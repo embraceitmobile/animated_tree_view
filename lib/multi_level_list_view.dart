@@ -12,7 +12,7 @@ typedef LeveledIndexedWidgetBuilder<T> = Widget Function(
 
 const TAG = "MultiLevelListView";
 
-class MultiLevelListView<T extends MultiLevelEntry> extends StatefulWidget {
+class MultiLevelListView<T extends MultiLevelEntry<T>> extends StatefulWidget {
   final List<T> initialItems;
   final LeveledIndexedWidgetBuilder builder;
   final bool showExpansionIndicator;
@@ -33,10 +33,10 @@ class MultiLevelListView<T extends MultiLevelEntry> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MultiLevelListView();
+  State<StatefulWidget> createState() => _MultiLevelListView<T>();
 }
 
-class _MultiLevelListView<T extends MultiLevelEntry>
+class _MultiLevelListView<T extends MultiLevelEntry<T>>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListController<T> _animatedListController;

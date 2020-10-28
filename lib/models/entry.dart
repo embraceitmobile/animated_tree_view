@@ -1,7 +1,7 @@
-mixin MultiLevelEntry<T extends _Entry> implements _Entry<T> {
-  String get id;
+mixin MultiLevelEntry<T extends _Entry<T>> implements _Entry<T> {
+  String id;
 
-  List<T> get children;
+  List<T> children;
 
   bool get hasChildren => children.isNotEmpty;
 
@@ -12,9 +12,9 @@ mixin MultiLevelEntry<T extends _Entry> implements _Entry<T> {
 }
 
 mixin _Entry<T> {
-  String get id;
+  String id;
 
-  List<T> get children;
+  List<T> children;
 
   @override
   bool operator ==(Object other) =>

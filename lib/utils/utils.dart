@@ -4,7 +4,7 @@ import '../multi_level_list_view.dart';
 class Utils {
   Utils._();
 
-  static Future<List<T>> normalize<T extends MultiLevelEntry>(List<T> list) async {
+  static Future<List<T>> normalize<T extends MultiLevelEntry<T>>(List<T> list) async {
     return List<T>.from(await compute(generateLevelAwareEntries, list));
   }
 

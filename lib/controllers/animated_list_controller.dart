@@ -3,7 +3,7 @@ import 'package:multi_level_list_view/listenables/listenable_list.dart';
 import 'package:multi_level_list_view/models/entry.dart';
 import 'package:multi_level_list_view/utils/utils.dart';
 
-class AnimatedListController<T extends MultiLevelEntry> {
+class AnimatedListController<T extends MultiLevelEntry<T>> {
   static const TAG = "AnimatedListController";
 
   final GlobalKey<AnimatedListState> listKey;
