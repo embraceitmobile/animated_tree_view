@@ -12,9 +12,7 @@ class EntryItemImpl with MultiLevelEntry<EntryItemImpl> {
 }
 
 List<EntryItemImpl> items = [
-  EntryItemImpl(id: "0A", children: <EntryItemImpl>[
-    EntryItemImpl(id: "1A"),
-  ]),
+  EntryItemImpl(id: "0A", children: <EntryItemImpl>[EntryItemImpl(id: "1A")]),
   EntryItemImpl(id: "0B"),
   EntryItemImpl(id: "0C", children: <EntryItemImpl>[
     EntryItemImpl(id: "0C1A"),

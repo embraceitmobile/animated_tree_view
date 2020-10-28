@@ -1,20 +1,30 @@
 mixin MultiLevelEntry<T extends _Entry<T>> implements _Entry<T> {
-  String id;
+  static const PATH_SEPARATOR = ".";
 
-  List<T> children;
+  String get id;
+
+  List<T> get children;
+
+  String entryPath = "";
+
+  bool isExpanded = false;
 
   bool get hasChildren => children.isNotEmpty;
 
+  int get level => PATH_SEPARATOR.allMatches(entryPath).length;
+
   @override
   String toString() {
-    return 'MultiLevelEntry{id: $id}, children: ${children.length}';
+    return 'MultiLevelEntry{id: $id}, path: $entryPath, children: ${children.length}';
   }
 }
 
 mixin _Entry<T> {
-  String id;
+  String get id;
 
-  List<T> children;
+  String entryPath;
+
+  List<T> get children;
 
   @override
   bool operator ==(Object other) =>

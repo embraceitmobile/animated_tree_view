@@ -70,15 +70,14 @@ class _MultiLevelListView<T extends MultiLevelEntry<T>>
   /// Used to build list items that haven't been removed.
   Widget _buildItem(T item, Animation<double> animation,
       {bool remove = false}) {
-    final level = '.'.allMatches(item.id).length;
     return ListItemContainer(
       animation: animation,
-      item:item,
-      child: widget.builder(context, level, item),
-      indentPadding: widget.indentPadding * level,
+      item: item,
+      child: widget.builder(context, item.level, item),
+      indentPadding: widget.indentPadding * item.level,
       showExpansionIndicator:
           widget.showExpansionIndicator && item.children.isNotEmpty,
-      expandedIndicatorIcon: _animatedListController.isExpanded(item.id)
+      expandedIndicatorIcon: item.isExpanded
           ? widget.collapseIcon
           : widget.expandIcon,
       onTap: remove

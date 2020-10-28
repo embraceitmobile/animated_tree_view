@@ -9,7 +9,6 @@ class AnimatedListController<T extends MultiLevelEntry<T>> {
   final GlobalKey<AnimatedListState> listKey;
   final dynamic removedItemBuilder;
   ListenableList<T> _items = ListenableList();
-  Map<String, T> _expandedItems = {};
 
   AnimatedListController(
       {@required this.listKey,
@@ -27,8 +26,6 @@ class AnimatedListController<T extends MultiLevelEntry<T>> {
   T operator [](int index) => _items[index];
 
   int indexOf(T item) => _items.indexOf(item);
-
-  bool isExpanded(String id) => _expandedItems.containsKey(id);
 
   AnimatedListState get _animatedList => listKey.currentState;
 
@@ -50,22 +47,25 @@ class AnimatedListController<T extends MultiLevelEntry<T>> {
   }
 
   void toggleExpansion(T item) {
-    if (_expandedItems.containsKey(item.id)) {
-      _expandedItems.removeWhere((id, value) => id.startsWith(item.id));
-
-      final removeItems =
-          _items.where((element) => element.id.startsWith('${item.id}.'));
+    if (item.isExpanded) {
+      final removeItems = _items.where((element) => element.entryPath
+          .startsWith(
+              '${item.entryPath}${MultiLevelEntry.PATH_SEPARATOR}${item.id}'));
 
       for (final item in removeItems) {
+        item.isExpanded = false;
         Future.microtask(() => removeAt(indexOf(item)));
       }
     } else {
       if (item.children.isEmpty) return;
-      _expandedItems[item.id] = item;
-      final index = _items.indexWhere((element) => element.id == item.id) + 1;
+      final index = _items.indexWhere(
+              (e) => e.entryPath == item.entryPath && e.id == item.id) +
+          1;
       for (int i = 0; i < item.children.length; i++) {
         insert(index + i, item.children[i]);
       }
     }
+
+    item.isExpanded = !item.isExpanded;
   }
 }
