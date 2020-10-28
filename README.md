@@ -1,6 +1,6 @@
 # Multi Level List View
 
-A flutter pacakge for creating a mult-level list view
+A flutter package for creating a multi-level list view
 
 ## Getting Started
 

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-class EntryItemImpl implements Entry {
-  String id;
-  List<Entry> children;
+class EntryItemImpl with MultiLevelEntry<EntryItemImpl> {
+  final String id;
+  final List<EntryItemImpl> children;
 
   EntryItemImpl({
     @required this.id,
-    this.children = const <Entry>[],
+    this.children = const <EntryItemImpl>[],
   });
 }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-class RowItem implements Entry {
-  String id;
-  List<Entry> children;
+class RowItem with MultiLevelEntry<RowItem> {
+  final String id;
+  final List<RowItem> children;
   final String title;
   final String subTitle;
 
@@ -11,7 +11,7 @@ class RowItem implements Entry {
     @required this.id,
     @required this.title,
     this.subTitle = "",
-    this.children = const <Entry>[],
+    this.children = const <RowItem>[],
   });
 }
 

@@ -7,14 +7,14 @@ import 'models/entry.dart';
 
 export 'models/entry.dart';
 
-typedef MultiLevelIndexBuilder<T> = Widget Function(
+typedef LeveledIndexedWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
 const TAG = "MultiLevelListView";
 
-class MultiLevelListView<T extends Entry> extends StatefulWidget {
-  final List<T> list;
-  final MultiLevelIndexBuilder builder;
+class MultiLevelListView<T extends MultiLevelEntry> extends StatefulWidget {
+  final List<T> initialItems;
+  final LeveledIndexedWidgetBuilder builder;
   final bool showExpansionIndicator;
   final Icon expandIcon;
   final Icon collapseIcon;
@@ -23,7 +23,7 @@ class MultiLevelListView<T extends Entry> extends StatefulWidget {
 
   const MultiLevelListView({
     Key key,
-    @required this.list,
+    @required this.initialItems,
     @required this.builder,
     this.showExpansionIndicator = true,
     this.indentPadding = 24.0,
@@ -36,7 +36,7 @@ class MultiLevelListView<T extends Entry> extends StatefulWidget {
   State<StatefulWidget> createState() => _MultiLevelListView();
 }
 
-class _MultiLevelListView<T extends Entry>
+class _MultiLevelListView<T extends MultiLevelEntry>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListController<T> _animatedListController;
@@ -46,7 +46,7 @@ class _MultiLevelListView<T extends Entry>
     super.initState();
     _animatedListController = AnimatedListController(
       listKey: _listKey,
-      initialItems: widget.list,
+      initialItems: widget.initialItems,
       removedItemBuilder: _buildRemovedItem,
     );
   }
@@ -57,7 +57,6 @@ class _MultiLevelListView<T extends Entry>
       valueListenable: _animatedListController.list,
       builder: (context, list, child) {
         if (list.isEmpty) return SizedBox.shrink();
-
         return AnimatedList(
           key: _listKey,
           initialItemCount: list.length,
@@ -68,7 +67,7 @@ class _MultiLevelListView<T extends Entry>
     );
   }
 
-  // Used to build list items that haven't been removed.
+  /// Used to build list items that haven't been removed.
   Widget _buildItem(T item, Animation<double> animation,
       {bool remove = false}) {
     final level = '.'.allMatches(item.id).length;

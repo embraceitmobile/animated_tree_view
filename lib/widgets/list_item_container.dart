@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/models/entry.dart';
 
-class ListItemContainer<T extends Entry> extends StatelessWidget {
+class ListItemContainer<T extends MultiLevelEntry> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<T> onTap;
   final T item;

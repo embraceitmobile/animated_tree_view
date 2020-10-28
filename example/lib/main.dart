@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: MultiLevelListView<RowItem>(
-          list: items,
+          initialItems: items,
           builder: (context, level, item) => ListTile(
             title: Text(item.title),
             subtitle: Text('${item.subTitle}'),
