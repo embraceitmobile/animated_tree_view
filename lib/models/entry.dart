@@ -1,9 +1,12 @@
-mixin MultiLevelEntry<T extends _Entry<T>> implements _Entry<T> {
+import 'package:flutter/material.dart';
+
+mixin Entry<T extends _Entry<T>> implements _Entry<T> {
   static const PATH_SEPARATOR = ".";
 
-  String get id;
-
   List<T> get children;
+
+  /// [key] should be unique, if you are overriding it then make sure that it has a unique value
+  final String key = UniqueKey().toString();
 
   String entryPath = "";
 
@@ -15,12 +18,12 @@ mixin MultiLevelEntry<T extends _Entry<T>> implements _Entry<T> {
 
   @override
   String toString() {
-    return 'MultiLevelEntry{id: $id}, path: $entryPath, children: ${children.length}';
+    return 'MultiLevelEntry{key: $key}, path: $entryPath, child_count: ${children.length}';
   }
 }
 
 mixin _Entry<T> {
-  String get id;
+  String get key;
 
   String entryPath;
 
@@ -29,8 +32,8 @@ mixin _Entry<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _Entry && runtimeType == other.runtimeType && id == other.id;
+      other is _Entry && runtimeType == other.runtimeType && key == other.key;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => key.hashCode;
 }

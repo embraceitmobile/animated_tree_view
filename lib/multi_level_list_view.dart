@@ -2,6 +2,7 @@ library multi_level_list_view;
 
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/controllers/animated_list_controller.dart';
+import 'package:multi_level_list_view/controllers/multilevel_listview_controller.dart';
 import 'package:multi_level_list_view/widgets/list_item_container.dart';
 import 'models/entry.dart';
 
@@ -12,31 +13,34 @@ typedef LeveledIndexedWidgetBuilder<T> = Widget Function(
 
 const TAG = "MultiLevelListView";
 
-class MultiLevelListView<T extends MultiLevelEntry<T>> extends StatefulWidget {
-  final List<T> initialItems;
+class MultiLevelListView<T extends Entry<T>> extends StatefulWidget {
+  final List<T> _items;
   final LeveledIndexedWidgetBuilder builder;
   final bool showExpansionIndicator;
   final Icon expandIcon;
   final Icon collapseIcon;
   final double indentPadding;
   final VoidCallback onTap;
+  final MultiLevelListViewController controller;
 
   const MultiLevelListView({
     Key key,
-    @required this.initialItems,
     @required this.builder,
+    List<T> initialItems,
+    this.controller,
+    this.onTap,
     this.showExpansionIndicator = true,
     this.indentPadding = 24.0,
     this.expandIcon = const Icon(Icons.keyboard_arrow_down),
     this.collapseIcon = const Icon(Icons.keyboard_arrow_up),
-    this.onTap,
-  }) : super(key: key);
+  })  : this._items = initialItems ?? const [],
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MultiLevelListView<T>();
 }
 
-class _MultiLevelListView<T extends MultiLevelEntry<T>>
+class _MultiLevelListView<T extends Entry<T>>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListController<T> _animatedListController;
@@ -46,7 +50,8 @@ class _MultiLevelListView<T extends MultiLevelEntry<T>>
     super.initState();
     _animatedListController = AnimatedListController(
       listKey: _listKey,
-      initialItems: widget.initialItems,
+      initialItems: widget._items,
+      listViewController: widget.controller,
       removedItemBuilder: _buildRemovedItem,
     );
   }
@@ -77,9 +82,8 @@ class _MultiLevelListView<T extends MultiLevelEntry<T>>
       indentPadding: widget.indentPadding * item.level,
       showExpansionIndicator:
           widget.showExpansionIndicator && item.children.isNotEmpty,
-      expandedIndicatorIcon: item.isExpanded
-          ? widget.collapseIcon
-          : widget.expandIcon,
+      expandedIndicatorIcon:
+          item.isExpanded ? widget.collapseIcon : widget.expandIcon,
       onTap: remove
           ? null
           : (item) {

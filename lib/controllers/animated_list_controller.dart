@@ -3,20 +3,33 @@ import 'package:multi_level_list_view/listenables/listenable_list.dart';
 import 'package:multi_level_list_view/models/entry.dart';
 import 'package:multi_level_list_view/utils/utils.dart';
 
-class AnimatedListController<T extends MultiLevelEntry<T>> {
+import 'multilevel_listview_controller.dart';
+
+class AnimatedListController<T extends Entry<T>> {
   static const TAG = "AnimatedListController";
 
-  final GlobalKey<AnimatedListState> listKey;
-  final dynamic removedItemBuilder;
+  final GlobalKey<AnimatedListState> _listKey;
+  final MultiLevelListViewController<T> _listViewController;
+  final dynamic _removedItemBuilder;
   ListenableList<T> _items = ListenableList();
 
   AnimatedListController(
-      {@required this.listKey,
-      @required this.removedItemBuilder,
+      {@required GlobalKey<AnimatedListState> listKey,
+      @required dynamic removedItemBuilder,
+      MultiLevelListViewController listViewController,
       List<T> initialItems = const []})
-      : assert(listKey != null),
+      : _listKey = listKey,
+        _removedItemBuilder = removedItemBuilder,
+        _listViewController = listViewController,
+        assert(listKey != null),
         assert(removedItemBuilder != null) {
     Utils.normalize<T>(initialItems).then((list) => _items.value = list);
+    if (listViewController != null) {
+      _listViewController.insertItemsStream.listen((event) {
+        Utils.normalize<T>(event.items).then((list) {});
+      });
+      _listViewController.removeItemsStream.listen((event) {});
+    }
   }
 
   ListenableList<T> get list => _items;
@@ -27,11 +40,17 @@ class AnimatedListController<T extends MultiLevelEntry<T>> {
 
   int indexOf(T item) => _items.indexOf(item);
 
-  AnimatedListState get _animatedList => listKey.currentState;
+  AnimatedListState get _animatedList => _listKey.currentState;
 
   void insert(int index, T item) {
     _items.insert(index, item);
     _animatedList.insertItem(index);
+  }
+
+  void insertAll(int index, List<T> items) {
+    for (int i = 0; i < items.length; i++) {
+      insert(index + i, items[i]);
+    }
   }
 
   T removeAt(int index) {
@@ -40,30 +59,32 @@ class AnimatedListController<T extends MultiLevelEntry<T>> {
       _animatedList.removeItem(
         index,
         (BuildContext context, Animation<double> animation) =>
-            removedItemBuilder(removedItem, context, animation),
+            _removedItemBuilder(removedItem, context, animation),
       );
     }
     return removedItem;
+  }
+
+  void removeAll(List<T> items) {
+    for (final item in items) {
+      item.isExpanded = false;
+      Future.microtask(() => removeAt(indexOf(item)));
+    }
   }
 
   void toggleExpansion(T item) {
     if (item.isExpanded) {
       final removeItems = _items.where((element) => element.entryPath
           .startsWith(
-              '${item.entryPath}${MultiLevelEntry.PATH_SEPARATOR}${item.id}'));
+              '${item.entryPath}${Entry.PATH_SEPARATOR}${item.key}'));
 
-      for (final item in removeItems) {
-        item.isExpanded = false;
-        Future.microtask(() => removeAt(indexOf(item)));
-      }
+      removeAll(removeItems.toList());
     } else {
       if (item.children.isEmpty) return;
       final index = _items.indexWhere(
-              (e) => e.entryPath == item.entryPath && e.id == item.id) +
+              (e) => e.entryPath == item.entryPath && e.key == item.key) +
           1;
-      for (int i = 0; i < item.children.length; i++) {
-        insert(index + i, item.children[i]);
-      }
+      insertAll(index, item.children);
     }
 
     item.isExpanded = !item.isExpanded;

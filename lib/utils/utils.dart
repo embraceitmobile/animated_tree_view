@@ -4,7 +4,7 @@ import '../multi_level_list_view.dart';
 class Utils {
   Utils._();
 
-  static Future<List<T>> normalize<T extends MultiLevelEntry<T>>(
+  static Future<List<T>> normalize<T extends Entry<T>>(
       List<T> list) async {
     return List<T>.from(await compute(generateLevelAwareEntries, list));
   }
@@ -18,7 +18,7 @@ class Utils {
     for (final entry in normalList) {
       entry.entryPath = path;
       if (entry.children.isNotEmpty) {
-        generateLevelAwareEntries(entry.children, path: '$path.${entry.id}');
+        generateLevelAwareEntries(entry.children, path: '$path.${entry.key}');
       }
     }
 
