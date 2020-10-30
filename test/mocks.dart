@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-class EntryItemWithIdImpl with Entry<EntryItemWithIdImpl> {
+class EntryItemWithIdImpl with Node<EntryItemWithIdImpl> {
   final String key;
   final List<EntryItemWithIdImpl> children;
 
@@ -11,7 +11,7 @@ class EntryItemWithIdImpl with Entry<EntryItemWithIdImpl> {
   });
 }
 
-class EntryItemImpl with Entry<EntryItemImpl> {
+class EntryItemImpl with Node<EntryItemImpl> {
   final List<EntryItemImpl> children;
 
   EntryItemImpl({

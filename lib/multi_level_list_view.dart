@@ -2,18 +2,19 @@ library multi_level_list_view;
 
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/controllers/animated_list_controller.dart';
-import 'package:multi_level_list_view/controllers/multilevel_listview_controller.dart';
+import 'package:multi_level_list_view/tree_list/node.dart';
+import 'package:multi_level_list_view/tree_list/tree_list.dart';
 import 'package:multi_level_list_view/widgets/list_item_container.dart';
-import 'models/entry.dart';
 
-export 'models/entry.dart';
+export 'package:multi_level_list_view/tree_list/node.dart';
+export 'package:multi_level_list_view/tree_list/tree_list.dart';
 
 typedef LeveledIndexedWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
 const TAG = "MultiLevelListView";
 
-class MultiLevelListView<T extends Entry<T>> extends StatefulWidget {
+class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   final List<T> _items;
   final LeveledIndexedWidgetBuilder builder;
   final bool showExpansionIndicator;
@@ -21,7 +22,7 @@ class MultiLevelListView<T extends Entry<T>> extends StatefulWidget {
   final Icon collapseIcon;
   final double indentPadding;
   final VoidCallback onTap;
-  final MultiLevelListViewController controller;
+  final TreeList controller;
 
   const MultiLevelListView({
     Key key,
@@ -40,7 +41,7 @@ class MultiLevelListView<T extends Entry<T>> extends StatefulWidget {
   State<StatefulWidget> createState() => _MultiLevelListView<T>();
 }
 
-class _MultiLevelListView<T extends Entry<T>>
+class _MultiLevelListView<T extends Node<T>>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListController<T> _animatedListController;
@@ -58,17 +59,14 @@ class _MultiLevelListView<T extends Entry<T>>
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<T>>(
-      valueListenable: _animatedListController.list,
-      builder: (context, list, child) {
-        if (list.isEmpty) return SizedBox.shrink();
-        return AnimatedList(
-          key: _listKey,
-          initialItemCount: list.length,
-          itemBuilder: (context, index, animation) =>
-              _buildItem(list[index], animation),
-        );
-      },
+    final list = _animatedListController.list;
+    if (list.isEmpty) return SizedBox.shrink();
+
+    return AnimatedList(
+      key: _listKey,
+      initialItemCount: list.length,
+      itemBuilder: (context, index, animation) =>
+          _buildItem(list[index], animation),
     );
   }
 

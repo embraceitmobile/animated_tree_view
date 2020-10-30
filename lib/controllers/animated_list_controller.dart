@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/listenables/listenable_list.dart';
-import 'package:multi_level_list_view/models/entry.dart';
+import 'package:multi_level_list_view/tree_list/node.dart';
 import 'package:multi_level_list_view/utils/utils.dart';
+import 'package:multi_level_list_view/tree_list/tree_list.dart';
 
-import 'multilevel_listview_controller.dart';
-
-class AnimatedListController<T extends Entry<T>> {
+class AnimatedListController<T extends Node<T>> {
   static const TAG = "AnimatedListController";
 
   final GlobalKey<AnimatedListState> _listKey;
-  final MultiLevelListViewController<T> _listViewController;
+  final TreeList<T> _listViewController;
   final dynamic _removedItemBuilder;
   ListenableList<T> _items = ListenableList();
 
   AnimatedListController(
       {@required GlobalKey<AnimatedListState> listKey,
       @required dynamic removedItemBuilder,
-      MultiLevelListViewController listViewController,
+      TreeList listViewController,
       List<T> initialItems = const []})
       : _listKey = listKey,
         _removedItemBuilder = removedItemBuilder,
@@ -25,10 +24,10 @@ class AnimatedListController<T extends Entry<T>> {
         assert(removedItemBuilder != null) {
     Utils.normalize<T>(initialItems).then((list) => _items.value = list);
     if (listViewController != null) {
-      _listViewController.insertItemsStream.listen((event) {
-        Utils.normalize<T>(event.items).then((list) {});
-      });
-      _listViewController.removeItemsStream.listen((event) {});
+      // _listViewController.insertedItems.listen((event) {
+      //   Utils.normalize<T>(event.items).then((list) {});
+      // });
+      // _listViewController.removedItems.listen((event) {});
     }
   }
 
@@ -74,15 +73,15 @@ class AnimatedListController<T extends Entry<T>> {
 
   void toggleExpansion(T item) {
     if (item.isExpanded) {
-      final removeItems = _items.where((element) => element.entryPath
+      final removeItems = _items.where((element) => element.path
           .startsWith(
-              '${item.entryPath}${Entry.PATH_SEPARATOR}${item.key}'));
+              '${item.path}${Node.PATH_SEPARATOR}${item.key}'));
 
       removeAll(removeItems.toList());
     } else {
       if (item.children.isEmpty) return;
       final index = _items.indexWhere(
-              (e) => e.entryPath == item.entryPath && e.key == item.key) +
+              (e) => e.path == item.path && e.key == item.key) +
           1;
       insertAll(index, item.children);
     }
