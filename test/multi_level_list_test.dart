@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:multi_level_list_view/multi_level_list_view.dart';
 import 'package:multi_level_list_view/tree_list/node.dart';
-import 'package:multi_level_list_view/utils/utils.dart';
 import 'mocks.dart';
 
 void main() {
@@ -17,17 +17,34 @@ void main() {
     expect(itemsWithoutIds.at(2).children.length, equals(3));
   });
 
-  test('correct entry path are generated', () async {
-    final entries = itemsWithIds;
+  test('tree list initializes from list and generates path for children',
+      () async {
+    final treeList = TreeList.from(List.of(itemsWithIds));
+    final nodes = treeList.root.children;
     final _ = Node.PATH_SEPARATOR;
-    expect(entries.firstNode.key, equals("0A"));
-    expect(entries.firstNode.children.firstNode.path, equals("${_}0A"));
-    expect(entries.at(2).key, equals("0C"));
-    expect(entries.at(2).children.first.path, equals("${_}0C"));
-    expect(entries.at(2).children.at(2).path, equals("${_}0C"));
-    expect(entries.at(2).children.at(2).children.firstNode.path,
-        equals("${_}0C${_}0C1C"));
-    expect(entries.at(2).children.at(2).children.firstNode.children.firstNode.path,
-        equals("${_}0C${_}0C1C${_}0C1C2A"));
+    final root = "$_$ROOT_KEY";
+
+    expect(nodes.firstNode.key, equals("0A"));
+    expect(nodes.firstNode.children.firstNode.path, equals("$root${_}0A"));
+    expect(nodes.at(2).key, equals("0C"));
+    expect(nodes.at(2).children.first.path, equals("$root${_}0C"));
+    expect(nodes.at(2).children.at(2).path, equals("$root${_}0C"));
+    expect(nodes.at(2).children.at(2).children.firstNode.path,
+        equals("$root${_}0C${_}0C1C"));
+    expect(
+        nodes.at(2).children.at(2).children.firstNode.children.firstNode.path,
+        equals("$root${_}0C${_}0C1C${_}0C1C2A"));
+  });
+
+  test('get the correct node from path', () async {
+    final treeList = TreeList.from(List.of(itemsWithIds));
+    final rootNode = treeList.root;
+    final _ = Node.PATH_SEPARATOR;
+    final testNode =
+        rootNode.children.at(2).children.at(2).children.firstNode.children.firstNode;
+    final testPath = "0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final returnedNode = rootNode.getNodeAt(testPath);
+
+    expect(returnedNode.key, equals(testNode.key));
   });
 }

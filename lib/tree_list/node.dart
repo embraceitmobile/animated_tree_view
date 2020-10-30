@@ -1,27 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class TreeNode<T extends Node<T>> with Node<T> {
-  final List<Node<T>> children;
-
-  TreeNode(this.children);
-}
-
 extension NodeList<T extends _Node<T>> on List<_Node<T>> {
-  Node<T> get firstNode => _populatePath(first);
+  Node<T> get firstNode => _populateChildrenPath(first);
 
-  Node<T> get lastNode => _populatePath(last);
+  Node<T> get lastNode => _populateChildrenPath(last);
 
-  Node<T> at(int index) => _populatePath(this[index]);
+  Node<T> at(int index) => _populateChildrenPath(this[index]);
 
-  Node<T> firstNodeWhere(bool Function(T element) test,
-          {T Function() orElse}) =>
-      _populatePath(this.firstWhere(test, orElse: orElse));
+  Node<T> firstNodeWhere(bool test(T element), {T orElse()}) =>
+      _populateChildrenPath(this.firstWhere((e) => test(e), orElse: orElse));
 
-  Node<T> _populatePath(Node<T> node) {
-    if (node.children.isEmpty) return node;
+  Node<T> lastNodeWhere(bool Function(T element) test, {T Function() orElse}) =>
+      _populateChildrenPath(this.lastWhere((e) => test(e), orElse: orElse));
+
+  Node<T> _populateChildrenPath(Node<T> node) {
+    if (!node.hasChildren) return node;
     if (node.children.first.path.isNotEmpty) return node;
     for (final child in node.children) {
-      child.path = "${node.path}.${node.key}";
+      child.path = node.childrenPath;
     }
     return node;
   }
@@ -48,14 +45,16 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
 
     var currentNode = this;
     for (final node in nodes) {
-      currentNode = currentNode.children.firstWhere((n) => n.key == node);
+      currentNode = currentNode.children.firstNodeWhere((n) => n.key == node);
     }
     return currentNode;
   }
 
+  String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
+
   @override
   String toString() {
-    return 'MultiLevelEntry{key: $key}, path: $path, child_count: ${children.length}';
+    return 'Node {key: $key}, path: $path, child_count: ${children.length}';
   }
 }
 

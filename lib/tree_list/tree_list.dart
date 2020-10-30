@@ -1,15 +1,24 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/tree_list/node.dart';
 import 'i_tree_list.dart';
 
+const ROOT_KEY = "/";
+
 class TreeList<T extends Node<T>> implements ITreeList<T> {
-  TreeList._(TreeNode<T> root) : _root = root;
-  TreeNode<T> _root;
+  TreeList._(_RootNode<T> root) : _root = root {
+    if (_root.hasChildren) {
+      for (final node in _root.children) {
+        node.path = _root.childrenPath;
+      }
+    }
+  }
 
-  factory TreeList.fromList(List<T> list) => TreeList._(TreeNode(list));
+  _RootNode<T> _root;
 
-  factory TreeList.empty() => TreeList._(TreeNode(<T>[]));
+  Node<T> get root => _root;
+
+  factory TreeList() => TreeList._(_RootNode(<T>[]));
+
+  factory TreeList.from(List<Node<T>> list) => TreeList._(_RootNode(list));
 
   void insertAt(T item, int index, {String path}) {}
 
@@ -24,4 +33,11 @@ class TreeList<T extends Node<T>> implements ITreeList<T> {
   void removeAt(int index, {String path}) {}
 
   void removeAllAt(String path) {}
+}
+
+class _RootNode<T extends Node<T>> with Node<T> {
+  final List<Node<T>> children;
+  final String key;
+
+  _RootNode(this.children) : this.key = ROOT_KEY;
 }

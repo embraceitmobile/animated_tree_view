@@ -1,11 +1,9 @@
 import 'package:multi_level_list_view/tree_list/node.dart';
 
-
-
 abstract class ITreeList<T extends Node<T>> {
-  external factory ITreeList.fromList(List<T> list);
+  external factory ITreeList();
 
-  external factory ITreeList.empty();
+  external factory ITreeList.from(List<Node<T>> list);
 
   void insertAt(T item, int index, {String path});
 
