@@ -44,6 +44,9 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   int get level => PATH_SEPARATOR.allMatches(path).length;
 
   Node<T> getNodeAt(String path) {
+    assert(key != ROOT_KEY ? !path.contains(ROOT_KEY) : true,
+        "Path with ROOT_KEY = $ROOT_KEY can only be called from the root node");
+
     path = path
         .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
         .replaceAll(ROOT_KEY, "");
