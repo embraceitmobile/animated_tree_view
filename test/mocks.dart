@@ -1,54 +1,54 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-class EntryItemWithIdImpl with Node<EntryItemWithIdImpl> {
+class NodeWithGivenId with Node<NodeWithGivenId> {
   final String key;
-  final List<EntryItemWithIdImpl> children;
+  final List<NodeWithGivenId> children;
 
-  EntryItemWithIdImpl({
+  NodeWithGivenId({
     @required this.key,
-    this.children = const <EntryItemWithIdImpl>[],
+    this.children = const <NodeWithGivenId>[],
   });
 }
 
-class EntryItemImpl with Node<EntryItemImpl> {
-  final List<EntryItemImpl> children;
+class TestNode with Node<TestNode> {
+  final List<TestNode> children;
 
-  EntryItemImpl({
-    this.children = const <EntryItemImpl>[],
+  TestNode({
+    this.children = const <TestNode>[],
   });
 }
 
-List<EntryItemWithIdImpl> itemsWithIds = [
-  EntryItemWithIdImpl(key: "0A", children: <EntryItemWithIdImpl>[EntryItemWithIdImpl(key: "1A")]),
-  EntryItemWithIdImpl(key: "0B"),
-  EntryItemWithIdImpl(key: "0C", children: <EntryItemWithIdImpl>[
-    EntryItemWithIdImpl(key: "0C1A"),
-    EntryItemWithIdImpl(key: "0C1B"),
-    EntryItemWithIdImpl(key: "0C1C", children: <EntryItemWithIdImpl>[
-      EntryItemWithIdImpl(key: "0C1C2A", children: <EntryItemWithIdImpl>[
-        EntryItemWithIdImpl(key: "0C1C2A3A"),
-        EntryItemWithIdImpl(key: "0C1C2A3B"),
-        EntryItemWithIdImpl(key: "0C1C2A3C"),
+List<NodeWithGivenId> itemsWithIds = [
+  NodeWithGivenId(key: "0A", children: <NodeWithGivenId>[NodeWithGivenId(key: "1A")]),
+  NodeWithGivenId(key: "0B"),
+  NodeWithGivenId(key: "0C", children: <NodeWithGivenId>[
+    NodeWithGivenId(key: "0C1A"),
+    NodeWithGivenId(key: "0C1B"),
+    NodeWithGivenId(key: "0C1C", children: <NodeWithGivenId>[
+      NodeWithGivenId(key: "0C1C2A", children: <NodeWithGivenId>[
+        NodeWithGivenId(key: "0C1C2A3A"),
+        NodeWithGivenId(key: "0C1C2A3B"),
+        NodeWithGivenId(key: "0C1C2A3C"),
       ]),
     ]),
   ]),
-  EntryItemWithIdImpl(key: "0D"),
+  NodeWithGivenId(key: "0D"),
 ];
 
-List<EntryItemImpl> itemsWithoutIds = [
-  EntryItemImpl(children: <EntryItemImpl>[EntryItemImpl()]),
-  EntryItemImpl(),
-  EntryItemImpl(children: <EntryItemImpl>[
-    EntryItemImpl(),
-    EntryItemImpl(),
-    EntryItemImpl(children: <EntryItemImpl>[
-      EntryItemImpl(children: <EntryItemImpl>[
-        EntryItemImpl(),
-        EntryItemImpl(),
-        EntryItemImpl(),
+List<TestNode> itemsWithoutIds = [
+  TestNode(children: <TestNode>[TestNode()]),
+  TestNode(),
+  TestNode(children: <TestNode>[
+    TestNode(),
+    TestNode(),
+    TestNode(children: <TestNode>[
+      TestNode(children: <TestNode>[
+        TestNode(),
+        TestNode(),
+        TestNode(),
       ]),
     ]),
   ]),
-  EntryItemImpl(),
+  TestNode(),
 ];

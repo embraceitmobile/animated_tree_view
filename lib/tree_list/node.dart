@@ -1,16 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_level_list_view/multi_level_list_view.dart';
 
 extension NodeList<T extends _Node<T>> on List<_Node<T>> {
-  Node<T> get firstNode => _populateChildrenPath(first);
+  Node<T> get firstNode => _populateChildrenPath(this.first);
 
-  Node<T> get lastNode => _populateChildrenPath(last);
+  Node<T> get lastNode => _populateChildrenPath(this.last);
 
   Node<T> at(int index) => _populateChildrenPath(this[index]);
 
+  //TODO: optimize this method, it is simply getting the first element in a loop
   Node<T> firstNodeWhere(bool test(T element), {T orElse()}) =>
       _populateChildrenPath(this.firstWhere((e) => test(e), orElse: orElse));
 
+  //TODO: optimize this method, it is simply getting the last element in a loop
   Node<T> lastNodeWhere(bool Function(T element) test, {T Function() orElse}) =>
       _populateChildrenPath(this.lastWhere((e) => test(e), orElse: orElse));
 
@@ -41,6 +44,11 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   int get level => PATH_SEPARATOR.allMatches(path).length;
 
   Node<T> getNodeAt(String path) {
+    path = path
+        .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
+        .replaceAll(ROOT_KEY, "");
+
+    if (path.startsWith(PATH_SEPARATOR)) path = path.substring(1);
     final nodes = path.split(PATH_SEPARATOR);
 
     var currentNode = this;

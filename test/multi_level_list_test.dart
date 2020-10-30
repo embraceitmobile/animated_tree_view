@@ -17,6 +17,13 @@ void main() {
     expect(itemsWithoutIds.at(2).children.length, equals(3));
   });
 
+  test('child paths are assigned when a TreeList is initialized', () async {
+    final treeList = TreeList.from(List.of(itemsWithoutIds));
+    expect(treeList.root.children.firstNode.path.isNotEmpty, isTrue);
+    expect(treeList.root.children.at(2).children.firstNode.path.isNotEmpty,
+        isTrue);
+  });
+
   test('tree list initializes from list and generates path for children',
       () async {
     final treeList = TreeList.from(List.of(itemsWithIds));
@@ -40,11 +47,31 @@ void main() {
     final treeList = TreeList.from(List.of(itemsWithIds));
     final rootNode = treeList.root;
     final _ = Node.PATH_SEPARATOR;
-    final testNode =
-        rootNode.children.at(2).children.at(2).children.firstNode.children.firstNode;
-    final testPath = "0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final testNode = rootNode.children
+        .at(2)
+        .children
+        .at(2)
+        .children
+        .firstNode
+        .children
+        .firstNode;
+
+    final testPath = "$_$ROOT_KEY${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
     final returnedNode = rootNode.getNodeAt(testPath);
 
-    expect(returnedNode.key, equals(testNode.key));
+    expect(returnedNode.key, equals(testNode.key),
+        reason:
+            "getNodeAt handles path starting with PATH_SEPARATOR = $_ and ROOT_KEY = $ROOT_KEY");
+
+    final testPath2 = "$ROOT_KEY${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final returnedNode2 = rootNode.getNodeAt(testPath2);
+    expect(returnedNode2.key, equals(testNode.key),
+        reason: "getNodeAt handles path starting with ROOT_KEY = $ROOT_KEY");
+
+    final testPath3 = "0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final returnedNode3 = rootNode.getNodeAt(testPath3);
+    expect(returnedNode3.key, equals(testNode.key),
+        reason:
+            "getNodeAt handles path starting without ROOT_KEY = $ROOT_KEY and PATH_SEPARATOR = $_");
   });
 }
