@@ -5,17 +5,19 @@ abstract class ITreeList<T extends Node<T>> {
 
   external factory ITreeList.from(List<Node<T>> list);
 
-  void insertAt(T item, int index, {String path});
+  void add(T item, {String path});
 
-  void insert(T item, {String path});
+  void addAll(Iterable<T> items, {String path});
 
-  void insertAll(List<T> items, {String path});
+  void insert(T item, int index, {String path});
 
-  void remove(T item, {String path});
+  void insertAll(Iterable<T> iterable, int index, {String path});
 
-  void removeAll(List<T> items, {String path});
+  void remove(T value, {String path});
+
+  void removeItems(Iterable<Node<T>> iterable, {String path});
 
   void removeAt(int index, {String path});
-
-  void removeAllAt(String path);
+  
+  void clearAll({String path});
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
@@ -16,6 +15,8 @@ extension NodeList<T extends _Node<T>> on List<_Node<T>> {
   //TODO: optimize this method, it is simply getting the last element in a loop
   Node<T> lastNodeWhere(bool Function(T element) test, {T Function() orElse}) =>
       _populateChildrenPath(this.lastWhere((e) => test(e), orElse: orElse));
+
+
 
   Node<T> _populateChildrenPath(Node<T> node) {
     if (!node.hasChildren) return node;
@@ -56,7 +57,11 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
 
     var currentNode = this;
     for (final node in nodes) {
-      currentNode = currentNode.children.firstNodeWhere((n) => n.key == node);
+      if (node.isEmpty) {
+        return currentNode.children.first;
+      } else {
+        currentNode = currentNode.children.firstNodeWhere((n) => n.key == node);
+      }
     }
     return currentNode;
   }

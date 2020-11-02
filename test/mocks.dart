@@ -14,13 +14,13 @@ class NodeWithGivenId with Node<NodeWithGivenId> {
 class TestNode with Node<TestNode> {
   final List<TestNode> children;
 
-  TestNode({
-    this.children = const <TestNode>[],
-  });
+  TestNode({List<TestNode> children})
+      : this.children = children ?? <TestNode>[];
 }
 
 List<NodeWithGivenId> itemsWithIds = [
-  NodeWithGivenId(key: "0A", children: <NodeWithGivenId>[NodeWithGivenId(key: "1A")]),
+  NodeWithGivenId(
+      key: "0A", children: <NodeWithGivenId>[NodeWithGivenId(key: "1A")]),
   NodeWithGivenId(key: "0B"),
   NodeWithGivenId(key: "0C", children: <NodeWithGivenId>[
     NodeWithGivenId(key: "0C1A"),
@@ -37,7 +37,13 @@ List<NodeWithGivenId> itemsWithIds = [
 ];
 
 List<TestNode> itemsWithoutIds = [
-  TestNode(children: <TestNode>[TestNode()]),
+  TestNode(children: <TestNode>[
+    TestNode(children: [
+      TestNode(),
+      TestNode(),
+      TestNode(),
+    ])
+  ]),
   TestNode(),
   TestNode(children: <TestNode>[
     TestNode(),
@@ -52,3 +58,4 @@ List<TestNode> itemsWithoutIds = [
   ]),
   TestNode(),
 ];
+

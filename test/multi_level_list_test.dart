@@ -19,15 +19,15 @@ void main() {
 
   test('child paths are assigned when a TreeList is initialized', () async {
     final treeList = TreeList.from(List.of(itemsWithoutIds));
-    expect(treeList.root.children.firstNode.path.isNotEmpty, isTrue);
-    expect(treeList.root.children.at(2).children.firstNode.path.isNotEmpty,
+    expect(treeList.children.firstNode.path.isNotEmpty, isTrue);
+    expect(treeList.children.at(2).children.firstNode.path.isNotEmpty,
         isTrue);
   });
 
   test('tree list initializes from list and generates path for children',
       () async {
     final treeList = TreeList.from(List.of(itemsWithIds));
-    final nodes = treeList.root.children;
+    final nodes = treeList.children;
     final _ = Node.PATH_SEPARATOR;
     final root = "$_$ROOT_KEY";
 
@@ -47,7 +47,7 @@ void main() {
     final treeList = TreeList.from(List.of(itemsWithIds));
     final rootNode = treeList.root;
     final _ = Node.PATH_SEPARATOR;
-    final testNode = rootNode.children
+    final testNode = treeList.children
         .at(2)
         .children
         .at(2)
