@@ -1,9 +1,11 @@
-import 'package:multi_level_list_view/iterable_tree/iterable_tree.dart';
-import 'package:multi_level_list_view/collections/node_collections.dart';
+
+
+import 'package:multi_level_list_view/interfaces/iterable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/node.dart';
 
 const ROOT_KEY = "/";
 
-class TreeList<T extends Node<T>> implements IterableTree<T> {
+class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
   TreeList._(_RootNode<T> root) : _root = root {
     if (_root.hasChildren) {
       for (final node in _root.children) {

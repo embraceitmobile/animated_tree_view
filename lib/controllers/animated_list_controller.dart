@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/collections/node_collections.dart';
-import 'package:multi_level_list_view/iterable_tree/listenable_iterable_tree.dart';
+import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/listenables/listenable_list.dart';
+import 'package:multi_level_list_view/tree_structures/node.dart';
 
 class AnimatedListController<T extends Node<T>> {
   static const TAG = "AnimatedListController";
@@ -82,10 +82,9 @@ class AnimatedListController<T extends Node<T>> {
       removeAll(removeItems.toList());
     } else {
       if (item.children.isEmpty) return;
-      item.populateChildrenPath();
 
       final index =
-          _items.indexWhere((e) => e.path == item.path && e.key == item.key) +
+          _items.nodeIndexWhere((e) => e.path == item.path && e.key == item.key) +
               1;
       insertAll(index, item.children);
     }

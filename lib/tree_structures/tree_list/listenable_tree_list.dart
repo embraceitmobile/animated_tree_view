@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/collections/node_collections.dart';
-import 'package:multi_level_list_view/iterable_tree/iterable_tree_update_provider.dart';
-import 'package:multi_level_list_view/iterable_tree/listenable_iterable_tree.dart';
-import 'package:multi_level_list_view/tree_list/tree_list.dart';
+import 'package:multi_level_list_view/interfaces/iterable_tree_update_provider.dart';
+import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/node.dart';
+import 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 
 class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
     with IterableTreeUpdateProvider<T>
-    implements ListenableIterableTree<T> {
+    implements ListenableIterableTree<T>, ListenableInsertableIterableTree<T> {
   ListenableTreeList._(TreeList<T> list) : _value = list;
 
   factory ListenableTreeList() => ListenableTreeList._(TreeList<T>());
