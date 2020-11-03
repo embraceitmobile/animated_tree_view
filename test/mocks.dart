@@ -59,3 +59,25 @@ List<TestNode> itemsWithoutIds = [
   TestNode(),
 ];
 
+List<TestNode> itemsWithoutIds2 = [
+  TestNode(children: <TestNode>[
+    TestNode(children: [
+      TestNode(),
+      TestNode(),
+      TestNode(),
+    ])
+  ]),
+  TestNode(),
+  TestNode(children: <TestNode>[
+    TestNode(),
+    TestNode(),
+    TestNode(children: <TestNode>[
+      TestNode(children: <TestNode>[
+        TestNode(),
+        TestNode(),
+        TestNode(),
+      ]),
+    ]),
+  ]),
+  TestNode(),
+];

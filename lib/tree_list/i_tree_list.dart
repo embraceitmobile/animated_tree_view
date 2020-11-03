@@ -17,7 +17,7 @@ abstract class ITreeList<T extends Node<T>> {
 
   void removeItems(Iterable<Node<T>> iterable, {String path});
 
-  void removeAt(int index, {String path});
-  
-  void clearAll({String path});
+  T removeAt(int index, {String path});
+
+  Iterable<Node<T>> clearAll({String path});
 }

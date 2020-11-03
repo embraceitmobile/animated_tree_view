@@ -4,16 +4,19 @@ import 'package:multi_level_list_view/tree_list/node.dart';
 import 'mocks.dart';
 
 void main() {
+  TreeList<TestNode> items;
+  setUp(() {
+    items = TreeList.from(List.of(itemsWithoutIds));
+  });
+
   group('test add method', () {
     test('on adding an item, the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       items.add(TestNode());
       expect(items.children.length, equals(origLength + 1));
     });
 
     test('on adding an item at path, the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final lengthOrigChild = items.children.firstNode.children.length;
       final path = items.children.firstNode.path;
       items.add(TestNode(), path: path);
@@ -26,14 +29,12 @@ void main() {
     final itemsToAdd = [TestNode(), TestNode()];
 
     test('on adding items, the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       items.addAll(itemsToAdd);
       expect(items.children.length, equals(origLength + itemsToAdd.length));
     });
 
     test('on adding items at path, the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final lengthOrigChild = items.children.firstNode.children.length;
       final path = items.children.firstNode.path;
       items.addAll(itemsToAdd, path: path);
@@ -46,7 +47,6 @@ void main() {
     test(
         'on inserting item, the item at the index is updated, and the length of '
         'list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       final itemToInsert = TestNode();
       items.insert(itemToInsert, 0);
@@ -57,7 +57,6 @@ void main() {
     test(
         'on inserting items at path, the items at and after the index are updated,'
         ' and the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final node = items.children.firstNode;
       final origLength = node.children.length;
       final itemToInsert = TestNode();
@@ -75,7 +74,6 @@ void main() {
     test(
         'on inserting items, the item at the index is updated, and the length of '
         'list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       final itemsToInsert = [TestNode(), TestNode()];
       items.insertAll(itemsToInsert, 0);
@@ -87,7 +85,6 @@ void main() {
     test(
         'on inserting items at path, the items at and after the index are updated,'
         ' and the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final node = items.children.firstNode;
       final origLength = node.children.length;
       final itemsToInsert = [TestNode(), TestNode()];
@@ -104,7 +101,6 @@ void main() {
   group('test remove method', () {
     test('on removing an item, the item is no longer available in the list',
         () async {
-          final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       final itemToRemove = items.children.firstNode;
       items.remove(itemToRemove);
@@ -113,7 +109,6 @@ void main() {
     });
 
     test('on removing an item at path, the length of list increases', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       final node = items.children.firstNode;
       final origLength = node.children.length;
       final itemToRemove = node.children.firstNode;
@@ -127,7 +122,6 @@ void main() {
   group('test removeItems method', () {
     test('on removing items, the items are no longer available in the list',
         () async {
-          final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       final itemsToRemove = [items.children.first, items.children.last];
       items.removeItems(itemsToRemove);
@@ -139,7 +133,7 @@ void main() {
     test(
         'on removing items at path, the items are no longer available in the list at the path',
         () async {
-          final items = TreeList.from(List.of(itemsWithoutIds));
+      final items = TreeList.from(List.of(itemsWithoutIds2));
       final node = items.children.firstNode.children.firstNode;
       final origLength = node.children.length;
       final itemsToRemove = [node.children.firstNode, node.children.lastNode];
@@ -154,7 +148,6 @@ void main() {
     test(
         'on removing an item at the index, the item is no longer available in the list',
         () async {
-          final items = TreeList.from(List.of(itemsWithoutIds));
       final origLength = items.children.length;
       final itemToRemove = 0;
       items.removeAt(itemToRemove);
@@ -164,7 +157,6 @@ void main() {
 
     test('on removing an item at index at path, the length of list increases',
         () async {
-          final items = TreeList.from(List.of(itemsWithoutIds));
       final node = items.children.firstNode;
       final origLength = node.children.length;
       final itemToRemove = 0;
@@ -177,13 +169,12 @@ void main() {
 
   group('test clear method', () {
     test('on clearing a list, the list length is zero', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
       items.clearAll();
       expect(items.children.isEmpty, isTrue);
     });
 
-    test('on clearing a list at a path, the list length is zero at that path', () async {
-      final items = TreeList.from(List.of(itemsWithoutIds));
+    test('on clearing a list at a path, the list length is zero at that path',
+        () async {
       final node = items.children.firstNode;
       final path = node.path;
       items.clearAll(path: path);
