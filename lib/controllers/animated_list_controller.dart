@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:multi_level_list_view/collections/node_collections.dart';
+import 'package:multi_level_list_view/iterable_tree/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/listenables/listenable_list.dart';
-import 'package:multi_level_list_view/tree_list/node.dart';
-import 'package:multi_level_list_view/utils/utils.dart';
-import 'package:multi_level_list_view/tree_list/tree_list.dart';
 
 class AnimatedListController<T extends Node<T>> {
   static const TAG = "AnimatedListController";
 
   final GlobalKey<AnimatedListState> _listKey;
-  final TreeList<T> _listViewController;
+  final ListenableIterableTree<T> _listenableIterableTree;
   final dynamic _removedItemBuilder;
-  ListenableList<T> _items = ListenableList();
+  final ListenableList<Node<T>> _items;
 
   AnimatedListController(
       {@required GlobalKey<AnimatedListState> listKey,
       @required dynamic removedItemBuilder,
-      TreeList listViewController,
-      List<T> initialItems = const []})
+      ListenableIterableTree<T> tree})
       : _listKey = listKey,
+        _items = ListenableList.from(tree.root.children),
         _removedItemBuilder = removedItemBuilder,
-        _listViewController = listViewController,
+        _listenableIterableTree = tree,
         assert(listKey != null),
         assert(removedItemBuilder != null) {
-    Utils.normalize<T>(initialItems).then((list) => _items.value = list);
-    if (listViewController != null) {
-      // _listViewController.insertedItems.listen((event) {
-      //   Utils.normalize<T>(event.items).then((list) {});
-      // });
-      // _listViewController.removedItems.listen((event) {});
+    if (tree != null) {
+      _listenableIterableTree.addedItems.listen((event) {
+        //TODO: add items to animated list
+      });
+      _listenableIterableTree.insertedItems.listen((event) {
+        //TODO: insert items in animated list
+      });
+      _listenableIterableTree.removedItems.listen((event) {
+        //TODO: remove items from animated list
+      });
     }
   }
 
-  ListenableList<T> get list => _items;
+  ListenableList<Node<T>> get list => _items;
 
   int get length => _items.length;
 
@@ -41,19 +44,19 @@ class AnimatedListController<T extends Node<T>> {
 
   AnimatedListState get _animatedList => _listKey.currentState;
 
-  void insert(int index, T item) {
+  void insert(int index, Node<T> item) {
     _items.insert(index, item);
     _animatedList.insertItem(index);
   }
 
-  void insertAll(int index, List<T> items) {
+  void insertAll(int index, List<Node<T>> items) {
     for (int i = 0; i < items.length; i++) {
       insert(index + i, items[i]);
     }
   }
 
-  T removeAt(int index) {
-    final T removedItem = _items.removeAt(index);
+  Node<T> removeAt(int index) {
+    final removedItem = _items.removeAt(index);
     if (removedItem != null) {
       _animatedList.removeItem(
         index,
@@ -64,25 +67,26 @@ class AnimatedListController<T extends Node<T>> {
     return removedItem;
   }
 
-  void removeAll(List<T> items) {
+  void removeAll(List<Node<T>> items) {
     for (final item in items) {
       item.isExpanded = false;
       Future.microtask(() => removeAt(indexOf(item)));
     }
   }
 
-  void toggleExpansion(T item) {
+  void toggleExpansion(Node<T> item) {
     if (item.isExpanded) {
       final removeItems = _items.where((element) => element.path
-          .startsWith(
-              '${item.path}${Node.PATH_SEPARATOR}${item.key}'));
+          .startsWith('${item.path}${Node.PATH_SEPARATOR}${item.key}'));
 
       removeAll(removeItems.toList());
     } else {
       if (item.children.isEmpty) return;
-      final index = _items.indexWhere(
-              (e) => e.path == item.path && e.key == item.key) +
-          1;
+      item.populateChildrenPath();
+
+      final index =
+          _items.indexWhere((e) => e.path == item.path && e.key == item.key) +
+              1;
       insertAll(index, item.children);
     }
 

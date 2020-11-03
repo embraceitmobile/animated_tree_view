@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
-import 'package:multi_level_list_view/tree_list/node.dart';
 import 'mocks.dart';
 
 void main() {

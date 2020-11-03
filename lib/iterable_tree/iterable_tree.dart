@@ -1,9 +1,12 @@
-import 'package:multi_level_list_view/tree_list/node.dart';
 
-abstract class ITreeList<T extends Node<T>> {
-  external factory ITreeList();
+import 'package:multi_level_list_view/collections/node_collections.dart';
 
-  external factory ITreeList.from(List<Node<T>> list);
+abstract class IterableTree<T extends Node<T>> {
+  external factory IterableTree();
+
+  external factory IterableTree.from(List<Node<T>> list);
+
+  Node<T> get root;
 
   void add(T item, {String path});
 

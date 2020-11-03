@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/tree_list/node.dart';
+import 'package:multi_level_list_view/collections/node_collections.dart';
 
-mixin TreeListUpdateProvider<T extends Node<T>> {
+abstract class IterableTreeUpdateProvider<T extends Node<T>> {
   final StreamController<_NodeEvent<T>> _addedItemsController =
       StreamController<_NodeEvent<T>>.broadcast();
 

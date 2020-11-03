@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/tree_list/i_tree_list.dart';
-import 'package:multi_level_list_view/tree_list/node.dart';
+import 'package:multi_level_list_view/collections/node_collections.dart';
+import 'package:multi_level_list_view/iterable_tree/iterable_tree_update_provider.dart';
+import 'package:multi_level_list_view/iterable_tree/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/tree_list/tree_list.dart';
-import 'package:multi_level_list_view/tree_list/tree_list_update_provider.dart';
 
 class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
-    with TreeListUpdateProvider<T>
-    implements ITreeList<T>, ValueListenable<TreeList<T>> {
+    with IterableTreeUpdateProvider<T>
+    implements ListenableIterableTree<T> {
   ListenableTreeList._(TreeList<T> list) : _value = list;
 
   factory ListenableTreeList() => ListenableTreeList._(TreeList<T>());
@@ -14,12 +14,15 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   factory ListenableTreeList.from(List<Node<T>> list) =>
       ListenableTreeList._(TreeList.from(list));
 
-  TreeList<T> _value;
+  final TreeList<T> _value;
 
   @protected
   @visibleForTesting
   @override
   TreeList<T> get value => _value;
+
+  @override
+  Node<T> get root => _value.root;
 
   @override
   void add(T item, {String path}) {

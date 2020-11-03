@@ -2,30 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
 extension NodeList<T extends _Node<T>> on List<_Node<T>> {
-  Node<T> get firstNode => _populateChildrenPath(this.first);
+  Node<T> get firstNode => this.first.populateChildrenPath();
 
-  Node<T> get lastNode => _populateChildrenPath(this.last);
+  Node<T> get lastNode => this.last.populateChildrenPath();
 
-  Node<T> at(int index) => _populateChildrenPath(this[index]);
+  Node<T> at(int index) => this[index].populateChildrenPath();
 
   //TODO: optimize this method, it is simply getting the first element in a loop
   Node<T> firstNodeWhere(bool test(T element), {T orElse()}) =>
-      _populateChildrenPath(this.firstWhere((e) => test(e), orElse: orElse));
+      this.firstWhere((e) => test(e), orElse: orElse).populateChildrenPath();
 
   //TODO: optimize this method, it is simply getting the last element in a loop
   Node<T> lastNodeWhere(bool Function(T element) test, {T Function() orElse}) =>
-      _populateChildrenPath(this.lastWhere((e) => test(e), orElse: orElse));
-
-
-
-  Node<T> _populateChildrenPath(Node<T> node) {
-    if (!node.hasChildren) return node;
-    if (node.children.first.path.isNotEmpty) return node;
-    for (final child in node.children) {
-      child.path = node.childrenPath;
-    }
-    return node;
-  }
+      this.lastWhere((e) => test(e), orElse: orElse).populateChildrenPath();
 }
 
 mixin Node<T extends _Node<T>> implements _Node<T> {
@@ -66,6 +55,15 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     return currentNode;
   }
 
+  Node<T> populateChildrenPath() {
+    if (children.isEmpty) return this;
+    if (children.first.path.isNotEmpty) return this;
+    for (final child in children) {
+      child.path = this.childrenPath;
+    }
+    return this;
+  }
+
   String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
   @override
@@ -80,6 +78,8 @@ mixin _Node<T> {
   String path;
 
   List<_Node<T>> get children;
+
+  _Node<T> populateChildrenPath();
 
   @override
   bool operator ==(Object other) =>
