@@ -103,8 +103,6 @@ class AnimatedListController<T extends Node<T>> {
 
   @visibleForTesting
   void handleAddItemsEvent(NodeEvent<T> event) {
-    // childrenAt(event.path).addAll(event.items);
-
     final parentKey = event.path.split(Node.PATH_SEPARATOR).last;
     final parentIndex =
         _items.indexWhere((element) => element.key == parentKey);
@@ -124,8 +122,6 @@ class AnimatedListController<T extends Node<T>> {
 
   @visibleForTesting
   void handleInsertItemsEvent(NodeEvent<T> event) {
-    childrenAt(event.path).insertAll(event.index, event.items);
-
     //check if the path is visible in the animatedList
     if (_items.any((item) => item.path == event.path)) {
       // get the last child in the path

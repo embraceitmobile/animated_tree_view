@@ -67,12 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     buildButton("Above", () {
                       controller.insert(
-                          RowItem(index: item.index), item.index - 1,
+                          RowItem(index: item.index, children: <RowItem>[]),
+                          item.index - 1,
                           path: item.path);
                     }),
                     buildButton("Below", () {
                       controller.insert(
-                          RowItem(index: item.index + 1), item.index + 1,
+                          RowItem(index: item.index + 1, children: <RowItem>[]),
+                          item.index,
                           path: item.path);
                     }),
                     buildButton("Child", () {

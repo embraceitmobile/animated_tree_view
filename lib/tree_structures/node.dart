@@ -57,7 +57,7 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     var currentNode = this;
     for (final node in nodes) {
       if (node.isEmpty) {
-        return currentNode.children.first;
+        return currentNode;
       } else {
         currentNode = currentNode.children.firstNodeWhere((n) => n.key == node);
       }
