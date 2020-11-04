@@ -32,6 +32,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final controller = InsertableMultiLevelListViewController<RowItem>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +41,54 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: MultiLevelListView<RowItem>(
+        child: MultiLevelListView<RowItem>.insertable(
           initialItems: items,
-          builder: (context, level, item) => ListTile(
-            title: Text(item.title),
-            subtitle: Text('${item.subTitle}'),
+          controller: controller,
+          builder: (context, level, item) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("Item ${item.level}-${ALPHABET_MAPPER[item.index]}"),
+                subtitle: Text('Level $level'),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red[900]),
+                  onPressed: () {},
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildButton("Above", () {}),
+                    buildButton("Below", () {}),
+                    buildButton("Child", () {}),
+                  ],
+                ),
+              ),
+              Divider(),
+            ],
           ),
         ),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget buildButton(String label, VoidCallback onPressed) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: FlatButton.icon(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.green),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        icon: Icon(Icons.add_circle, color: Colors.green),
+        label: Text(label),
+        onPressed: onPressed,
+      ),
     );
   }
 }

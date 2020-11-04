@@ -11,6 +11,7 @@ import 'package:multi_level_list_view/widgets/list_item_container.dart';
 
 export 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 export 'package:multi_level_list_view/tree_structures/node.dart';
+export 'package:multi_level_list_view/controllers/multilevel_list_view_controller.dart';
 
 typedef LeveledIndexedWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
@@ -23,7 +24,7 @@ const DEFAULT_SHOW_EXPANSION_INDICATOR = true;
 
 class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   final ListenableIterableTree<T> listenableTree;
-  final LeveledIndexedWidgetBuilder builder;
+  final LeveledIndexedWidgetBuilder<T> builder;
   final MultiLevelListViewController<T> controller;
   final bool showExpansionIndicator;
   final Icon expandIcon;
@@ -56,7 +57,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   /// items at index positions, use the alternate [MultiLevelListView.insertable]
   factory MultiLevelListView({
     Key key,
-    @required LeveledIndexedWidgetBuilder builder,
+    @required LeveledIndexedWidgetBuilder<T> builder,
     List<T> initialItems,
     EfficientMultiLevelListViewController<T> controller,
     VoidCallback onTap,
@@ -91,7 +92,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   /// node, use the more efficient [MultiLevelListView] instead.
   factory MultiLevelListView.insertable({
     Key key,
-    @required LeveledIndexedWidgetBuilder builder,
+    @required LeveledIndexedWidgetBuilder<T> builder,
     List<T> initialItems,
     InsertableMultiLevelListViewController<T> controller,
     VoidCallback onTap,
