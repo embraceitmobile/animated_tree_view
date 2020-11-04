@@ -31,12 +31,11 @@ class EfficientMultiLevelListViewController<T extends Node<T>>
       _listenableTree.clearAll(path: path);
 
   @override
-  void remove(T value, {String path}) =>
-      _listenableTree.remove(value, path: path);
+  void remove(T value) => _listenableTree.remove(value);
 
   @override
-  void removeItems(Iterable<Node<T>> iterable, {String path}) =>
-      _listenableTree.removeItems(iterable, path: path);
+  void removeItems(Iterable<Node<T>> iterable) =>
+      _listenableTree.removeItems(iterable);
 }
 
 class InsertableMultiLevelListViewController<T extends Node<T>>
@@ -63,12 +62,11 @@ class InsertableMultiLevelListViewController<T extends Node<T>>
       _listenableTree.clearAll(path: path);
 
   @override
-  void remove(T value, {String path}) =>
-      _listenableTree.remove(value, path: path);
+  void remove(T value) => _listenableTree.remove(value);
 
   @override
-  void removeItems(Iterable<Node<T>> iterable, {String path}) =>
-      _listenableTree.removeItems(iterable, path: path);
+  void removeItems(Iterable<Node<T>> iterable) =>
+      _listenableTree.removeItems(iterable);
 
   @override
   void insert(T value, int index, {String path}) =>

@@ -45,8 +45,6 @@ class ListenableList<T> extends ChangeNotifier
 
   List<T> _value;
 
-  @protected
-  @visibleForTesting
   @override
   List<T> get value => _value;
 

@@ -11,9 +11,9 @@ abstract class IterableTree<T extends Node<T>> {
 
   void addAll(Iterable<T> iterable, {String path});
 
-  void remove(T value, {String path});
+  void remove(T value);
 
-  void removeItems(Iterable<Node<T>> iterable, {String path});
+  void removeItems(Iterable<Node<T>> iterable);
 
   Iterable<Node<T>> clearAll({String path});
 }

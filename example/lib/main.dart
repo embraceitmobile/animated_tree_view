@@ -48,11 +48,14 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Text("Item ${item.level}-${ALPHABET_MAPPER[item.index]}"),
+                title:
+                    Text("Item ${item.level}-${ALPHABET_MAPPER[item.index]}"),
                 subtitle: Text('Level $level'),
                 trailing: IconButton(
                   icon: Icon(Icons.delete, color: Colors.red[900]),
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.remove(item);
+                  },
                 ),
               ),
               SingleChildScrollView(
@@ -62,9 +65,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buildButton("Above", () {}),
-                    buildButton("Below", () {}),
-                    buildButton("Child", () {}),
+                    buildButton("Above", () {
+                      controller.insert(
+                          RowItem(index: item.index), item.index - 1,
+                          path: item.path);
+                    }),
+                    buildButton("Below", () {
+                      controller.insert(
+                          RowItem(index: item.index + 1), item.index + 1,
+                          path: item.path);
+                    }),
+                    buildButton("Child", () {
+                      controller.add(RowItem(index: 1),
+                          path: item.childrenPath);
+                    }),
                   ],
                 ),
               ),

@@ -23,9 +23,9 @@ class AnimatedListController<T extends Node<T>> {
         assert(listKey != null),
         assert(removedItemBuilder != null) {
     if (tree != null) {
-      _listenableIterableTree.addedItems.listen(_handleAddItemsEvent);
-      _listenableIterableTree.insertedItems.listen(_handleInsertItemsEvent);
-      _listenableIterableTree.removedItems.listen(_handleRemoveItemsEvent);
+      _listenableIterableTree.addedItems.listen(handleAddItemsEvent);
+      _listenableIterableTree.insertedItems.listen(handleInsertItemsEvent);
+      _listenableIterableTree.removedItems.listen(handleRemoveItemsEvent);
     }
   }
 
@@ -61,6 +61,8 @@ class AnimatedListController<T extends Node<T>> {
     return removedItem;
   }
 
+  void remove(Node<T> item) => removeAt(indexOf(item));
+
   void removeAll(List<Node<T>> items) {
     for (final item in items) {
       item.isExpanded = false;
@@ -68,13 +70,12 @@ class AnimatedListController<T extends Node<T>> {
     }
   }
 
-  List<Node<T>> childrenAt(String path) {
-    if (path.isEmpty) return _items;
-    var children = _items;
-    var nodes = path.split(Node.PATH_SEPARATOR);
+  List<Node<T>> childrenAt([String path]) {
+    if (path?.isEmpty ?? true) return _items.value;
+    var children = _items.value;
+    var nodes = Node.normalizePath(path).split(Node.PATH_SEPARATOR);
     for (final node in nodes) {
-      children =
-          children.firstNodeWhere((element) => node == element.key).children;
+      children = children.firstWhere((element) => node == element.key).children;
     }
     return children;
   }
@@ -94,7 +95,8 @@ class AnimatedListController<T extends Node<T>> {
     item.isExpanded = !item.isExpanded;
   }
 
-  void _handleAddItemsEvent(NodeEvent<T> event) {
+  @visibleForTesting
+  void handleAddItemsEvent(NodeEvent<T> event) {
     childrenAt(event.path).addAll(event.items);
 
     //check if the path is visible in the animatedList
@@ -107,7 +109,8 @@ class AnimatedListController<T extends Node<T>> {
     }
   }
 
-  void _handleInsertItemsEvent(NodeEvent<T> event) {
+  @visibleForTesting
+  void handleInsertItemsEvent(NodeEvent<T> event) {
     childrenAt(event.path).insertAll(event.index, event.items);
 
     //check if the path is visible in the animatedList
@@ -120,16 +123,25 @@ class AnimatedListController<T extends Node<T>> {
     }
   }
 
-  void _handleRemoveItemsEvent(NodeEvent<T> event) {
-    final list = childrenAt(event.path);
+  @visibleForTesting
+  void handleRemoveItemsEvent(NodeEvent<T> event) {
     for (final item in event.items) {
-      list.remove(item);
-    }
+      //if item is in the root of the list, then remove the item
+      if (_items.contains(item)) {
+        remove(item);
 
-    //check if the path is visible in the animatedList
-    if (_items.any((item) => item.path == event.path)) {
-      // for visible path, remove the items from the flatList and the animatedList
-      removeAll(event.items);
+        if (item.isExpanded) {
+          //if the item is expanded, also remove its children
+          removeAll(_items.where((element) {
+            final test = element.path.startsWith(item.childrenPath);
+            return test;
+          }).toList());
+        }
+      }
+      // if item is not in the root list, then remove its value from the _items
+      if (item.normalizedPath?.isNotEmpty ?? false) {
+        childrenAt(item.path).remove(item);
+      }
     }
   }
 }

@@ -41,21 +41,15 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   String path = "";
 
   ///Provides [path] without any leading [PATH_SEPARATOR] and [ROOT_KEY]
-  String get normalizedPath {
-    var _path = path
-        .toString()
-        .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
-        .replaceAll(ROOT_KEY, "");
-
-    if (_path.startsWith(PATH_SEPARATOR)) _path = _path.substring(1);
-    return _path;
-  }
+  String get normalizedPath => Node.normalizePath(path);
 
   bool isExpanded = false;
 
   bool get hasChildren => children.isNotEmpty;
 
   int get level => PATH_SEPARATOR.allMatches(path).length;
+
+  String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
   Node<T> getNodeAt(String path) {
     assert(key != ROOT_KEY ? !path.contains(ROOT_KEY) : true,
@@ -83,7 +77,22 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     return this;
   }
 
-  String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
+  static String normalizePath(String path) {
+    var _path = path
+        .toString()
+        .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
+        .replaceAll(ROOT_KEY, "");
+
+    if (_path.startsWith(PATH_SEPARATOR)) _path = _path.substring(1);
+    return _path;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Node && key == other.key;
+
+  @override
+  int get hashCode => key.hashCode;
 
   @override
   String toString() {
