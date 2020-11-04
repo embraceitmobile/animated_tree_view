@@ -63,7 +63,7 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   T removeAt(int index, {String path}) {
     final item = _value.removeAt(index, path: path);
     notifyListeners();
-    emitRemoveItems([item], index: index, path: path);
+    emitRemoveItems([item], path: path);
     return item;
   }
 

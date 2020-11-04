@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 
 extension NodeList<T extends _Node<T>> on List<_Node<T>> {
   Node<T> get firstNode => this.first.populateChildrenPath();
@@ -23,8 +22,16 @@ extension NodeList<T extends _Node<T>> on List<_Node<T>> {
   }
 }
 
+class RootNode<T extends Node<T>> with Node<T> {
+  final List<Node<T>> children;
+  final String key;
+
+  RootNode(this.children) : this.key = Node.ROOT_KEY;
+}
+
 mixin Node<T extends _Node<T>> implements _Node<T> {
   static const PATH_SEPARATOR = ".";
+  static const ROOT_KEY = "/";
 
   List<Node<T>> get children;
 
@@ -32,6 +39,17 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   final String key = UniqueKey().toString();
 
   String path = "";
+
+  ///Provides [path] without any leading [PATH_SEPARATOR] and [ROOT_KEY]
+  String get normalizedPath {
+    var _path = path
+        .toString()
+        .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
+        .replaceAll(ROOT_KEY, "");
+
+    if (_path.startsWith(PATH_SEPARATOR)) _path = _path.substring(1);
+    return _path;
+  }
 
   bool isExpanded = false;
 
@@ -43,12 +61,7 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     assert(key != ROOT_KEY ? !path.contains(ROOT_KEY) : true,
         "Path with ROOT_KEY = $ROOT_KEY can only be called from the root node");
 
-    path = path
-        .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")
-        .replaceAll(ROOT_KEY, "");
-
-    if (path.startsWith(PATH_SEPARATOR)) path = path.substring(1);
-    final nodes = path.split(PATH_SEPARATOR);
+    final nodes = normalizedPath.split(PATH_SEPARATOR);
 
     var currentNode = this;
     for (final node in nodes) {
@@ -61,9 +74,9 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     return currentNode;
   }
 
-  Node<T> populateChildrenPath() {
+  Node<T> populateChildrenPath({bool refresh = false}) {
     if (children.isEmpty) return this;
-    if (children.first.path.isNotEmpty) return this;
+    if (!refresh && children.first.path.isNotEmpty) return this;
     for (final child in children) {
       child.path = this.childrenPath;
     }
@@ -85,7 +98,7 @@ mixin _Node<T> {
 
   List<_Node<T>> get children;
 
-  _Node<T> populateChildrenPath();
+  _Node<T> populateChildrenPath({bool refresh});
 
   @override
   bool operator ==(Object other) =>

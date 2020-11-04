@@ -28,7 +28,7 @@ void main() {
     final treeList = TreeList.from(List.of(itemsWithIds));
     final nodes = treeList.children;
     final _ = Node.PATH_SEPARATOR;
-    final root = "$_$ROOT_KEY";
+    final root = "$_${Node.ROOT_KEY}";
 
     expect(nodes.firstNode.key, equals("0A"));
     expect(nodes.firstNode.children.firstNode.path, equals("$root${_}0A"));
@@ -55,22 +55,22 @@ void main() {
         .children
         .firstNode;
 
-    final testPath = "$_$ROOT_KEY${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final testPath = "$_${Node.ROOT_KEY}${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
     final returnedNode = rootNode.getNodeAt(testPath);
 
     expect(returnedNode.key, equals(testNode.key),
         reason:
-            "getNodeAt handles path starting with PATH_SEPARATOR = $_ and ROOT_KEY = $ROOT_KEY");
+            "getNodeAt handles path starting with PATH_SEPARATOR = $_ and ROOT_KEY = ${Node.ROOT_KEY}");
 
-    final testPath2 = "$ROOT_KEY${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
+    final testPath2 = "${Node.ROOT_KEY}${_}0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
     final returnedNode2 = rootNode.getNodeAt(testPath2);
     expect(returnedNode2.key, equals(testNode.key),
-        reason: "getNodeAt handles path starting with ROOT_KEY = $ROOT_KEY");
+        reason: "getNodeAt handles path starting with ROOT_KEY = ${Node.ROOT_KEY}");
 
     final testPath3 = "0C${_}0C1C${_}0C1C2A${_}0C1C2A3A";
     final returnedNode3 = rootNode.getNodeAt(testPath3);
     expect(returnedNode3.key, equals(testNode.key),
         reason:
-            "getNodeAt handles path starting without ROOT_KEY = $ROOT_KEY and PATH_SEPARATOR = $_");
+            "getNodeAt handles path starting without ROOT_KEY = ${Node.ROOT_KEY} and PATH_SEPARATOR = $_");
   });
 }

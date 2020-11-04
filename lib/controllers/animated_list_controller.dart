@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_level_list_view/interfaces/iterable_tree_update_provider.dart';
 import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/listenables/listenable_list.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
@@ -22,15 +23,9 @@ class AnimatedListController<T extends Node<T>> {
         assert(listKey != null),
         assert(removedItemBuilder != null) {
     if (tree != null) {
-      _listenableIterableTree.addedItems.listen((event) {
-        //TODO: add items to animated list
-      });
-      _listenableIterableTree.insertedItems.listen((event) {
-        //TODO: insert items in animated list
-      });
-      _listenableIterableTree.removedItems.listen((event) {
-        //TODO: remove items from animated list
-      });
+      _listenableIterableTree.addedItems.listen(_handleAddItemsEvent);
+      _listenableIterableTree.insertedItems.listen(_handleInsertItemsEvent);
+      _listenableIterableTree.removedItems.listen(_handleRemoveItemsEvent);
     }
   }
 
@@ -38,11 +33,10 @@ class AnimatedListController<T extends Node<T>> {
 
   int get length => _items.length;
 
-  T operator [](int index) => _items[index];
-
-  int indexOf(T item) => _items.indexOf(item);
-
   AnimatedListState get _animatedList => _listKey.currentState;
+
+  int indexOf(T item) =>
+      _items.nodeIndexWhere((e) => e.path == item.path && e.key == item.key);
 
   void insert(int index, Node<T> item) {
     _items.insert(index, item);
@@ -74,6 +68,17 @@ class AnimatedListController<T extends Node<T>> {
     }
   }
 
+  List<Node<T>> childrenAt(String path) {
+    if (path.isEmpty) return _items;
+    var children = _items;
+    var nodes = path.split(Node.PATH_SEPARATOR);
+    for (final node in nodes) {
+      children =
+          children.firstNodeWhere((element) => node == element.key).children;
+    }
+    return children;
+  }
+
   void toggleExpansion(Node<T> item) {
     if (item.isExpanded) {
       final removeItems = _items.where((element) => element.path
@@ -83,12 +88,48 @@ class AnimatedListController<T extends Node<T>> {
     } else {
       if (item.children.isEmpty) return;
 
-      final index =
-          _items.nodeIndexWhere((e) => e.path == item.path && e.key == item.key) +
-              1;
-      insertAll(index, item.children);
+      insertAll(indexOf(item) + 1, item.children);
     }
 
     item.isExpanded = !item.isExpanded;
+  }
+
+  void _handleAddItemsEvent(NodeEvent<T> event) {
+    childrenAt(event.path).addAll(event.items);
+
+    //check if the path is visible in the animatedList
+    if (_items.any((item) => item.path == event.path)) {
+      // get the last child in the path
+      final lastChild =
+          _items.lastWhere((element) => element.path == event.path);
+      // for visible path, add the items in the flatList and the animatedList
+      insertAll(indexOf(lastChild) + 1, event.items);
+    }
+  }
+
+  void _handleInsertItemsEvent(NodeEvent<T> event) {
+    childrenAt(event.path).insertAll(event.index, event.items);
+
+    //check if the path is visible in the animatedList
+    if (_items.any((item) => item.path == event.path)) {
+      // get the last child in the path
+      final firstChild =
+          _items.firstWhere((element) => element.path == event.path);
+      // for visible path, add the items in the flatList and the animatedList
+      insertAll(indexOf(firstChild) + event.index, event.items);
+    }
+  }
+
+  void _handleRemoveItemsEvent(NodeEvent<T> event) {
+    final list = childrenAt(event.path);
+    for (final item in event.items) {
+      list.remove(item);
+    }
+
+    //check if the path is visible in the animatedList
+    if (_items.any((item) => item.path == event.path)) {
+      // for visible path, remove the items from the flatList and the animatedList
+      removeAll(event.items);
+    }
   }
 }

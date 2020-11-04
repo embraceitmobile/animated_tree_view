@@ -1,12 +1,8 @@
-
-
 import 'package:multi_level_list_view/interfaces/iterable_tree.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
 
-const ROOT_KEY = "/";
-
 class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
-  TreeList._(_RootNode<T> root) : _root = root {
+  TreeList._(RootNode<T> root) : _root = root {
     if (_root.hasChildren) {
       for (final node in _root.children) {
         node.path = _root.childrenPath;
@@ -14,34 +10,38 @@ class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
     }
   }
 
-  _RootNode<T> _root;
+  RootNode<T> _root;
 
   Node<T> get root => _root;
 
   List<Node<T>> get children => _root.children;
 
-  factory TreeList() => TreeList._(_RootNode(<T>[]));
+  factory TreeList() => TreeList._(RootNode(<T>[]));
 
-  factory TreeList.from(List<Node<T>> list) => TreeList._(_RootNode(list));
+  factory TreeList.from(List<Node<T>> list) => TreeList._(RootNode(list));
 
   void add(T element, {String path}) {
     final node = path == null ? _root : _root.getNodeAt(path);
     node.children.add(element);
+    node.populateChildrenPath(refresh: true);
   }
 
   void addAll(Iterable<T> iterable, {String path}) {
     final node = path == null ? _root : _root.getNodeAt(path);
     node.children.addAll(iterable);
+    node.populateChildrenPath(refresh: true);
   }
 
   void insert(T element, int index, {String path}) {
     final node = path == null ? _root : _root.getNodeAt(path);
     node.children.insert(index, element);
+    node.populateChildrenPath(refresh: true);
   }
 
   void insertAll(Iterable<T> iterable, int index, {String path}) {
     final node = path == null ? _root : _root.getNodeAt(path);
     node.children.insertAll(index, iterable);
+    node.populateChildrenPath(refresh: true);
   }
 
   void remove(T value, {String path}) {
@@ -70,11 +70,4 @@ class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
     node.children.clear();
     return items;
   }
-}
-
-class _RootNode<T extends Node<T>> with Node<T> {
-  final List<Node<T>> children;
-  final String key;
-
-  _RootNode(this.children) : this.key = ROOT_KEY;
 }
