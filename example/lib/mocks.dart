@@ -15,19 +15,19 @@ List<RowItem> items = [
   RowItem(index: 1, children: <RowItem>[
     RowItem(index: 1, children: <RowItem>[]),
   ]),
-  RowItem(index: 2),
+  RowItem(index: 2, children: <RowItem>[]),
   RowItem(index: 3, children: <RowItem>[
-    RowItem(index: 1),
-    RowItem(index: 2),
+    RowItem(index: 1, children: <RowItem>[]),
+    RowItem(index: 2, children: <RowItem>[]),
     RowItem(index: 3, children: <RowItem>[
       RowItem(index: 1, children: <RowItem>[
-        RowItem(index: 1),
-        RowItem(index: 2),
-        RowItem(index: 3),
+        RowItem(index: 1, children: <RowItem>[]),
+        RowItem(index: 2, children: <RowItem>[]),
+        RowItem(index: 3, children: <RowItem>[]),
       ]),
     ]),
   ]),
-  RowItem(index: 4),
+  RowItem(index: 4, children: <RowItem>[]),
 ];
 
 const Map<int, String> ALPHABET_MAPPER = {

@@ -40,9 +40,6 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
 
   String path = "";
 
-  ///Provides [path] without any leading [PATH_SEPARATOR] and [ROOT_KEY]
-  String get normalizedPath => Node.normalizePath(path);
-
   bool isExpanded = false;
 
   bool get hasChildren => children.isNotEmpty;
@@ -55,7 +52,7 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     assert(key != ROOT_KEY ? !path.contains(ROOT_KEY) : true,
         "Path with ROOT_KEY = $ROOT_KEY can only be called from the root node");
 
-    final nodes = normalizedPath.split(PATH_SEPARATOR);
+    final nodes = Node.normalizePath(path).split(PATH_SEPARATOR);
 
     var currentNode = this;
     for (final node in nodes) {
@@ -78,6 +75,7 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   }
 
   static String normalizePath(String path) {
+    if (path?.isEmpty ?? true) return "";
     var _path = path
         .toString()
         .replaceAll("$PATH_SEPARATOR$ROOT_KEY", "")

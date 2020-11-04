@@ -80,32 +80,45 @@ class AnimatedListController<T extends Node<T>> {
     return children;
   }
 
+  void collapseNode(Node<T> item) {
+    final removeItems = _items.where((element) => element.path
+        .startsWith('${item.path}${Node.PATH_SEPARATOR}${item.key}'));
+
+    removeAll(removeItems.toList());
+    item.isExpanded = false;
+  }
+
+  void expandNode(Node<T> item) {
+    if (item.children.isEmpty) return;
+    insertAll(indexOf(item) + 1, item.children);
+    item.isExpanded = true;
+  }
+
   void toggleExpansion(Node<T> item) {
-    if (item.isExpanded) {
-      final removeItems = _items.where((element) => element.path
-          .startsWith('${item.path}${Node.PATH_SEPARATOR}${item.key}'));
-
-      removeAll(removeItems.toList());
-    } else {
-      if (item.children.isEmpty) return;
-
-      insertAll(indexOf(item) + 1, item.children);
-    }
-
-    item.isExpanded = !item.isExpanded;
+    if (item.isExpanded)
+      collapseNode(item);
+    else
+      expandNode(item);
   }
 
   @visibleForTesting
   void handleAddItemsEvent(NodeEvent<T> event) {
-    childrenAt(event.path).addAll(event.items);
+    // childrenAt(event.path).addAll(event.items);
 
-    //check if the path is visible in the animatedList
-    if (_items.any((item) => item.path == event.path)) {
-      // get the last child in the path
-      final lastChild =
-          _items.lastWhere((element) => element.path == event.path);
-      // for visible path, add the items in the flatList and the animatedList
-      insertAll(indexOf(lastChild) + 1, event.items);
+    final parentKey = event.path.split(Node.PATH_SEPARATOR).last;
+    final parentIndex =
+        _items.indexWhere((element) => element.key == parentKey);
+    final parentNode = _items[parentIndex];
+    for (final item in event.items) {
+      item.path = event.path;
+    }
+
+    if (!parentNode.isExpanded) {
+      expandNode(parentNode);
+    } else {
+      // if the node is expanded, add the items in the flatList and
+      // the animatedList
+      insertAll(parentIndex + parentNode.children.length, event.items);
     }
   }
 
@@ -132,14 +145,13 @@ class AnimatedListController<T extends Node<T>> {
 
         if (item.isExpanded) {
           //if the item is expanded, also remove its children
-          removeAll(_items.where((element) {
-            final test = element.path.startsWith(item.childrenPath);
-            return test;
-          }).toList());
+          removeAll(_items
+              .where((element) => element.path.startsWith(item.childrenPath))
+              .toList());
         }
       }
       // if item is not in the root list, then remove its value from the _items
-      if (item.normalizedPath?.isNotEmpty ?? false) {
+      if (Node.normalizePath(item.path).isNotEmpty ?? false) {
         childrenAt(item.path).remove(item);
       }
     }

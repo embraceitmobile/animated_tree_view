@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           path: item.path);
                     }),
                     buildButton("Child", () {
-                      controller.add(RowItem(index: 1),
+                      controller.add(RowItem(index: 1, children: <RowItem>[]),
                           path: item.childrenPath);
                     }),
                   ],
