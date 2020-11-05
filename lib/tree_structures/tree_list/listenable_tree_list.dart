@@ -46,10 +46,42 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
+  int insertBefore(T value, T itemBefore, {String path}) {
+    final index = _value.insertBefore(value, itemBefore, path: path);
+    notifyListeners();
+    emitInsertItems([value], index, path: path);
+    return index;
+  }
+
+  @override
+  int insertAfter(T value, T itemAfter, {String path}) {
+    final index = _value.insertAfter(value, itemAfter, path: path);
+    notifyListeners();
+    emitInsertItems([value], index, path: path);
+    return index;
+  }
+
+  @override
   void insertAll(Iterable<T> iterable, int index, {String path}) {
     _value.insertAll(iterable, index, path: path);
     notifyListeners();
     emitInsertItems(iterable, index, path: path);
+  }
+
+  @override
+  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String path}) {
+    final index = _value.insertAllAfter(iterable, itemBefore, path: path);
+    notifyListeners();
+    emitInsertItems(iterable, index, path: path);
+    return index;
+  }
+
+  @override
+  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String path}) {
+    final index = _value.insertAllAfter(iterable, itemAfter, path: path);
+    notifyListeners();
+    emitInsertItems(iterable, index, path: path);
+    return index;
   }
 
   @override

@@ -66,15 +66,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     buildButton("Above", () {
-                      controller.insert(
+                      controller.insertBefore(
                           RowItem(index: item.index, children: <RowItem>[]),
-                          item.index - 1,
+                          item,
                           path: item.path);
                     }),
                     buildButton("Below", () {
-                      controller.insert(
+                      controller.insertAfter(
                           RowItem(index: item.index + 1, children: <RowItem>[]),
-                          item.index,
+                          item,
                           path: item.path);
                     }),
                     buildButton("Child", () {

@@ -38,10 +38,44 @@ class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
     node.populateChildrenPath(refresh: true);
   }
 
+  int insertAfter(T value, T itemAfter, {String path}) {
+    final node = path == null ? _root : _root.getNodeAt(path);
+    final index = node.children.indexOf(itemAfter) + 1;
+    node.children.insert(index, value);
+    node.populateChildrenPath(refresh: true);
+    return index;
+  }
+
+  int insertBefore(T value, T itemBefore, {String path}) {
+    final node = path == null ? _root : _root.getNodeAt(path);
+    final index = node.children.indexOf(itemBefore);
+    node.children.insert(index, value);
+    node.populateChildrenPath(refresh: true);
+    return index;
+  }
+
   void insertAll(Iterable<T> iterable, int index, {String path}) {
     final node = path == null ? _root : _root.getNodeAt(path);
     node.children.insertAll(index, iterable);
     node.populateChildrenPath(refresh: true);
+  }
+
+  @override
+  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String path}) {
+    final node = path == null ? _root : _root.getNodeAt(path);
+    final index = node.children.indexOf(itemAfter);
+    node.children.insertAll(index, iterable);
+    node.populateChildrenPath(refresh: true);
+    return index;
+  }
+
+  @override
+  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String path}) {
+    final node = path == null ? _root : _root.getNodeAt(path);
+    final index = node.children.indexOf(itemBefore) - 1;
+    node.children.insertAll(index, iterable);
+    node.populateChildrenPath(refresh: true);
+    return index;
   }
 
   void remove(T value, {String path}) {

@@ -18,15 +18,22 @@ abstract class IterableTree<T extends Node<T>> {
   Iterable<Node<T>> clearAll({String path});
 }
 
-abstract class InsertableIterableTree<T extends Node<T>>
-    with IterableTree<T> {
+abstract class InsertableIterableTree<T extends Node<T>> with IterableTree<T> {
   external factory InsertableIterableTree();
 
   external factory InsertableIterableTree.from(List<Node<T>> list);
 
   void insert(T value, int index, {String path});
 
+  int insertAfter(T value, T itemAfter, {String path});
+
+  int insertBefore(T value, T itemBefore, {String path});
+
   void insertAll(Iterable<T> iterable, int index, {String path});
+
+  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String path});
+
+  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String path});
 
   T removeAt(int index, {String path});
 }
