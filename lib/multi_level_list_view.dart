@@ -32,14 +32,14 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   final Icon expandIcon;
   final Icon collapseIcon;
   final double indentPadding;
-  final VoidCallback onTap;
+  final ValueSetter<T> onItemTap;
 
   const MultiLevelListView._({
     Key key,
     @required this.builder,
     this.listenableTree,
     this.controller,
-    this.onTap,
+    this.onItemTap,
     this.showExpansionIndicator,
     this.indentPadding,
     this.expandIcon,
@@ -62,7 +62,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
     @required LeveledIndexedWidgetBuilder<T> builder,
     List<T> initialItems,
     EfficientMultiLevelListViewController<T> controller,
-    VoidCallback onTap,
+    ValueSetter<T> onItemTap,
     bool showExpansionIndicator,
     double indentPadding,
     Icon expandIcon,
@@ -73,7 +73,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
         builder: builder,
         listenableTree: ListenableTreeList.from(initialItems ?? <T>[]),
         controller: controller,
-        onTap: onTap,
+        onItemTap: onItemTap,
         showExpansionIndicator:
             showExpansionIndicator ?? DEFAULT_SHOW_EXPANSION_INDICATOR,
         indentPadding: indentPadding ?? DEFAULT_INDENT_PADDING,
@@ -97,7 +97,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
     @required LeveledIndexedWidgetBuilder<T> builder,
     List<T> initialItems,
     InsertableMultiLevelListViewController<T> controller,
-    VoidCallback onTap,
+    ValueSetter<T> onItemTap,
     bool showExpansionIndicator,
     double indentPadding,
     Icon expandIcon,
@@ -108,7 +108,7 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
         builder: builder,
         listenableTree: ListenableTreeList.from(initialItems ?? <T>[]),
         controller: controller,
-        onTap: onTap,
+        onItemTap: onItemTap,
         showExpansionIndicator:
             showExpansionIndicator ?? DEFAULT_SHOW_EXPANSION_INDICATOR,
         indentPadding: indentPadding ?? DEFAULT_INDENT_PADDING,
@@ -179,7 +179,7 @@ class _MultiLevelListView<T extends Node<T>>
           ? null
           : (item) {
               _animatedListController.toggleExpansion(item);
-              if (widget.onTap != null) widget.onTap();
+              if (widget.onItemTap != null) widget.onItemTap(item);
             },
     );
 

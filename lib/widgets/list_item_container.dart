@@ -26,7 +26,8 @@ class ListItemContainer<T extends Node<T>> extends StatelessWidget {
     return SizeTransition(
       axis: Axis.vertical,
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-      child: InkWell(
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () => onTap(item),
         child: Stack(
           children: <Widget>[

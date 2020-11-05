@@ -33,10 +33,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller = InsertableMultiLevelListViewController<RowItem>();
+  final globalKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -44,6 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: MultiLevelListView<RowItem>.insertable(
           initialItems: items,
           controller: controller,
+          onItemTap: (item) => globalKey.currentState.showSnackBar(SnackBar(
+              duration: Duration(milliseconds: 500),
+              content: Text(
+                  'on tap item \nItem ${item.level}-${ALPHABET_MAPPER[item.index]}'))),
           builder: (context, level, item) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -73,7 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     }),
                     buildButton("Below", () {
                       controller.insertAfter(
-                          RowItem(index: item.index + 1, children: <RowItem>[]),
+                          RowItem(
+                              index: item.index + 1, children: <RowItem>[]),
                           item,
                           path: item.path);
                     }),

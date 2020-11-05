@@ -14,6 +14,8 @@ abstract class MultiLevelListViewController<T extends Node<T>>
   void scrollToItem(T item);
 
   void scrollToIndex(int index);
+
+  void toggleNodeExpandCollapse(T item);
 }
 
 class EfficientMultiLevelListViewController<T extends Node<T>>
@@ -60,6 +62,10 @@ class EfficientMultiLevelListViewController<T extends Node<T>>
   @override
   void scrollToItem(T item) =>
       _scrollController.scrollToIndex(_listController.indexOf(item));
+
+  @override
+  void toggleNodeExpandCollapse(T item) =>
+      _listController.toggleExpansion(item);
 }
 
 class InsertableMultiLevelListViewController<T extends Node<T>>
@@ -134,4 +140,8 @@ class InsertableMultiLevelListViewController<T extends Node<T>>
   @override
   void scrollToItem(T item) =>
       _scrollController.scrollToIndex(_listController.indexOf(item));
+
+  @override
+  void toggleNodeExpandCollapse(T item) =>
+      _listController.toggleExpansion(item);
 }
