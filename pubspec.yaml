@@ -5,9 +5,11 @@ author: jawwad-hassan89
 homepage: https://github.com/embraceitmobile/multi-level-listview
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
+  scroll_to_index: ^1.0.6
+
   flutter:
     sdk: flutter
 

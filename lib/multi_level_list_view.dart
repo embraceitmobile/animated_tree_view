@@ -3,11 +3,13 @@ library multi_level_list_view;
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/controllers/animated_list_controller.dart';
 import 'package:multi_level_list_view/controllers/multilevel_list_view_controller.dart';
+import 'package:multi_level_list_view/interfaces/iterable_tree_update_provider.dart';
 import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
 import 'package:multi_level_list_view/tree_structures/tree_list/listenable_tree_list.dart';
 import 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 import 'package:multi_level_list_view/widgets/list_item_container.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 export 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 export 'package:multi_level_list_view/tree_structures/node.dart';
@@ -122,6 +124,7 @@ class _MultiLevelListView<T extends Node<T>>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListController<T> _animatedListController;
+  AutoScrollController _scrollController;
 
   @override
   void initState() {
@@ -129,11 +132,15 @@ class _MultiLevelListView<T extends Node<T>>
     if (widget.controller != null)
       widget.controller.attachTree(widget.listenableTree);
 
+    _scrollController = AutoScrollController();
     _animatedListController = AnimatedListController(
       listKey: _listKey,
       tree: widget.listenableTree,
       removedItemBuilder: _buildRemovedItem,
     );
+
+    widget.listenableTree.addedItems.listen(_handleItemAdditionEvent);
+    widget.listenableTree.insertedItems.listen(_handleItemAdditionEvent);
   }
 
   @override
@@ -144,15 +151,16 @@ class _MultiLevelListView<T extends Node<T>>
     return AnimatedList(
       key: _listKey,
       initialItemCount: list.length,
+      controller: _scrollController,
       itemBuilder: (context, index, animation) =>
-          _buildItem(list[index], animation),
+          _buildItem(list[index], animation, index: index),
     );
   }
 
   /// Used to build list items that haven't been removed.
-  Widget _buildItem(T item, Animation<double> animation,
-      {bool remove = false}) {
-    return ListItemContainer(
+  Widget _buildItem(Node<T> item, Animation<double> animation,
+      {bool remove = false, int index}) {
+    final itemContainer = ListItemContainer(
       animation: animation,
       item: item,
       child: widget.builder(context, item.level, item),
@@ -168,9 +176,25 @@ class _MultiLevelListView<T extends Node<T>>
               if (widget.onTap != null) widget.onTap();
             },
     );
+
+    if (index == null) return itemContainer;
+
+    return AutoScrollTag(
+      key: ValueKey(item.key),
+      controller: _scrollController,
+      index: index,
+      child: itemContainer,
+    );
   }
 
   Widget _buildRemovedItem(
           T item, BuildContext context, Animation<double> animation) =>
       _buildItem(item, animation, remove: true);
+
+  void _handleItemAdditionEvent(NodeEvent<T> event) {
+    Future.delayed(
+        Duration(milliseconds: 300),
+        () => _scrollController
+            .scrollToIndex(_animatedListController.indexOf(event.items.first)));
+  }
 }
