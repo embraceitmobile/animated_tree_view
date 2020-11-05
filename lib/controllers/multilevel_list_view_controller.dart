@@ -1,20 +1,37 @@
+import 'package:multi_level_list_view/controllers/animated_list_controller.dart';
 import 'package:multi_level_list_view/interfaces/iterable_tree.dart';
 import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 abstract class MultiLevelListViewController<T extends Node<T>>
     implements IterableTree<T> {
-  void attachTree(IterableTree<T> tree);
+  void attach(
+      {IterableTree<T> tree,
+      AnimatedListController listController,
+      AutoScrollController scrollController});
+
+  void scrollToItem(T item);
+
+  void scrollToIndex(int index);
 }
 
 class EfficientMultiLevelListViewController<T extends Node<T>>
     implements MultiLevelListViewController<T> {
   ListenableIterableTree<T> _listenableTree;
+  AnimatedListController _listController;
+  AutoScrollController _scrollController;
 
   EfficientMultiLevelListViewController();
 
-  void attachTree(IterableTree<T> listenableTree) =>
-      this._listenableTree = listenableTree;
+  void attach(
+      {IterableTree<T> tree,
+      AnimatedListController listController,
+      AutoScrollController scrollController}) {
+    _listenableTree = tree;
+    _listController = listController;
+    _scrollController = scrollController;
+  }
 
   @override
   Node<T> get root => _listenableTree.root;
@@ -36,16 +53,31 @@ class EfficientMultiLevelListViewController<T extends Node<T>>
   @override
   void removeItems(Iterable<Node<T>> iterable) =>
       _listenableTree.removeItems(iterable);
+
+  @override
+  void scrollToIndex(int index) => _scrollController.scrollToIndex(index);
+
+  @override
+  void scrollToItem(T item) =>
+      _scrollController.scrollToIndex(_listController.indexOf(item));
 }
 
 class InsertableMultiLevelListViewController<T extends Node<T>>
     implements MultiLevelListViewController<T>, InsertableIterableTree<T> {
   ListenableInsertableIterableTree<T> _listenableTree;
+  AnimatedListController _listController;
+  AutoScrollController _scrollController;
 
   InsertableMultiLevelListViewController();
 
-  void attachTree(IterableTree<T> listenableTree) =>
-      this._listenableTree = listenableTree;
+  void attach(
+      {IterableTree<T> tree,
+      AnimatedListController listController,
+      AutoScrollController scrollController}) {
+    _listenableTree = tree;
+    _listController = listController;
+    _scrollController = scrollController;
+  }
 
   @override
   Node<T> get root => _listenableTree.root;
@@ -95,4 +127,11 @@ class InsertableMultiLevelListViewController<T extends Node<T>>
   @override
   Iterable<Node<T>> clearAll({String path}) =>
       _listenableTree.clearAll(path: path);
+
+  @override
+  void scrollToIndex(int index) => _scrollController.scrollToIndex(index);
+
+  @override
+  void scrollToItem(T item) =>
+      _scrollController.scrollToIndex(_listController.indexOf(item));
 }
