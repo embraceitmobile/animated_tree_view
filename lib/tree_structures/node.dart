@@ -44,7 +44,7 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
 
   bool get hasChildren => children.isNotEmpty;
 
-  int get level => PATH_SEPARATOR.allMatches(path).length;
+  int get level => PATH_SEPARATOR.allMatches(path).length - 1;
 
   String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
