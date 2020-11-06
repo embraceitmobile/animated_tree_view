@@ -130,7 +130,15 @@ class _MultiLevelListView<T extends Node<T>>
   void initState() {
     super.initState();
 
-    _scrollController = AutoScrollController();
+    widget.listenableTree.addedItems.listen(_handleItemAdditionEvent);
+    widget.listenableTree.insertedItems.listen(_handleItemAdditionEvent);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _scrollController ??= AutoScrollController();
 
     _animatedListController = AnimatedListController(
       listKey: _listKey,
@@ -138,15 +146,11 @@ class _MultiLevelListView<T extends Node<T>>
       removedItemBuilder: _buildRemovedItem,
     );
 
-    if (widget.controller != null)
-      widget.controller.attach(
-        tree: widget.listenableTree,
-        scrollController: _scrollController,
-        listController: _animatedListController,
-      );
-
-    widget.listenableTree.addedItems.listen(_handleItemAdditionEvent);
-    widget.listenableTree.insertedItems.listen(_handleItemAdditionEvent);
+    widget.controller.attach(
+      tree: widget.listenableTree,
+      scrollController: _scrollController,
+      listController: _animatedListController,
+    );
   }
 
   @override
