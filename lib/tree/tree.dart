@@ -1,47 +1,56 @@
-abstract class Tree<T> {
-  void add(T value, {String path});
+import 'package:flutter/material.dart';
+import 'node.dart';
+import 'i_tree.dart';
 
-  void remove(T element, {String path});
+class Tree<T> implements ITree<T> {
+  Tree({this.children = const {}});
 
-  void addAll(Iterable<T> iterable, {String path});
+  factory Tree.fromList(List<ListNode<T>> list) => Tree();
 
-  void removeAll(Iterable<T> iterable, {String path});
+  final Map<String, Node<T>> children;
 
-  void removeWhere(bool test(T element), {String path});
+  @override
+  int get length => children.length;
 
-  void clear({String path});
+  @override
+  // TODO: implement root
+  Node<T> get root => throw UnimplementedError();
 
-  T elementAt(String path);
+  T operator [](String at) {
+    // TODO: implement []
+    throw UnimplementedError();
+  }
 
-  T operator [](covariant dynamic at);
+  void operator []=(String at, T value) {
+    // TODO: implement []=
+  }
 
-  void operator []=(covariant dynamic at, T value);
+  void add(T value, {String path}) {
+    // TODO: implement add
+  }
 
-  int get length;
-}
+  void addAll(Iterable<T> iterable, {String path}) {
+    // TODO: implement addAll
+  }
 
-abstract class IndexedTree<T> extends Tree<T> {
-  void insert(int index, T element, {String path});
+  void clear({String path}) {
+    // TODO: implement clear
+  }
 
-  void insertAll(int index, Iterable<T> iterable, {String path});
+  T elementAt(String path) {
+    // TODO: implement elementAt
+    throw UnimplementedError();
+  }
 
-  void insertAfter(T element, {String path});
+  void remove(T element, {String path}) {
+    // TODO: implement remove
+  }
 
-  void insertBefore(T element, {String path});
+  void removeAll(Iterable<T> iterable, {String path}) {
+    // TODO: implement removeAll
+  }
 
-  T removeAt(int index, {String path});
-
-  set first(T value);
-
-  T get first;
-
-  set last(T value);
-
-  T get last;
-
-  int indexWhere(bool test(T element), {int start = 0, String path});
-
-  T firstWhere(bool test(T element), {T orElse(), String path});
-
-  T lastWhere(bool test(T element), {T orElse(), String path});
+  void removeWhere(bool Function(T element) test, {String path}) {
+    // TODO: implement removeWhere
+  }
 }

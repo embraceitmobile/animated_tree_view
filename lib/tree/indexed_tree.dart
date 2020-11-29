@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'node.dart';
-import 'tree.dart';
+import 'i_tree.dart';
 
-class ListTree<T> implements IndexedTree<T> {
-  ListTree({this.children = const []});
+class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
+  IndexedTree({this.children = const []});
+
+  factory IndexedTree.fromMap(Map<String, Node<T>> map) => IndexedTree();
 
   final List<Node<T>> children;
 
   @override
   int get length => children.length;
+
+  @override
+  // TODO: implement root
+  Node<T> get root => throw UnimplementedError();
 
   T operator [](int at) {
     // TODO: implement []

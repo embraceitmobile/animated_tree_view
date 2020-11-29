@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/interfaces/iterable_tree_update_provider.dart';
-import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
 import 'package:multi_level_list_view/tree_structures/tree_list/tree_list.dart';
 
