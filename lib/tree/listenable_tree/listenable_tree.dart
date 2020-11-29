@@ -11,11 +11,6 @@ class ListenableTree<T> extends ChangeNotifier
     implements ITree<T>, IListenableTree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
 
-  factory ListenableTree.fromMap(Map<String, MapNode<T>> children) =>
-      ListenableTree(Tree<T>(children: children));
-
-  factory ListenableTree.fromList(List<ListNode<T>> list) =>
-      ListenableTree(Tree.fromList(list));
 
   final Tree<T> _value;
 

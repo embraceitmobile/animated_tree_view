@@ -12,7 +12,7 @@ class ListNode<T> with NodeViewData<T> implements Node<T> {
     return ListNode();
   }
 
-  UnmodifiableListView<Node<T>> get nodes => children;
+  UnmodifiableListView<Node<T>> toList() => children;
 }
 
 class MapNode<T> with NodeViewData<T> implements Node<T> {
@@ -25,7 +25,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T> {
     return MapNode();
   }
 
-  UnmodifiableListView<Node<T>> get nodes => children.values;
+  UnmodifiableListView<Node<T>> toList() => children.values;
 }
 
 mixin NodeViewData<T> {
@@ -39,10 +39,10 @@ mixin NodeViewData<T> {
 
   String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
-  UnmodifiableListView<Node<T>> get nodes;
+  UnmodifiableListView<Node<T>> toList();
 }
 
-abstract class Node<T> with NodeViewData<T>{
+abstract class Node<T> with NodeViewData<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
 

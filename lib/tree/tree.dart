@@ -3,9 +3,11 @@ import 'node.dart';
 import 'i_tree.dart';
 
 class Tree<T> implements ITree<T> {
-  Tree({this.children = const {}});
+  Tree._({this.children = const {}});
 
-  factory Tree.fromList(List<ListNode<T>> list) => Tree();
+  factory Tree({Map<String, Node<T>> nodes}) => Tree._();
+
+  factory Tree.fromList(List<ListNode<T>> list) => Tree._();
 
   final Map<String, Node<T>> children;
 
