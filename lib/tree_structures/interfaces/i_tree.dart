@@ -30,10 +30,10 @@ abstract class ITree<T> {
   int get length;
 }
 
-abstract class IInsertableTree<T> extends ITree<T> {
-  external factory IInsertableTree();
+abstract class IIndexedTree<T> extends ITree<T> {
+  external factory IIndexedTree();
 
-  external factory IInsertableTree.from(List<ListNode<T>> list);
+  external factory IIndexedTree.from(List<ListNode<T>> list);
 
   void insert(int index, T element, {String path});
 

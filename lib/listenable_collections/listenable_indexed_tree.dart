@@ -1,22 +1,22 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/tree_structures/insertable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/indexed_tree.dart';
 import 'package:multi_level_list_view/tree_structures/interfaces/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree_structures/interfaces/i_tree.dart';
 import 'package:multi_level_list_view/tree_structures/node.dart';
 import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
 
-class ListenableInsertableTree<T> extends ChangeNotifier
+class ListenableIndexedTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
-    implements IInsertableTree<T>, IListenableIndexedTree<T> {
-  ListenableInsertableTree._(InsertableTree<T> tree) : _value = tree;
+    implements IIndexedTree<T>, IListenableIndexedTree<T> {
+  ListenableIndexedTree(IndexedTree<T> tree) : _value = tree;
 
-  factory ListenableInsertableTree({List<ListNode<T>> children = const []}) =>
-      ListenableInsertableTree._(InsertableTree<T>());
+  factory ListenableIndexedTree.fromList(List<Node<T>> list) =>
+      ListenableIndexedTree(IndexedTree<T>.fromList(list));
 
-  factory ListenableInsertableTree.fromMap(Map<String, Node<T>> map) =>
-      ListenableInsertableTree._(InsertableTree.fromMap(map));
+  factory ListenableIndexedTree.fromMap(Map<String, Node<T>> map) =>
+      ListenableIndexedTree(IndexedTree.fromMap(map));
 
-  final InsertableTree<T> _value;
+  final IndexedTree<T> _value;
 
   @override
   T first;
@@ -25,13 +25,13 @@ class ListenableInsertableTree<T> extends ChangeNotifier
   T last;
 
   @override
-  T operator [](covariant at) {
+  T operator [](int at) {
     // TODO: implement []
     throw UnimplementedError();
   }
 
   @override
-  void operator []=(covariant at, T value) {
+  void operator []=(int at, T value) {
     // TODO: implement []=
   }
 
@@ -57,7 +57,8 @@ class ListenableInsertableTree<T> extends ChangeNotifier
   }
 
   @override
-  T firstWhere(bool Function(T element) test, {T Function() orElse, String path}) {
+  T firstWhere(bool Function(T element) test,
+      {T Function() orElse, String path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
@@ -89,7 +90,8 @@ class ListenableInsertableTree<T> extends ChangeNotifier
   }
 
   @override
-  T lastWhere(bool Function(T element) test, {T Function() orElse, String path}) {
+  T lastWhere(bool Function(T element) test,
+      {T Function() orElse, String path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
@@ -125,5 +127,5 @@ class ListenableInsertableTree<T> extends ChangeNotifier
 
   @override
   // TODO: implement value
-  InsertableTree<T> get value => throw UnimplementedError();
+  IndexedTree<T> get value => throw UnimplementedError();
 }

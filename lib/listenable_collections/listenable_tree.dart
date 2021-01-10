@@ -5,22 +5,27 @@ import 'package:multi_level_list_view/tree_structures/node.dart';
 import 'package:multi_level_list_view/tree_structures/tree.dart';
 import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
 
-
 class ListenableTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
     implements ITree<T>, IListenableTree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
 
+  factory ListenableTree.fromList(List<Node<T>> list) =>
+      ListenableTree(Tree<T>.fromList(list));
+
+  factory ListenableTree.fromMap(Map<String, Node<T>> map) =>
+      ListenableTree(Tree.fromMap(map));
+
   final Tree<T> _value;
 
   @override
-  T operator [](covariant at) {
+  T operator [](String at) {
     // TODO: implement []
     throw UnimplementedError();
   }
 
   @override
-  void operator []=(covariant at, T value) {
+  void operator []=(String at, T value) {
     // TODO: implement []=
   }
 
