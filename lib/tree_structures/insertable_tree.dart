@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'node.dart';
-import 'i_tree.dart';
+import 'interfaces/i_tree.dart';
 
-class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
-  IndexedTree({this.children = const []});
+class InsertableTree<T> implements ITree<T>, IInsertableTree<T> {
+  InsertableTree() : children = <Node<T>>[];
 
-  factory IndexedTree.fromMap(Map<String, Node<T>> map) => IndexedTree();
+  factory InsertableTree.fromMap(Map<String, Node<T>> map) => InsertableTree();
+
+  factory InsertableTree.fromList(List<Node<T>> list) => InsertableTree();
 
   final List<Node<T>> children;
 

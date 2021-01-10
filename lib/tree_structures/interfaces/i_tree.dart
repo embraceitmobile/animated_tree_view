@@ -1,4 +1,4 @@
-import 'node.dart';
+import '../node.dart';
 
 abstract class ITree<T> {
   external factory ITree();
@@ -30,10 +30,10 @@ abstract class ITree<T> {
   int get length;
 }
 
-abstract class IIndexedTree<T> extends ITree<T> {
-  external factory IIndexedTree();
+abstract class IInsertableTree<T> extends ITree<T> {
+  external factory IInsertableTree();
 
-  external factory IIndexedTree.from(List<ListNode<T>> list);
+  external factory IInsertableTree.from(List<ListNode<T>> list);
 
   void insert(int index, T element, {String path});
 

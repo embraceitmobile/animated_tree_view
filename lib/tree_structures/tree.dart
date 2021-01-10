@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'node.dart';
-import 'i_tree.dart';
+import 'interfaces/i_tree.dart';
 
 class Tree<T> implements ITree<T> {
-  Tree._({this.children = const {}});
+  Tree() : children = <String, Node<T>>{};
 
-  factory Tree({Map<String, Node<T>> nodes}) => Tree._();
+  factory Tree.fromMap(Map<String, Node<T>> nodes) => Tree();
 
-  factory Tree.fromList(List<ListNode<T>> list) => Tree._();
+  factory Tree.fromList(List<Node<T>> list) => Tree();
 
   final Map<String, Node<T>> children;
 

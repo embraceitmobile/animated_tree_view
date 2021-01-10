@@ -1,16 +1,15 @@
-import 'package:multi_level_list_view/tree/tree.dart';
 import 'package:flutter/foundation.dart';
+import 'package:multi_level_list_view/tree_structures/interfaces/i_listenable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/interfaces/i_tree.dart';
+import 'package:multi_level_list_view/tree_structures/node.dart';
+import 'package:multi_level_list_view/tree_structures/tree.dart';
+import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
 
-import '../listenable_tree_interfaces.dart';
-import '../node.dart';
-import '../i_tree.dart';
-import '../tree_update_provider.dart';
 
 class ListenableTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
     implements ITree<T>, IListenableTree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
-
 
   final Tree<T> _value;
 

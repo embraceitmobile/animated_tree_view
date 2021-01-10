@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
+import '../insertable_tree.dart';
+import '../tree.dart';
+import '../tree_update_provider.dart';
 import 'i_tree.dart';
-import 'indexed_tree.dart';
-import 'tree.dart';
-import 'tree_update_provider.dart';
 
 abstract class IListenableTree<T>
     with TreeUpdateProvider<T>
@@ -10,4 +10,4 @@ abstract class IListenableTree<T>
 
 abstract class IListenableIndexedTree<T>
     with TreeUpdateProvider<T>
-    implements ITree<T>, IIndexedTree<T>, ValueListenable<IndexedTree<T>> {}
+    implements ITree<T>, IInsertableTree<T>, ValueListenable<InsertableTree<T>> {}

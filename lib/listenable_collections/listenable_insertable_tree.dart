@@ -1,24 +1,22 @@
-import 'package:multi_level_list_view/tree/tree.dart';
 import 'package:flutter/foundation.dart';
+import 'package:multi_level_list_view/tree_structures/insertable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/interfaces/i_listenable_tree.dart';
+import 'package:multi_level_list_view/tree_structures/interfaces/i_tree.dart';
+import 'package:multi_level_list_view/tree_structures/node.dart';
+import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
 
-import '../indexed_tree.dart';
-import '../listenable_tree_interfaces.dart';
-import '../node.dart';
-import '../i_tree.dart';
-import '../tree_update_provider.dart';
-
-class ListenableIndexedTree<T> extends ChangeNotifier
+class ListenableInsertableTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
-    implements IIndexedTree<T>, IListenableIndexedTree<T> {
-  ListenableIndexedTree._(IndexedTree<T> tree) : _value = tree;
+    implements IInsertableTree<T>, IListenableIndexedTree<T> {
+  ListenableInsertableTree._(InsertableTree<T> tree) : _value = tree;
 
-  factory ListenableIndexedTree({List<ListNode<T>> children = const []}) =>
-      ListenableIndexedTree._(IndexedTree<T>(children: children));
+  factory ListenableInsertableTree({List<ListNode<T>> children = const []}) =>
+      ListenableInsertableTree._(InsertableTree<T>());
 
-  factory ListenableIndexedTree.fromMap(Map<String, Node<T>> map) =>
-      ListenableIndexedTree._(IndexedTree.fromMap(map));
+  factory ListenableInsertableTree.fromMap(Map<String, Node<T>> map) =>
+      ListenableInsertableTree._(InsertableTree.fromMap(map));
 
-  final IndexedTree<T> _value;
+  final InsertableTree<T> _value;
 
   @override
   T first;
@@ -127,5 +125,5 @@ class ListenableIndexedTree<T> extends ChangeNotifier
 
   @override
   // TODO: implement value
-  IndexedTree<T> get value => throw UnimplementedError();
+  InsertableTree<T> get value => throw UnimplementedError();
 }
