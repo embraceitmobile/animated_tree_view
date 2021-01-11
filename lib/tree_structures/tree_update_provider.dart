@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-
 abstract class TreeUpdateProvider<T> {
   final StreamController<NodeEvent<T>> _addedItemsController =
       StreamController<NodeEvent<T>>.broadcast();
