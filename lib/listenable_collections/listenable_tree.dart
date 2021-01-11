@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/tree_structures/interfaces/i_listenable_tree.dart';
-import 'package:multi_level_list_view/tree_structures/interfaces/i_tree.dart';
-import 'package:multi_level_list_view/tree_structures/node.dart';
-import 'package:multi_level_list_view/tree_structures/tree.dart';
-import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
+import 'package:multi_level_list_view/node/node.dart';
+import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
+import 'package:multi_level_list_view/tree/base/i_tree.dart';
+import 'package:multi_level_list_view/tree/tree.dart';
+import 'package:multi_level_list_view/tree/tree_update_provider.dart';
 
 class ListenableTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
@@ -19,29 +19,28 @@ class ListenableTree<T> extends ChangeNotifier
   final Tree<T> _value;
 
   @override
-  T operator [](String at) {
+  // TODO: implement value
+  Tree<T> get value => _value;
+
+  @override
+  Node<T> operator [](covariant at) {
     // TODO: implement []
     throw UnimplementedError();
   }
 
   @override
-  void operator []=(String at, T value) {
+  void operator []=(covariant at, Node<T> value) {
     // TODO: implement []=
   }
 
   @override
-  void add(T value, {String path}) {
+  void add(Node<T> value, {String path}) {
     // TODO: implement add
   }
 
   @override
-  void addAll(Iterable<T> iterable, {String path}) {
+  void addAll(Iterable<Node<T>> iterable, {String path}) {
     // TODO: implement addAll
-  }
-
-  @override
-  void addListener(void Function() listener) {
-    // TODO: implement addListener
   }
 
   @override
@@ -50,7 +49,7 @@ class ListenableTree<T> extends ChangeNotifier
   }
 
   @override
-  T elementAt(String path) {
+  Node<T> elementAt(String path) {
     // TODO: implement elementAt
     throw UnimplementedError();
   }
@@ -60,30 +59,21 @@ class ListenableTree<T> extends ChangeNotifier
   int get length => throw UnimplementedError();
 
   @override
-  void remove(T element, {String path}) {
+  void remove(Node<T> element, {String path}) {
     // TODO: implement remove
   }
 
   @override
-  void removeAll(Iterable<T> iterable, {String path}) {
+  void removeAll(Iterable<Node<T>> iterable, {String path}) {
     // TODO: implement removeAll
   }
 
   @override
-  void removeListener(void Function() listener) {
-    // TODO: implement removeListener
-  }
-
-  @override
-  void removeWhere(bool Function(T element) test, {String path}) {
+  void removeWhere(bool Function(Node<T> element) test, {String path}) {
     // TODO: implement removeWhere
   }
 
   @override
   // TODO: implement root
   Node<T> get root => throw UnimplementedError();
-
-  @override
-  // TODO: implement value
-  Tree<T> get value => throw UnimplementedError();
 }

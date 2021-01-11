@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/tree_structures/indexed_tree.dart';
-import 'package:multi_level_list_view/tree_structures/interfaces/i_listenable_tree.dart';
-import 'package:multi_level_list_view/tree_structures/interfaces/i_tree.dart';
-import 'package:multi_level_list_view/tree_structures/node.dart';
-import 'package:multi_level_list_view/tree_structures/tree_update_provider.dart';
+import 'package:multi_level_list_view/node/node.dart';
+import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
+import 'package:multi_level_list_view/tree/base/i_tree.dart';
+import 'package:multi_level_list_view/tree/indexed_tree.dart';
+import 'package:multi_level_list_view/tree/tree_update_provider.dart';
 
 class ListenableIndexedTree<T> extends ChangeNotifier
     with TreeUpdateProvider<T>
@@ -19,29 +19,29 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   final IndexedTree<T> _value;
 
   @override
-  T first;
+  Node<T> first;
 
   @override
-  T last;
+  Node<T> last;
 
   @override
-  T operator [](int at) {
+  Node<T> operator [](covariant at) {
     // TODO: implement []
     throw UnimplementedError();
   }
 
   @override
-  void operator []=(int at, T value) {
+  void operator []=(covariant at, Node<T> value) {
     // TODO: implement []=
   }
 
   @override
-  void add(T value, {String path}) {
+  void add(Node<T> value, {String path}) {
     // TODO: implement add
   }
 
   @override
-  void addAll(Iterable<T> iterable, {String path}) {
+  void addAll(Iterable<Node<T>> iterable, {String path}) {
     // TODO: implement addAll
   }
 
@@ -51,47 +51,45 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   }
 
   @override
-  T elementAt(String path) {
+  Node<T> elementAt(String path) {
     // TODO: implement elementAt
     throw UnimplementedError();
   }
 
   @override
-  T firstWhere(bool Function(T element) test,
-      {T Function() orElse, String path}) {
+  Node<T> firstWhere(bool Function(Node<T> element) test, {Node<T> Function() orElse, String path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
 
   @override
-  int indexWhere(bool Function(T element) test, {int start = 0, String path}) {
+  int indexWhere(bool Function(Node<T> element) test, {int start = 0, String path}) {
     // TODO: implement indexWhere
     throw UnimplementedError();
   }
 
   @override
-  void insert(int index, T element, {String path}) {
+  void insert(int index, Node<T> element, {String path}) {
     // TODO: implement insert
   }
 
   @override
-  void insertAfter(T element, {String path}) {
+  void insertAfter(Node<T> element, {String path}) {
     // TODO: implement insertAfter
   }
 
   @override
-  void insertAll(int index, Iterable<T> iterable, {String path}) {
+  void insertAll(int index, Iterable<Node<T>> iterable, {String path}) {
     // TODO: implement insertAll
   }
 
   @override
-  void insertBefore(T element, {String path}) {
+  void insertBefore(Node<T> element, {String path}) {
     // TODO: implement insertBefore
   }
 
   @override
-  T lastWhere(bool Function(T element) test,
-      {T Function() orElse, String path}) {
+  Node<T> lastWhere(bool Function(Node<T> element) test, {Node<T> Function() orElse, String path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
@@ -101,23 +99,23 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   int get length => throw UnimplementedError();
 
   @override
-  void remove(T element, {String path}) {
+  void remove(Node<T> element, {String path}) {
     // TODO: implement remove
   }
 
   @override
-  void removeAll(Iterable<T> iterable, {String path}) {
+  void removeAll(Iterable<Node<T>> iterable, {String path}) {
     // TODO: implement removeAll
   }
 
   @override
-  T removeAt(int index, {String path}) {
+  Node<T> removeAt(int index, {String path}) {
     // TODO: implement removeAt
     throw UnimplementedError();
   }
 
   @override
-  void removeWhere(bool Function(T element) test, {String path}) {
+  void removeWhere(bool Function(Node<T> element) test, {String path}) {
     // TODO: implement removeWhere
   }
 
@@ -128,4 +126,6 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   @override
   // TODO: implement value
   IndexedTree<T> get value => throw UnimplementedError();
+
+
 }
