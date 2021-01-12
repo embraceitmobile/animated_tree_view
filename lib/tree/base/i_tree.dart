@@ -1,11 +1,10 @@
-
 import 'package:multi_level_list_view/node/list_node.dart';
 import 'package:multi_level_list_view/node/map_node.dart';
 
 abstract class ITree<T> {
   external factory ITree();
 
-  external factory ITree.fromList(List<MapNode<T>> list);
+  external factory ITree.fromList(List<Node<T>> list);
 
   external factory ITree.fromMap(Map<String, Node<T>> map);
 
@@ -27,15 +26,13 @@ abstract class ITree<T> {
 
   Node<T> operator [](covariant dynamic at);
 
-  void operator []=(covariant dynamic at, Node<T> value);
-
   int get length;
 }
 
 abstract class IIndexedTree<T> extends ITree<T> {
   external factory IIndexedTree();
 
-  external factory IIndexedTree.from(List<ListNode<T>> list);
+  external factory IIndexedTree.from(List<Node<T>> list);
 
   void insert(int index, Node<T> element, {String path});
 
@@ -47,13 +44,13 @@ abstract class IIndexedTree<T> extends ITree<T> {
 
   Node<T> removeAt(int index, {String path});
 
-  set first(Node<T> value);
+  set first(ListNode<T> value);
 
-  Node<T> get first;
+  ListNode<T> get first;
 
-  set last(Node<T> value);
+  set last(ListNode<T> value);
 
-  Node<T> get last;
+  ListNode<T> get last;
 
   int indexWhere(bool test(Node<T> element), {int start = 0, String path});
 

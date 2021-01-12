@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:multi_level_list_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'node.dart';
 
@@ -20,6 +21,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
 
   @override
   void add(Node<T> value) {
+    if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
     children[value.key] = value;
 

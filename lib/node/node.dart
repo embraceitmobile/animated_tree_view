@@ -1,8 +1,4 @@
 import 'dart:collection';
-import 'package:flutter/material.dart';
-import 'base/i_node_actions.dart';
-
-
 
 mixin NodeViewData<T> {
   bool isExpanded = false;

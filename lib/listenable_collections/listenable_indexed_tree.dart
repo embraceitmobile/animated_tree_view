@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:multi_level_list_view/node/list_node.dart';
 import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';
@@ -19,20 +20,15 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   final IndexedTree<T> _value;
 
   @override
-  Node<T> first;
+  ListNode<T> first;
 
   @override
-  Node<T> last;
+  ListNode<T> last;
 
   @override
   Node<T> operator [](covariant at) {
     // TODO: implement []
     throw UnimplementedError();
-  }
-
-  @override
-  void operator []=(covariant at, Node<T> value) {
-    // TODO: implement []=
   }
 
   @override
@@ -126,6 +122,8 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   @override
   // TODO: implement value
   IndexedTree<T> get value => throw UnimplementedError();
+
+
 
 
 }

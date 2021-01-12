@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:multi_level_list_view/node/list_node.dart';
 import 'base/i_tree.dart';
 import '../node/node.dart';
 
 class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
-  IndexedTree() : children = <Node<T>>[];
+  IndexedTree() : children = <ListNode<T>>[];
 
   factory IndexedTree.fromMap(Map<String, Node<T>> map) => IndexedTree();
 
   factory IndexedTree.fromList(List<Node<T>> list) => IndexedTree();
 
-  final List<Node<T>> children;
+  final List<ListNode<T>> children;
 
   @override
   int get length => children.length;
 
   @override
   // TODO: implement root
-  Node<T> get root => throw UnimplementedError();
+  ListNode<T> get root => throw UnimplementedError();
 
-  Node<T> operator [](int at) {
+  ListNode<T> operator [](int at) {
     // TODO: implement []
     throw UnimplementedError();
   }
 
-  void operator []=(int at, Node<T> value) {
-    // TODO: implement []=
-  }
 
   void add(Node<T> value, {String path}) {
     // TODO: implement add
@@ -39,7 +37,7 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     // TODO: implement clear
   }
 
-  Node<T> elementAt(String path) {
+  ListNode<T> elementAt(String path) {
     // TODO: implement elementAt
     throw UnimplementedError();
   }
@@ -57,20 +55,20 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   }
 
   @override
-  Node<T> first;
+  ListNode<T> first;
 
   @override
-  Node<T> last;
+  ListNode<T> last;
 
   @override
-  Node<T> firstWhere(bool Function(Node<T> element) test,
+  ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
       {Node<T> Function() orElse, String path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
 
   @override
-  int indexWhere(bool Function(Node<T> element) test, {int start = 0, String path}) {
+  int indexWhere(bool Function(ListNode<T> element) test, {int start = 0, String path}) {
     // TODO: implement indexWhere
     throw UnimplementedError();
   }
@@ -96,14 +94,14 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   }
 
   @override
-  Node<T> lastWhere(bool Function(Node<T> element) test,
+  ListNode<T> lastWhere(bool Function(Node<T> element) test,
       {Node<T> Function() orElse, String path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
 
   @override
-  Node<T> removeAt(int index, {String path}) {
+  ListNode<T> removeAt(int index, {String path}) {
     // TODO: implement removeAt
     throw UnimplementedError();
   }

@@ -38,5 +38,4 @@ abstract class IListNodeActions<T> implements IMapNodeActions<T> {
   Node<T> removeAt(int index);
 
   Future<Node<T>> removeAtAsync(int index);
-
 }
