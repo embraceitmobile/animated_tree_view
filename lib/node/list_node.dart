@@ -11,7 +11,7 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   String path;
 
   @mustCallSuper
-  ListNode({String key})
+  ListNode([String key])
       : children = <Node<T>>[],
         key = key ?? UniqueKey().toString();
 

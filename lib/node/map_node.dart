@@ -12,7 +12,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   String path;
 
   @mustCallSuper
-  MapNode({String key})
+  MapNode([String key])
       : children = <String, MapNode<T>>{},
         key = key ?? UniqueKey().toString();
 
