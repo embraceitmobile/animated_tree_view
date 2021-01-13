@@ -22,6 +22,8 @@ abstract class Node<T> with NodeViewData<T> {
 
   Object get children;
 
+  Node<T> operator [](covariant dynamic at);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is Node<T> && other.key == key;

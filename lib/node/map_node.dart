@@ -72,4 +72,9 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   void removeWhere(bool Function(Node<T> element) test) {
     children.removeWhere((key, value) => test(value));
   }
+
+  @override
+  MapNode<T> operator [](String at) {
+    return children.containsKey(at) ? children[at] : null;
+  }
 }

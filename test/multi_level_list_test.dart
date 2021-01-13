@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
-import 'mocks.dart';
+import 'mocks/mocks.dart';
 
 void main() {
   test('same Uuid is returned for every call if ids are not overridden',

@@ -17,6 +17,8 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
 
   UnmodifiableListView<Node<T>> toList() => children;
 
+
+
   @override
   void add(Node<T> value) {
     // TODO: implement add
@@ -113,5 +115,10 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   Future<Node<T>> removeAtAsync(int index) {
     // TODO: implement removeAtAsync
     throw UnimplementedError();
+  }
+
+  @override
+  ListNode<T> operator [](int at) {
+    return children[at];
   }
 }
