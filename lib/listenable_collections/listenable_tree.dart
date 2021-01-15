@@ -29,11 +29,6 @@ class ListenableTree<T> extends ChangeNotifier
   }
 
   @override
-  void operator []=(covariant at, Node<T> value) {
-    // TODO: implement []=
-  }
-
-  @override
   void add(Node<T> value, {String path}) {
     // TODO: implement add
   }
