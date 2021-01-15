@@ -9,9 +9,9 @@ abstract class IMapNodeActions<T> {
 
   Future<void> addAllAsync(Iterable<Node<T>> iterable);
 
-  void remove(Node<T> element);
+  void remove(String key);
 
-  void removeAll(Iterable<Node<T>> iterable);
+  void removeAll(Iterable<String> keys);
 
   void removeWhere(bool test(Node<T> element));
 

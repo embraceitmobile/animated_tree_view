@@ -54,18 +54,18 @@ void main() {
     final nodeUnderTest = MapNode();
     node.add(nodeUnderTest);
     expect(node.children.length, equals(1));
-    node.remove(nodeUnderTest);
+    node.remove(nodeUnderTest.key);
     expect(node.children.length, equals(0));
   });
 
   test(
-      'On removing a list of nodes node, the size of children decreases correspondingly',
+      'On removing a list of nodes, the size of children decreases correspondingly',
       () async {
     final node = MapNode();
     final nodesUnderTest = [MapNode(), MapNode(), MapNode()];
     node.addAll(nodesUnderTest);
     expect(node.children.length, equals(nodesUnderTest.length));
-    node.removeAll(nodesUnderTest.sublist(1));
+    node.removeAll(nodesUnderTest.sublist(1).map((e) => e.key));
     expect(node.children.length, equals(1));
   });
 

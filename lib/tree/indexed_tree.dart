@@ -42,11 +42,11 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     throw UnimplementedError();
   }
 
-  void remove(Node<T> element, {String path}) {
+  void remove(String key, {String path}) {
     // TODO: implement remove
   }
 
-  void removeAll(Iterable<Node<T>> iterable, {String path}) {
+  void removeAll(Iterable<String> keys, {String path}) {
     // TODO: implement removeAll
   }
 

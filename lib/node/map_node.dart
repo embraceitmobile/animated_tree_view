@@ -57,15 +57,13 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   }
 
   @override
-  void remove(Node<T> element) {
-    children.remove(element.key);
+  void remove(String key) {
+    children.remove(key);
   }
 
   @override
-  void removeAll(Iterable<Node<T>> iterable) {
-    for (final node in iterable) {
-      remove(node);
-    }
+  void removeAll(Iterable<String> keys) {
+    keys.forEach((key) => children.remove(key));
   }
 
   @override
@@ -74,7 +72,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   }
 
   @override
-  MapNode<T> operator [](String at) {
-    return children.containsKey(at) ? children[at] : null;
+  MapNode<T> operator [](String key) {
+    return children.containsKey(key) ? children[key] : null;
   }
 }

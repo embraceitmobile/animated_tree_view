@@ -1,3 +1,4 @@
+import 'package:multi_level_list_view/exceptions/exceptions.dart';
 import 'package:multi_level_list_view/node/map_node.dart';
 import 'base/i_tree.dart';
 import '../node/node.dart';
@@ -41,20 +42,22 @@ class Tree<T> implements ITree<T> {
       if (node.isEmpty) {
         return currentNode;
       } else {
-        currentNode = currentNode.children[node];
+        final nextNode = currentNode.children[node];
+        if (nextNode == null) throw NodeNotFoundException(path, node);
+        currentNode = nextNode;
       }
     }
     return currentNode;
   }
 
-  void remove(Node<T> element, {String path}) {
+  void remove(String key, {String path}) {
     final node = path == null ? _root : elementAt(path);
-    node.children.remove(element);
+    node.remove(key);
   }
 
-  void removeAll(Iterable<Node<T>> iterable, {String path}) {
+  void removeAll(Iterable<String> keys, {String path}) {
     final node = path == null ? _root : elementAt(path);
-    node.removeAll(iterable);
+    node.removeAll(keys);
   }
 
   void removeWhere(bool Function(Node<T> element) test, {String path}) {

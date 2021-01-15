@@ -12,11 +12,11 @@ abstract class ITree<T> {
 
   void add(Node<T> value, {String path});
 
-  void remove(Node<T> element, {String path});
+  void remove(String key, {String path});
 
   void addAll(Iterable<Node<T>> iterable, {String path});
 
-  void removeAll(Iterable<Node<T>> iterable, {String path});
+  void removeAll(Iterable<String> keys, {String path});
 
   void removeWhere(bool test(Node<T> element), {String path});
 

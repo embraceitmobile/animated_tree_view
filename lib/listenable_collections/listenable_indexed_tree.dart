@@ -53,13 +53,15 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   }
 
   @override
-  Node<T> firstWhere(bool Function(Node<T> element) test, {Node<T> Function() orElse, String path}) {
+  Node<T> firstWhere(bool Function(Node<T> element) test,
+      {Node<T> Function() orElse, String path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
 
   @override
-  int indexWhere(bool Function(Node<T> element) test, {int start = 0, String path}) {
+  int indexWhere(bool Function(Node<T> element) test,
+      {int start = 0, String path}) {
     // TODO: implement indexWhere
     throw UnimplementedError();
   }
@@ -85,7 +87,8 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   }
 
   @override
-  Node<T> lastWhere(bool Function(Node<T> element) test, {Node<T> Function() orElse, String path}) {
+  Node<T> lastWhere(bool Function(Node<T> element) test,
+      {Node<T> Function() orElse, String path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
@@ -93,16 +96,6 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   @override
   // TODO: implement length
   int get length => throw UnimplementedError();
-
-  @override
-  void remove(Node<T> element, {String path}) {
-    // TODO: implement remove
-  }
-
-  @override
-  void removeAll(Iterable<Node<T>> iterable, {String path}) {
-    // TODO: implement removeAll
-  }
 
   @override
   Node<T> removeAt(int index, {String path}) {
@@ -123,7 +116,13 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   // TODO: implement value
   IndexedTree<T> get value => throw UnimplementedError();
 
+  @override
+  void remove(String key, {String path}) {
+    // TODO: implement remove
+  }
 
-
-
+  @override
+  void removeAll(Iterable<String> keys, {String path}) {
+    // TODO: implement removeAll
+  }
 }

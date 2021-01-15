@@ -17,8 +17,6 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
 
   UnmodifiableListView<Node<T>> toList() => children;
 
-
-
   @override
   void add(Node<T> value) {
     // TODO: implement add
@@ -52,16 +50,6 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   @override
   void insertBefore(Node<T> element) {
     // TODO: implement insertBefore
-  }
-
-  @override
-  void remove(Node<T> element) {
-    // TODO: implement remove
-  }
-
-  @override
-  void removeAll(Iterable<Node<T>> iterable) {
-    // TODO: implement removeAll
   }
 
   @override
@@ -120,5 +108,15 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   @override
   ListNode<T> operator [](int at) {
     return children[at];
+  }
+
+  @override
+  void remove(String key) {
+    // TODO: implement remove
+  }
+
+  @override
+  void removeAll(Iterable<String> keys) {
+    // TODO: implement removeAll
   }
 }
