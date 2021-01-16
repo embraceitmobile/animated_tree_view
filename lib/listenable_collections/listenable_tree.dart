@@ -14,61 +14,58 @@ class ListenableTree<T> extends ChangeNotifier
       ListenableTree(Tree<T>.fromList(list));
 
   factory ListenableTree.fromMap(Map<String, Node<T>> map) =>
-      ListenableTree(Tree.fromMap(map));
+      ListenableTree(Tree<T>.fromMap(map));
 
   final Tree<T> _value;
 
   @override
-  // TODO: implement value
   Tree<T> get value => _value;
 
   @override
-  Node<T> operator [](covariant at) {
-    // TODO: implement []
-    throw UnimplementedError();
-  }
+  Node<T> get root => _value.root;
+
+  @override
+  int get length => _value.length;
+
+  @override
+  Node<T> elementAt(String path) => _value.elementAt(path);
+
+  @override
+  Node<T> operator [](String at) => _value[at];
 
   @override
   void add(Node<T> value, {String path}) {
-    // TODO: implement add
+    _value.add(value, path: path);
+    notifyListeners();
   }
 
   @override
   void addAll(Iterable<Node<T>> iterable, {String path}) {
-    // TODO: implement addAll
+    _value.addAll(iterable, path: path);
+    notifyListeners();
   }
 
   @override
   void clear({String path}) {
-    // TODO: implement clear
+    _value.clear(path: path);
+    notifyListeners();
   }
-
-  @override
-  Node<T> elementAt(String path) {
-    // TODO: implement elementAt
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement length
-  int get length => throw UnimplementedError();
 
   @override
   void removeWhere(bool Function(Node<T> element) test, {String path}) {
-    // TODO: implement removeWhere
+    _value.removeWhere(test, path: path);
+    notifyListeners();
   }
 
   @override
-  // TODO: implement root
-  Node<T> get root => throw UnimplementedError();
-
-  @override
   void remove(String key, {String path}) {
-    // TODO: implement remove
+    _value.remove(key, path: path);
+    notifyListeners();
   }
 
   @override
   void removeAll(Iterable<String> keys, {String path}) {
-    // TODO: implement removeAll
+    _value.removeAll(keys, path: path);
+    notifyListeners();
   }
 }
