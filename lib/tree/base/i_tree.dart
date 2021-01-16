@@ -29,7 +29,7 @@ abstract class ITree<T> {
   int get length;
 }
 
-abstract class IIndexedTree<T> extends ITree<T> {
+abstract class IIndexedTree<T> implements ITree<T> {
   external factory IIndexedTree();
 
   external factory IIndexedTree.from(List<Node<T>> list);
