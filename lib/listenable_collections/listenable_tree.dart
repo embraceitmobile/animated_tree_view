@@ -3,10 +3,10 @@ import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/tree.dart';
-import 'package:multi_level_list_view/tree/tree_update_provider.dart';
+import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
 
 class ListenableTree<T> extends ChangeNotifier
-    with TreeUpdateProvider<T>
+    with TreeChangeNotifier<T>
     implements ITree<T>, IListenableTree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
 

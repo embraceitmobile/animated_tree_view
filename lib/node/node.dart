@@ -11,7 +11,7 @@ mixin NodeViewData<T> {
 
   String get childrenPath => "${path ?? ""}${Node.PATH_SEPARATOR}$key";
 
-  UnmodifiableListView<Node<T>> toList();
+  UnmodifiableListView<Node<T>> get childrenAsList;
 }
 
 abstract class Node<T> with NodeViewData<T> {

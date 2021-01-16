@@ -16,7 +16,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
       : children = <String, MapNode<T>>{},
         key = key ?? UniqueKey().toString();
 
-  UnmodifiableListView<Node<T>> toList() =>
+  UnmodifiableListView<Node<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
 
   @override

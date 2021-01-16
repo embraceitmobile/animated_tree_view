@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_level_list_view/controllers/animated_list_controller.dart';
 import 'package:multi_level_list_view/listenable_collections/listenable_indexed_tree.dart';
-import 'package:multi_level_list_view/listenable_collections/listenable_tree.dart';
 import 'package:multi_level_list_view/node/list_node.dart';
 import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';

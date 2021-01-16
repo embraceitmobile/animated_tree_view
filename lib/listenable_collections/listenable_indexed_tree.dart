@@ -4,10 +4,10 @@ import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/indexed_tree.dart';
-import 'package:multi_level_list_view/tree/tree_update_provider.dart';
+import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
 
 class ListenableIndexedTree<T> extends ChangeNotifier
-    with TreeUpdateProvider<T>
+    with TreeChangeNotifier<T>
     implements IIndexedTree<T>, IListenableIndexedTree<T> {
   ListenableIndexedTree(IndexedTree<T> tree) : _value = tree;
 

@@ -15,7 +15,8 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
       : children = <Node<T>>[],
         key = key ?? UniqueKey().toString();
 
-  UnmodifiableListView<Node<T>> toList() => children;
+  UnmodifiableListView<Node<T>> get childrenAsList =>
+      UnmodifiableListView(children);
 
   @override
   void add(Node<T> value) {
