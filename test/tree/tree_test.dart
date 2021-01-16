@@ -5,7 +5,7 @@ import 'package:multi_level_list_view/tree/tree.dart';
 import '../mocks/mocks.dart';
 
 void main() {
-  group('new tree construction', () {
+  group('test new tree construction', () {
     test('On constructing a new tree, the value is not null', () async {
       final tree = Tree();
       expect(tree, isNotNull);
@@ -28,7 +28,7 @@ void main() {
     });
   });
 
-  group('adding nodes to the tree', () {
+  group('test adding nodes to the tree', () {
     test(
         'On adding a node to the root, the size of root children increases respectively',
         () async {
@@ -56,7 +56,7 @@ void main() {
     });
   });
 
-  group('removing nodes from the tree', () {
+  group('test removing nodes from the tree', () {
     test(
         'On removing a node from the root, the size of root children decreases respectively',
         () async {
@@ -106,7 +106,7 @@ void main() {
     });
   });
 
-  group('accessing nodes', () {
+  group('test accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
       final tree = mockTreeWithIds;
       expect(tree.root.children["0A"].key, equals("0A"));

@@ -72,7 +72,20 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   }
 
   @override
-  MapNode<T> operator [](String key) {
-    return children.containsKey(key) ? children[key] : null;
+  MapNode<T> operator [](String path) => elementAt(path);
+
+  @override
+  MapNode<T> elementAt(String path) {
+    var currentNode = this;
+    for (final node in path.splitToNodes) {
+      if (node.isEmpty) {
+        return currentNode;
+      } else {
+        final nextNode = currentNode.children[node];
+        if (nextNode == null) throw NodeNotFoundException(path, node);
+        currentNode = nextNode;
+      }
+    }
+    return currentNode;
   }
 }

@@ -22,7 +22,9 @@ abstract class Node<T> with NodeViewData<T> {
 
   Object get children;
 
-  Node<T> operator [](covariant dynamic at);
+  Node<T> elementAt(String path);
+
+  Node<T> operator [](String path);
 
   @override
   bool operator ==(Object other) =>

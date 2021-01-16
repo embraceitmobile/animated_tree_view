@@ -106,8 +106,9 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   }
 
   @override
-  ListNode<T> operator [](int at) {
-    return children[at];
+  ListNode<T> operator [](String path) {
+    // TODO: implement removeAtAsync
+    throw UnimplementedError();
   }
 
   @override
@@ -118,5 +119,11 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   @override
   void removeAll(Iterable<String> keys) {
     // TODO: implement removeAll
+  }
+
+  @override
+  Node<T> elementAt(String path) {
+    // TODO: implement elementAt
+    throw UnimplementedError();
   }
 }

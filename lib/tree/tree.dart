@@ -17,51 +17,37 @@ class Tree<T> implements ITree<T> {
 
   MapNode<T> get root => _root;
 
-  MapNode<T> operator [](String at) {
-    return elementAt(at);
-  }
+  MapNode<T> elementAt(String path) => _root.elementAt(path);
+
+  MapNode<T> operator [](String at) => elementAt(at);
 
   void add(Node<T> value, {String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.add(value);
   }
 
   void addAll(Iterable<Node<T>> iterable, {String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.addAll(iterable);
   }
 
   void clear({String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.children.clear();
   }
 
-  MapNode<T> elementAt(String path) {
-    var currentNode = _root;
-    for (final node in path.splitToNodes) {
-      if (node.isEmpty) {
-        return currentNode;
-      } else {
-        final nextNode = currentNode.children[node];
-        if (nextNode == null) throw NodeNotFoundException(path, node);
-        currentNode = nextNode;
-      }
-    }
-    return currentNode;
-  }
-
   void remove(String key, {String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.remove(key);
   }
 
   void removeAll(Iterable<String> keys, {String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.removeAll(keys);
   }
 
   void removeWhere(bool Function(Node<T> element) test, {String path}) {
-    final node = path == null ? _root : elementAt(path);
+    final node = path == null ? _root : _root[path];
     node.removeWhere(test);
   }
 }
