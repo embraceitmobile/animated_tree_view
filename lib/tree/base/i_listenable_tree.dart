@@ -5,9 +5,9 @@ import '../tree_change_notifier.dart';
 import 'i_tree.dart';
 
 abstract class IListenableTree<T>
-    with TreeChangeNotifier<T>
+    extends TreeChangeNotifier<T>
     implements ITree<T>, ValueListenable<Tree<T>> {}
 
 abstract class IListenableIndexedTree<T>
-    with TreeChangeNotifier<T>
+    extends TreeChangeNotifier<T>
     implements ITree<T>, IIndexedTree<T>, ValueListenable<IndexedTree<T>> {}

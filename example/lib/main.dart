@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = InsertableMultiLevelListViewController<RowItem>();
+  final controller = TreeListViewController<RowItem>();
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -42,75 +42,60 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: MultiLevelListView<RowItem>.insertable(
-          initialItems: items,
-          controller: controller,
-          onItemTap: (item) => globalKey.currentState.showSnackBar(SnackBar(
-              duration: Duration(milliseconds: 500),
-              content: Text(
-                  'on tap item \nItem ${item.level}-${ALPHABET_MAPPER[item.index]}'))),
-          builder: (context, level, item) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title:
-                    Text("Item ${item.level}-${ALPHABET_MAPPER[item.index]}"),
-                subtitle: Text('Level $level'),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red[900]),
-                  onPressed: () {
-                    controller.remove(item);
-                  },
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MultiLevelListView<RowItem>(
+              controller: controller,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              onItemTap: (item) => globalKey.currentState.showSnackBar(
+                  SnackBar(
+                      duration: Duration(milliseconds: 500),
+                      content: Text(
+                          'on tap item \nItem ${item.level}-${item.key}'))),
+              builder: (context, level, item) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text("Item ${item.level}-${item.key}"),
+                    subtitle: Text('Level $level'),
+                    trailing: IconButton(
+                      color: Colors.red[900],
+                      icon: Icon(Icons.delete, color: Colors.white),
+                      onPressed: () => controller.remove(item.key),
+                    ),
+                  ),
+                  buildAddItemChildButton(item),
+                  Divider(),
+                ],
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    buildButton("Above", () {
-                      controller.insertBefore(
-                          RowItem(index: item.index, children: <RowItem>[]),
-                          item,
-                          path: item.path);
-                    }),
-                    buildButton("Below", () {
-                      controller.insertAfter(
-                          RowItem(
-                              index: item.index + 1, children: <RowItem>[]),
-                          item,
-                          path: item.path);
-                    }),
-                    buildButton("Child", () {
-                      controller.add(RowItem(index: 1, children: <RowItem>[]),
-                          path: item.childrenPath);
-                    }),
-                  ],
-                ),
-              ),
-              Divider(),
-            ],
-          ),
+            ),
+            RaisedButton.icon(
+                onPressed: () => controller.add(RowItem()),
+                icon: Icon(Icons.add),
+                label: Text("Add Child"))
+          ],
         ),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Widget buildButton(String label, VoidCallback onPressed) {
+  Widget buildAddItemChildButton(RowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
+        color: Colors.green[800],
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.green),
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
-        icon: Icon(Icons.add_circle, color: Colors.green),
-        label: Text(label),
-        onPressed: onPressed,
+        icon: Icon(Icons.add_circle, color: Colors.white),
+        label: Text("Add Child", style: TextStyle(color: Colors.white)),
+        onPressed: () => controller.add(RowItem(), path: item.childrenPath),
       ),
     );
   }

@@ -6,9 +6,8 @@ import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/indexed_tree.dart';
 import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
 
-class ListenableIndexedTree<T> extends ChangeNotifier
-    with TreeChangeNotifier<T>
-    implements IIndexedTree<T>, IListenableIndexedTree<T> {
+class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
+    implements IIndexedTree<T> {
   ListenableIndexedTree(IndexedTree<T> tree) : _value = tree;
 
   factory ListenableIndexedTree.fromList(List<Node<T>> list) =>
@@ -125,4 +124,16 @@ class ListenableIndexedTree<T> extends ChangeNotifier
   void removeAll(Iterable<String> keys, {String path}) {
     // TODO: implement removeAll
   }
+
+  @override
+  // TODO: implement addedNodes
+  NodeAddEvent<T> get addedNodes => throw UnimplementedError();
+
+  @override
+  // TODO: implement insertedNodes
+  NodeInsertEvent<T> get insertedNodes => throw UnimplementedError();
+
+  @override
+  // TODO: implement removedNodes
+  NodeRemoveEvent get removedNodes => throw UnimplementedError();
 }
