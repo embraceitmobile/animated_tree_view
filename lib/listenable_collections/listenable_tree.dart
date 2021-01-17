@@ -16,8 +16,7 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
       ListenableTree(Tree<T>.fromMap(map));
 
   final Tree<T> _value;
-  NodeAddEvent<T> _addNodes;
-  NodeInsertEvent<T> _insertedNodes;
+  NodeAddEvent<T> _addedNodes;
   NodeRemoveEvent _removedNodes;
 
   @override
@@ -30,13 +29,13 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   int get length => _value.length;
 
   @override
-  NodeAddEvent<T> get addedNodes => _addNodes;
-
-  @override
-  NodeInsertEvent<T> get insertedNodes => _insertedNodes;
+  NodeAddEvent<T> get addedNodes => _addedNodes;
 
   @override
   NodeRemoveEvent get removedNodes => _removedNodes;
+
+  @override
+  NodeInsertEvent<T> get insertedNodes => null;
 
   @override
   MapNode<T> elementAt(String path) =>
@@ -89,9 +88,9 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String path}) {
-    _addNodes = NodeAddEvent(iterable, path: path);
+    _addedNodes = NodeAddEvent(iterable, path: path);
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 300), () => _addNodes = null);
+    Future.delayed(Duration(milliseconds: 300), () => _addedNodes = null);
   }
 
   void _notifyNodesRemoved(Iterable<String> keys, {String path}) {
