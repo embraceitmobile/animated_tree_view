@@ -6,6 +6,8 @@ import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/tree.dart';
 import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
 
+const _kChangeEventRetentionDuration = Duration(milliseconds: 200);
+
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
 
@@ -84,18 +86,17 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
     final allKeys = elementAt(path).children.keys;
     _value.clear(path: path);
     _notifyNodesRemoved(allKeys, path: path);
-    notifyListeners();
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String path}) {
     _addedNodes = NodeAddEvent(iterable, path: path);
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 300), () => _addedNodes = null);
+    Future.delayed(_kChangeEventRetentionDuration, () => _addedNodes = null);
   }
 
   void _notifyNodesRemoved(Iterable<String> keys, {String path}) {
     _removedNodes = NodeRemoveEvent(keys, path: path);
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 300), () => _removedNodes = null);
+    Future.delayed(_kChangeEventRetentionDuration, () => _removedNodes = null);
   }
 }
