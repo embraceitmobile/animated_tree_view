@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_level_list_view/listenable_collections/listenable_tree.dart';
 import 'package:multi_level_list_view/node/map_node.dart';
-import 'package:multi_level_list_view/tree/tree.dart';
 
 import '../mocks/mocks.dart';
 
@@ -17,7 +16,7 @@ void main() {
     test('On adding nodes, the addedNodes event is fired', () async {
       final tree = ListenableTree(mockTreeWithIds);
       tree.addedNodes.listen(
-          (expectAsync1((event) => expect(event.items.length, isNonZero))));
+          expectAsync1((event) => expect(event.items.length, isNonZero)));
 
       tree.add(MapNode());
     });
@@ -26,8 +25,10 @@ void main() {
         () async {
       final tree = ListenableTree(mockTreeWithIds);
       final nodesUnderTest = [MapNode(), MapNode(), MapNode()];
-      tree.addedNodes.listen((expectAsync1(
-          (event) => expect(event.items.length, nodesUnderTest.length))));
+      tree.addedNodes.listen(expectAsync1((event) {
+        print("AddEvent received: $event");
+        expect(event.items.length, nodesUnderTest.length);
+      }));
 
       tree.addAll(nodesUnderTest);
     });
@@ -37,7 +38,7 @@ void main() {
     test('On removing nodes, the removedNodes event is fired', () async {
       final tree = ListenableTree(mockTreeWithIds);
       tree.removedNodes.listen(
-          (expectAsync1((event) => expect(event.keys.length, isNonZero))));
+          expectAsync1((event) => expect(event.keys.length, isNonZero)));
 
       final nodeToRemove = tree.root.children.values.first;
       tree.remove(nodeToRemove.key);
@@ -53,8 +54,8 @@ void main() {
           .map((node) => node.key)
           .toList();
 
-      tree.removedNodes.listen((expectAsync1(
-          (event) => expect(event.keys.length, nodesToRemoveKeys.length ))));
+      tree.removedNodes.listen(expectAsync1(
+          (event) => expect(event.keys.length, nodesToRemoveKeys.length)));
 
       tree.removeAll(nodesToRemoveKeys);
     });

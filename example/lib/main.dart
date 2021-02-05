@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-import 'mocks.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,15 +47,23 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            RaisedButton(
+              child: Text("**Add Node**"),
+              onPressed: () => controller.add(RowItem()),
+            ),
+            RaisedButton(
+              child: Text("**Add 2xNodes**"),
+              onPressed: () =>
+                  controller.addAll(<RowItem>[RowItem(), RowItem()]),
+            ),
             MultiLevelListView<RowItem>(
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              onItemTap: (item) => globalKey.currentState.showSnackBar(
-                  SnackBar(
-                      duration: Duration(milliseconds: 500),
-                      content: Text(
-                          'on tap item \nItem ${item.level}-${item.key}'))),
+              onItemTap: (item) => globalKey.currentState.showSnackBar(SnackBar(
+                  duration: Duration(milliseconds: 500),
+                  content:
+                      Text('on tap item \nItem ${item.level}-${item.key}'))),
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

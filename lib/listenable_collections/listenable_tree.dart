@@ -8,7 +8,7 @@ import 'package:multi_level_list_view/tree/tree.dart';
 import 'package:multi_level_list_view/tree/tree_update_notifier.dart';
 
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
-  ListenableTree(Tree<T> tree) : _value = tree;
+  ListenableTree([Tree<T> tree]) : _value = tree ?? Tree<T>();
 
   factory ListenableTree.fromList(List<Node<T>> list) =>
       ListenableTree(Tree<T>.fromList(list));
@@ -40,7 +40,8 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
 
   @override
-  Stream<NodeInsertEvent<T>> get insertedNodes => null;
+  Stream<NodeInsertEvent<T>> get insertedNodes =>
+      StreamController<NodeInsertEvent<T>>().stream;
 
   @override
   MapNode<T> elementAt(String path) =>
@@ -92,12 +93,12 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String path}) {
-    _addedNodes.sink.add(NodeAddEvent(iterable, path: path));
+    _addedNodes.sink.add(NodeAddEvent(iterable, path: path ?? Node.ROOT_KEY));
     notifyListeners();
   }
 
   void _notifyNodesRemoved(Iterable<String> keys, {String path}) {
-    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path));
+    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path ?? Node.ROOT_KEY));
     notifyListeners();
   }
 

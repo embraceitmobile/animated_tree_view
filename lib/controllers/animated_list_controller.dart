@@ -94,7 +94,7 @@ class AnimatedListController<T extends Node<T>> {
     item.isExpanded = true;
   }
 
-  void toggleExpansion(Node<T> item) {
+  void toggleExpansion(T item) {
     if (item.isExpanded)
       collapseNode(item);
     else
@@ -106,6 +106,8 @@ class AnimatedListController<T extends Node<T>> {
     final parentKey = event.path!.split(Node.PATH_SEPARATOR).last;
     final parentIndex =
         _items.indexWhere((element) => element.key == parentKey);
+    if (parentIndex < 0) return;
+
     final parentNode = _items[parentIndex];
     for (final item in event.items) {
       item.path = event.path;
