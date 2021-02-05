@@ -43,18 +43,20 @@ void main() {
       tree.remove(nodeToRemove.key);
     });
 
-    test('On removing multiple nodes, respective items in the event are emitted',
-            () async {
-          final tree = ListenableTree(mockTreeWithIds);
-          final nodesCountToRemove = 2;
-          final nodesToRemoveKeys = tree.root.children.values
-              .take(nodesCountToRemove)
-              .map((node) => node.key)
-              .toList();
+    test(
+        'On removing multiple nodes, respective items in the event are emitted',
+        () async {
+      final tree = ListenableTree(mockTreeWithIds);
+      final nodesCountToRemove = 2;
+      final nodesToRemoveKeys = tree.root.children.values
+          .take(nodesCountToRemove)
+          .map((node) => node.key)
+          .toList();
 
-          tree.removedNodes.listen((expectAsync1(
-                  (event) => expect(event.keys.length, nodesToRemoveKeys.length))));
+      tree.removedNodes.listen((expectAsync1(
+          (event) => expect(event.keys.length, nodesToRemoveKeys.length ))));
 
-        });
+      tree.removeAll(nodesToRemoveKeys);
+    });
   });
 }
