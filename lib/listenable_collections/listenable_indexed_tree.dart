@@ -4,7 +4,7 @@ import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/indexed_tree.dart';
-import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
+import 'package:multi_level_list_view/tree/tree_update_notifier.dart';
 
 class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     implements IIndexedTree<T> {
@@ -127,13 +127,13 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
 
   @override
   // TODO: implement addedNodes
-  NodeAddEvent<T> get addedNodes => throw UnimplementedError();
+  Stream<NodeAddEvent<T>> get addedNodes => throw UnimplementedError();
 
   @override
   // TODO: implement insertedNodes
-  NodeInsertEvent<T> get insertedNodes => throw UnimplementedError();
+  Stream<NodeInsertEvent<T>> get insertedNodes => throw UnimplementedError();
 
   @override
   // TODO: implement removedNodes
-  NodeRemoveEvent get removedNodes => throw UnimplementedError();
+  Stream<NodeRemoveEvent> get removedNodes => throw UnimplementedError();
 }

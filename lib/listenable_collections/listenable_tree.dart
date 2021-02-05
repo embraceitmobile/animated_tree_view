@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
 import 'package:multi_level_list_view/node/map_node.dart';
 import 'package:multi_level_list_view/node/node.dart';
 import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
 import 'package:multi_level_list_view/tree/base/i_tree.dart';
 import 'package:multi_level_list_view/tree/tree.dart';
-import 'package:multi_level_list_view/tree/tree_change_notifier.dart';
-
-const _kChangeEventRetentionDuration = Duration(milliseconds: 200);
+import 'package:multi_level_list_view/tree/tree_update_notifier.dart';
 
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   ListenableTree(Tree<T> tree) : _value = tree;
@@ -18,8 +17,12 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
       ListenableTree(Tree<T>.fromMap(map));
 
   final Tree<T> _value;
-  NodeAddEvent<T> _addedNodes;
-  NodeRemoveEvent _removedNodes;
+
+  final StreamController<NodeAddEvent<T>> _addedNodes =
+      StreamController<NodeAddEvent<T>>.broadcast();
+
+  final StreamController<NodeRemoveEvent> _removedNodes =
+      StreamController<NodeRemoveEvent>.broadcast();
 
   @override
   Tree<T> get value => _value;
@@ -31,13 +34,13 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   int get length => _value.length;
 
   @override
-  NodeAddEvent<T> get addedNodes => _addedNodes;
+  Stream<NodeAddEvent<T>> get addedNodes => _addedNodes.stream;
 
   @override
-  NodeRemoveEvent get removedNodes => _removedNodes;
+  Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
 
   @override
-  NodeInsertEvent<T> get insertedNodes => null;
+  Stream<NodeInsertEvent<T>> get insertedNodes => null;
 
   @override
   MapNode<T> elementAt(String path) =>
@@ -89,14 +92,18 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String path}) {
-    _addedNodes = NodeAddEvent(iterable, path: path);
+    _addedNodes.sink.add(NodeAddEvent(iterable, path: path));
     notifyListeners();
-    Future.delayed(_kChangeEventRetentionDuration, () => _addedNodes = null);
   }
 
   void _notifyNodesRemoved(Iterable<String> keys, {String path}) {
-    _removedNodes = NodeRemoveEvent(keys, path: path);
+    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path));
     notifyListeners();
-    Future.delayed(_kChangeEventRetentionDuration, () => _removedNodes = null);
+  }
+
+  void dispose() {
+    _addedNodes.close();
+    _removedNodes.close();
+    super.dispose();
   }
 }
