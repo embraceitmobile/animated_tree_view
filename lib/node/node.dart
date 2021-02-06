@@ -35,5 +35,11 @@ abstract class Node<T> with NodeViewData<T> {
 }
 
 extension StringUtils on String {
-  List<String> get splitToNodes => this.split(Node.PATH_SEPARATOR);
+  List<String> get splitToNodes {
+    final nodes = this.split(Node.PATH_SEPARATOR);
+    if (nodes.isNotEmpty && nodes.first.isEmpty) {
+      nodes.removeAt(0);
+    }
+    return nodes;
+  }
 }

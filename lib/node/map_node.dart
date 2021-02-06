@@ -80,6 +80,8 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     for (final node in path.splitToNodes) {
       if (node.isEmpty) {
         return currentNode;
+      } else if (node == currentNode.key) {
+        continue;
       } else {
         final nextNode = currentNode.children[node];
         if (nextNode == null) throw NodeNotFoundException(path, node);
