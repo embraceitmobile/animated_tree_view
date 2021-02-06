@@ -61,9 +61,31 @@ void main() {
         'On adding a node with children, all the children path across the length and breadth are updated',
         () async {
       final node = MapNode(Node.ROOT_KEY);
-      node.add(mockMapNode);
-      expect(node["00"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
-          equals("./.00.0C.0C1C.0C1C2A"));
+      node.add(mockMapNode1);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M1.0C.0C1C.0C1C2A"));
+    });
+
+    test(
+        'On adding a node with children asynchronously, all the children path across the length and breadth are updated',
+        () async {
+      final node = MapNode(Node.ROOT_KEY);
+      await node.addAsync(mockMapNode1);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M1.0C.0C1C.0C1C2A"));
+    });
+
+    test(
+        'On adding a list of nodes node with children asynchronously, all the children path across the length and breadth are updated',
+        () async {
+      final node = MapNode(Node.ROOT_KEY);
+      await node.addAllAsync([mockMapNode1, mockMapNode2, mockMapNode3]);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M1.0C.0C1C.0C1C2A"));
+      expect(node["M2"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M2.0C.0C1C.0C1C2A"));
+      expect(node["M3"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M3.0C.0C1C.0C1C2A"));
     });
   });
 
@@ -113,24 +135,24 @@ void main() {
 
   group('accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       expect(mapNode.children["0A"].key, equals("0A"));
     });
 
     test('Correct node is returned elementAt method', () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       expect(mapNode.elementAt("0A").key, equals("0A"));
     });
 
     test('Correct node is returned using the [] operator', () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       expect(mapNode["0A"].key, equals("0A"));
     });
 
     test(
         'Correct nested node in hierarchy is returned using cascading of [] operator',
         () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       expect(mapNode["0A"]["0A1A"].key, equals("0A1A"));
       expect(
           mapNode["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
@@ -138,7 +160,7 @@ void main() {
 
     test('Correct node is returned using a path in the elementAt method',
         () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       const _s = Node.PATH_SEPARATOR;
       expect(mapNode.elementAt("0A${_s}0A1A").key, equals("0A1A"));
       expect(mapNode.elementAt("0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A").key,
@@ -146,7 +168,7 @@ void main() {
     });
 
     test('Correct node is returned using a path in the [] operator', () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       const _s = Node.PATH_SEPARATOR;
       expect(mapNode["0A${_s}0A1A"].key, equals("0A1A"));
       expect(mapNode["0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A"].key,
@@ -156,14 +178,14 @@ void main() {
     test(
         'Exception is thrown if an incorrect path is provided to elementAt method',
         () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       const _s = Node.PATH_SEPARATOR;
       expect(() => mapNode.elementAt("0A${_s}0C1A"), throwsException);
     });
 
     test('Exception is thrown if an incorrect path is provided to [] operator',
         () async {
-      final mapNode = mockMapNode;
+      final mapNode = mockMapNode1;
       const _s = Node.PATH_SEPARATOR;
       expect(() => mapNode["0A${_s}0C1A"], throwsException);
     });

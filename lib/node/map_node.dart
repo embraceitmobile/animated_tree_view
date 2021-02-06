@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
@@ -23,17 +24,17 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   void add(Node<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
-    children[value.key] = value;
-
-    if ((value as MapNode<T>).children.isNotEmpty) {
-      _updateChildrenPaths(children, childrenPath);
-    }
+    final updatedValue = _updateChildrenPaths(value as MapNode);
+    children[value.key] = updatedValue;
   }
 
   @override
   Future<void> addAsync(Node<T> value) async {
-    //TODO: update this method to use computes
-    return add(value);
+    if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
+    value.path = childrenPath;
+    final updatedValue =
+        await compute(_updateChildrenPaths, (value as MapNode));
+    children[value.key] = updatedValue;
   }
 
   @override
@@ -45,8 +46,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
 
   @override
   Future<void> addAllAsync(Iterable<Node<T>> iterable) async {
-    //TODO: update this method to use computes
-    return addAll(iterable);
+    await Future.forEach(iterable, (node) async => await addAsync(node));
   }
 
   @override
@@ -87,12 +87,13 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     return currentNode;
   }
 
-  static _updateChildrenPaths(Map<String, MapNode> nodes, String path) {
-    nodes.forEach((_, node) {
-      node.path = path;
-      if (node.children.isNotEmpty) {
-        _updateChildrenPaths(node.children, node.childrenPath);
+  static MapNode _updateChildrenPaths(MapNode node) {
+    node.children.forEach((_, childNode) {
+      childNode.path = node.childrenPath;
+      if (childNode.children.isNotEmpty) {
+        _updateChildrenPaths(childNode);
       }
     });
+    return node;
   }
 }
