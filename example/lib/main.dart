@@ -56,25 +56,32 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text('on tap item \nItem ${item.level}-${item.key}'))),
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   ListTile(
                     title: Text("Item ${item.level}-${item.key}"),
                     subtitle: Text('Level $level'),
-                    trailing: IconButton(
-                      color: Colors.red[900],
-                      icon: Icon(Icons.delete, color: Colors.white),
-                      onPressed: () => controller.remove(item.key),
-                    ),
                   ),
-                  buildAddItemChildButton(item),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      buildAddItemChildButton(item),
+                      buildRemoveItemButton(item),
+                    ],
+                  ),
                   Divider(),
                 ],
               ),
             ),
-            RaisedButton.icon(
-                onPressed: () => controller.add(RowItem()),
-                icon: Icon(Icons.add),
-                label: Text("Add Child"))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: RaisedButton.icon(
+                  onPressed: () => controller.add(RowItem()),
+                  icon: Icon(Icons.add),
+                  label: Text("Add Node")),
+            )
           ],
         ),
       ),
@@ -93,6 +100,21 @@ class _MyHomePageState extends State<MyHomePage> {
         icon: Icon(Icons.add_circle, color: Colors.white),
         label: Text("Add Child", style: TextStyle(color: Colors.white)),
         onPressed: () => controller.add(RowItem(), path: item.childrenPath),
+      ),
+    );
+  }
+
+  Widget buildRemoveItemButton(RowItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: FlatButton.icon(
+        color: Colors.red[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        icon: Icon(Icons.delete, color: Colors.white),
+        label: Text("Remove Node", style: TextStyle(color: Colors.white)),
+        onPressed: () => controller.remove(item.key, path: item.path),
       ),
     );
   }
