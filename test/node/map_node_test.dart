@@ -56,6 +56,15 @@ void main() {
       await node.addAllAsync(nodesToAdd);
       expect(node.children.length, equals(nodesToAdd.length));
     });
+
+    test(
+        'On adding a node with children, all the children path across the length and breadth are updated',
+        () async {
+      final node = MapNode(Node.ROOT_KEY);
+      node.add(mockMapNode);
+      expect(node["00"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.00.0C.0C1C.0C1C2A"));
+    });
   });
 
   group('test removing nodes from the tree', () {

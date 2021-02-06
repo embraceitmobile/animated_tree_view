@@ -12,6 +12,10 @@ mixin NodeViewData<T> {
   String get childrenPath => "${path ?? ""}${Node.PATH_SEPARATOR}$key";
 
   UnmodifiableListView<Node<T>> get childrenAsList;
+
+  bool get isLeaf => childrenAsList.isEmpty;
+
+  bool get isRoot => key == Node.ROOT_KEY;
 }
 
 abstract class Node<T> with NodeViewData<T> {

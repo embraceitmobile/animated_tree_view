@@ -25,10 +25,8 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     value.path = childrenPath;
     children[value.key] = value;
 
-    if (children.isNotEmpty) {
-      //TODO: handle if value has children
-      // need to update the path of all the children in the hierarchy
-
+    if ((value as MapNode<T>).children.isNotEmpty) {
+      _updateChildrenPaths(children, childrenPath);
     }
   }
 
@@ -87,5 +85,14 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
       }
     }
     return currentNode;
+  }
+
+  static _updateChildrenPaths(Map<String, MapNode> nodes, String path) {
+    nodes.forEach((_, node) {
+      node.path = path;
+      if (node.children.isNotEmpty) {
+        _updateChildrenPaths(node.children, node.childrenPath);
+      }
+    });
   }
 }
