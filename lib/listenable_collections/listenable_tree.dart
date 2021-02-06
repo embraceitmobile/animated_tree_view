@@ -93,12 +93,12 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String path}) {
-    _addedNodes.sink.add(NodeAddEvent(iterable, path: path ?? Node.ROOT_KEY));
+    _addedNodes.sink.add(NodeAddEvent(iterable, path: path));
     notifyListeners();
   }
 
   void _notifyNodesRemoved(Iterable<String> keys, {String path}) {
-    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path ?? Node.ROOT_KEY));
+    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path));
     notifyListeners();
   }
 

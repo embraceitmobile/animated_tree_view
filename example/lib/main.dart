@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -47,15 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            RaisedButton(
-              child: Text("**Add Node**"),
-              onPressed: () => controller.add(RowItem()),
-            ),
-            RaisedButton(
-              child: Text("**Add 2xNodes**"),
-              onPressed: () =>
-                  controller.addAll(<RowItem>[RowItem(), RowItem()]),
-            ),
             MultiLevelListView<RowItem>(
               controller: controller,
               shrinkWrap: true,
