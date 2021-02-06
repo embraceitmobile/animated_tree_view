@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_level_list_view/multi_level_list_view.dart';
 
+import 'mocks.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -50,10 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              onItemTap: (item) => globalKey.currentState.showSnackBar(SnackBar(
-                  duration: Duration(milliseconds: 500),
-                  content:
-                      Text('on tap item \nItem ${item.level}-${item.key}'))),
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -63,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     subtitle: Text('Level $level'),
                   ),
                   Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       buildAddItemChildButton(item),

@@ -78,9 +78,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   MapNode<T> elementAt(String path) {
     var currentNode = this;
     for (final node in path.splitToNodes) {
-      if (node.isEmpty) {
-        return currentNode;
-      } else if (node == currentNode.key) {
+      if (node == currentNode.key) {
         continue;
       } else {
         final nextNode = currentNode.children[node];
