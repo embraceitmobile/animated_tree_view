@@ -3,7 +3,7 @@ import 'package:multi_level_list_view/multi_level_list_view.dart';
 import 'mocks.dart';
 
 void main() {
-  TreeList<TestNode> items;
+  late TreeList<TestNode> items;
   setUp(() {
     items = TreeList.from(List.of(itemsWithoutIds));
   });
@@ -102,7 +102,7 @@ void main() {
         () async {
       final origLength = items.children.length;
       final itemToRemove = items.children.firstNode;
-      items.remove(itemToRemove);
+      items.remove(itemToRemove as TestNode);
       expect(items.children.contains(itemToRemove), isFalse);
       expect(items.children.length, equals(origLength - 1));
     });
@@ -112,7 +112,7 @@ void main() {
       final origLength = node.children.length;
       final itemToRemove = node.children.firstNode;
       final path = node.path;
-      items.remove(itemToRemove, path: path);
+      items.remove(itemToRemove as TestNode, path: path);
       expect(node.children.contains(itemToRemove), isFalse);
       expect(node.children.length, equals(origLength - 1));
     });

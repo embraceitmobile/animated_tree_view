@@ -6,7 +6,7 @@ class NodeWithGivenId with Node<NodeWithGivenId> {
   final List<NodeWithGivenId> children;
 
   NodeWithGivenId({
-    @required this.key,
+    required this.key,
     this.children = const <NodeWithGivenId>[],
   });
 }
@@ -14,7 +14,7 @@ class NodeWithGivenId with Node<NodeWithGivenId> {
 class TestNode with Node<TestNode> {
   final List<TestNode> children;
 
-  TestNode({List<TestNode> children})
+  TestNode({List<TestNode>? children})
       : this.children = children ?? <TestNode>[];
 }
 

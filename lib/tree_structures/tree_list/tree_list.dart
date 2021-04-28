@@ -20,49 +20,49 @@ class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
 
   factory TreeList.from(List<Node<T>> list) => TreeList._(RootNode(list));
 
-  void add(T element, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void add(T element, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     node.children.add(element);
     node.populateChildrenPath(refresh: true);
   }
 
-  void addAll(Iterable<T> iterable, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void addAll(Iterable<T> iterable, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     node.children.addAll(iterable);
     node.populateChildrenPath(refresh: true);
   }
 
-  void insert(T element, int index, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void insert(T element, int index, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     node.children.insert(index, element);
     node.populateChildrenPath(refresh: true);
   }
 
-  int insertAfter(T value, T itemAfter, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  int insertAfter(T value, T itemAfter, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final index = node.children.indexOf(itemAfter) + 1;
     node.children.insert(index, value);
     node.populateChildrenPath(refresh: true);
     return index;
   }
 
-  int insertBefore(T value, T itemBefore, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  int insertBefore(T value, T itemBefore, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final index = node.children.indexOf(itemBefore);
     node.children.insert(index, value);
     node.populateChildrenPath(refresh: true);
     return index;
   }
 
-  void insertAll(Iterable<T> iterable, int index, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void insertAll(Iterable<T> iterable, int index, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     node.children.insertAll(index, iterable);
     node.populateChildrenPath(refresh: true);
   }
 
   @override
-  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final index = node.children.indexOf(itemAfter);
     node.children.insertAll(index, iterable);
     node.populateChildrenPath(refresh: true);
@@ -70,36 +70,36 @@ class TreeList<T extends Node<T>> implements InsertableIterableTree<T> {
   }
 
   @override
-  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final index = node.children.indexOf(itemBefore) - 1;
     node.children.insertAll(index, iterable);
     node.populateChildrenPath(refresh: true);
     return index;
   }
 
-  void remove(T value, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void remove(T value, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     node.children.remove(value);
   }
 
-  void removeItems(Iterable<Node<T>> iterable, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  void removeItems(Iterable<Node<T>> iterable, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
 
     for (final item in iterable) {
       node.children.remove(item);
     }
   }
 
-  T removeAt(int index, {String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  T removeAt(int index, {String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final item = node.children[index];
     node.children.removeAt(index);
-    return item;
+    return item as T;
   }
 
-  Iterable<Node<T>> clearAll({String path}) {
-    final node = path == null ? _root : _root.getNodeAt(path);
+  Iterable<Node<T>> clearAll({String? path}) {
+    final Node<T> node = path == null ? _root : _root.getNodeAt(path);
     final items = List.of(node.children, growable: false);
     node.children.clear();
     return items;

@@ -25,18 +25,18 @@ const DEFAULT_COLLAPSE_ICON = const Icon(Icons.keyboard_arrow_up);
 const DEFAULT_SHOW_EXPANSION_INDICATOR = true;
 
 class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
-  final ListenableIterableTree<T> listenableTree;
+  final ListenableIterableTree<T>? listenableTree;
   final LeveledIndexedWidgetBuilder<T> builder;
-  final MultiLevelListViewController<T> controller;
-  final bool showExpansionIndicator;
-  final Icon expandIcon;
-  final Icon collapseIcon;
-  final double indentPadding;
-  final ValueSetter<T> onItemTap;
+  final MultiLevelListViewController<T>? controller;
+  final bool? showExpansionIndicator;
+  final Icon? expandIcon;
+  final Icon? collapseIcon;
+  final double? indentPadding;
+  final ValueSetter<T>? onItemTap;
 
   const MultiLevelListView._({
-    Key key,
-    @required this.builder,
+    Key? key,
+    required this.builder,
     this.listenableTree,
     this.controller,
     this.onItemTap,
@@ -58,15 +58,15 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   /// For a [MultiLevelListView] that allows for insertion and removal of
   /// items at index positions, use the alternate [MultiLevelListView.insertable]
   factory MultiLevelListView({
-    Key key,
-    @required LeveledIndexedWidgetBuilder<T> builder,
-    List<T> initialItems,
-    EfficientMultiLevelListViewController<T> controller,
-    ValueSetter<T> onItemTap,
-    bool showExpansionIndicator,
-    double indentPadding,
-    Icon expandIcon,
-    Icon collapseIcon,
+    Key? key,
+    required LeveledIndexedWidgetBuilder<T> builder,
+    List<T>? initialItems,
+    EfficientMultiLevelListViewController<T>? controller,
+    ValueSetter<T>? onItemTap,
+    bool? showExpansionIndicator,
+    double? indentPadding,
+    Icon? expandIcon,
+    Icon? collapseIcon,
   }) =>
       MultiLevelListView._(
         key: key,
@@ -93,15 +93,15 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
   /// If you do not have a requirement for insertion and removal of items in a
   /// node, use the more efficient [MultiLevelListView] instead.
   factory MultiLevelListView.insertable({
-    Key key,
-    @required LeveledIndexedWidgetBuilder<T> builder,
-    List<T> initialItems,
-    InsertableMultiLevelListViewController<T> controller,
-    ValueSetter<T> onItemTap,
-    bool showExpansionIndicator,
-    double indentPadding,
-    Icon expandIcon,
-    Icon collapseIcon,
+    Key? key,
+    required LeveledIndexedWidgetBuilder<T> builder,
+    List<T>? initialItems,
+    InsertableMultiLevelListViewController<T>? controller,
+    ValueSetter<T>? onItemTap,
+    bool? showExpansionIndicator,
+    double? indentPadding,
+    Icon? expandIcon,
+    Icon? collapseIcon,
   }) =>
       MultiLevelListView._(
         key: key,
@@ -123,15 +123,15 @@ class MultiLevelListView<T extends Node<T>> extends StatefulWidget {
 class _MultiLevelListView<T extends Node<T>>
     extends State<MultiLevelListView<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  AnimatedListController<T> _animatedListController;
-  AutoScrollController _scrollController;
+  AnimatedListController<T>? _animatedListController;
+  AutoScrollController? _scrollController;
 
   @override
   void initState() {
     super.initState();
 
-    widget.listenableTree.addedItems.listen(_handleItemAdditionEvent);
-    widget.listenableTree.insertedItems.listen(_handleItemAdditionEvent);
+    widget.listenableTree!.addedItems.listen(_handleItemAdditionEvent);
+    widget.listenableTree!.insertedItems.listen(_handleItemAdditionEvent);
   }
 
   @override
@@ -142,11 +142,11 @@ class _MultiLevelListView<T extends Node<T>>
 
     _animatedListController = AnimatedListController(
       listKey: _listKey,
-      tree: widget.listenableTree,
+      tree: widget.listenableTree!,
       removedItemBuilder: _buildRemovedItem,
     );
 
-    widget.controller.attach(
+    widget.controller!.attach(
       tree: widget.listenableTree,
       scrollController: _scrollController,
       listController: _animatedListController,
@@ -155,7 +155,7 @@ class _MultiLevelListView<T extends Node<T>>
 
   @override
   Widget build(BuildContext context) {
-    final list = _animatedListController.list;
+    final list = _animatedListController!.list;
     if (list.isEmpty) return SizedBox.shrink();
 
     return AnimatedList(
@@ -169,21 +169,21 @@ class _MultiLevelListView<T extends Node<T>>
 
   /// Used to build list items that haven't been removed.
   Widget _buildItem(Node<T> item, Animation<double> animation,
-      {bool remove = false, int index}) {
+      {bool remove = false, int? index}) {
     final itemContainer = ListItemContainer(
       animation: animation,
       item: item,
-      child: widget.builder(context, item.level, item),
-      indentPadding: widget.indentPadding * item.level,
+      child: widget.builder(context, item.level, item as T),
+      indentPadding: widget.indentPadding! * item.level,
       showExpansionIndicator:
-          widget.showExpansionIndicator && item.children.isNotEmpty,
+          widget.showExpansionIndicator! && item.children.isNotEmpty,
       expandedIndicatorIcon:
           item.isExpanded ? widget.collapseIcon : widget.expandIcon,
       onTap: remove
           ? null
-          : (item) {
-              _animatedListController.toggleExpansion(item);
-              if (widget.onItemTap != null) widget.onItemTap(item);
+          : (dynamic item) {
+              _animatedListController!.toggleExpansion(item);
+              if (widget.onItemTap != null) widget.onItemTap!(item);
             },
     );
 
@@ -191,7 +191,7 @@ class _MultiLevelListView<T extends Node<T>>
 
     return AutoScrollTag(
       key: ValueKey(item.key),
-      controller: _scrollController,
+      controller: _scrollController!,
       index: index,
       child: itemContainer,
     );
@@ -204,7 +204,7 @@ class _MultiLevelListView<T extends Node<T>>
   void _handleItemAdditionEvent(NodeEvent<T> event) {
     Future.delayed(
         Duration(milliseconds: 300),
-        () => _scrollController
-            .scrollToIndex(_animatedListController.indexOf(event.items.first)));
+        () => _scrollController!
+            .scrollToIndex(_animatedListController!.indexOf(event.items.first)));
   }
 }

@@ -19,7 +19,7 @@ class ListenableList<T> extends ChangeNotifier
 
   factory ListenableList([int length = 0]) {
     assert(length >= 0);
-    return ListenableList._(List<T>(length));
+    return ListenableList._(List<T?>.filled(length, null, growable: false) as List<T>);
   }
 
   factory ListenableList.filled(int length, T fill, {bool growable = false}) {
@@ -126,7 +126,7 @@ class ListenableList<T> extends ChangeNotifier
   }
 
   @override
-  bool contains(Object element) => _value.contains(element);
+  bool contains(Object? element) => _value.contains(element);
 
   @override
   T elementAt(int index) => _value.elementAt(index);
@@ -135,13 +135,13 @@ class ListenableList<T> extends ChangeNotifier
   bool every(bool Function(T element) test) => _value.every(test);
 
   @override
-  void fillRange(int start, int end, [T fillValue]) {
+  void fillRange(int start, int end, [T? fillValue]) {
     _value.fillRange(start, end, fillValue);
     notifyListeners();
   }
 
   @override
-  T firstWhere(bool Function(T element) test, {T Function() orElse}) =>
+  T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
       _value.firstWhere(test, orElse: orElse);
 
   @override
@@ -188,18 +188,18 @@ class ListenableList<T> extends ChangeNotifier
   String join([String separator = ""]) => _value.join(separator);
 
   @override
-  int lastIndexOf(T element, [int start]) => _value.lastIndexOf(element, start);
+  int lastIndexOf(T element, [int? start]) => _value.lastIndexOf(element, start);
 
   @override
-  int lastIndexWhere(bool Function(T element) test, [int start]) =>
+  int lastIndexWhere(bool Function(T element) test, [int? start]) =>
       _value.lastIndexWhere(test, start);
 
   @override
-  T lastWhere(bool Function(T element) test, {T Function() orElse}) =>
+  T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
       _value.lastWhere(test, orElse: orElse);
 
   @override
-  bool remove(Object value) {
+  bool remove(Object? value) {
     final removed = _value.remove(value);
     notifyListeners();
     return removed;
@@ -259,7 +259,7 @@ class ListenableList<T> extends ChangeNotifier
   }
 
   @override
-  void shuffle([Random random]) {
+  void shuffle([Random? random]) {
     _value.shuffle(random);
     notifyListeners();
   }
@@ -268,7 +268,7 @@ class ListenableList<T> extends ChangeNotifier
   T get single => _value.single;
 
   @override
-  T singleWhere(bool Function(T element) test, {T Function() orElse}) =>
+  T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
       _value.singleWhere(test, orElse: orElse);
 
   @override
@@ -278,13 +278,13 @@ class ListenableList<T> extends ChangeNotifier
   Iterable<T> skipWhile(bool Function(T value) test) => _value.skipWhile(test);
 
   @override
-  void sort([int Function(T a, T b) compare]) {
+  void sort([int Function(T a, T b)? compare]) {
     _value.sort(compare);
     notifyListeners();
   }
 
   @override
-  List<T> sublist(int start, [int end]) => _value.sublist(start, end);
+  List<T> sublist(int start, [int? end]) => _value.sublist(start, end);
 
   @override
   Iterable<T> take(int count) => _value.take(count);

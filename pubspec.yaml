@@ -1,14 +1,14 @@
 name: multi_level_list_view
 description: A flutter pacakge for creating a multi-level list view
-version: 0.0.1
+version: 0.1.0
 author: jawwad-hassan89
 homepage: https://github.com/embraceitmobile/multi-level-listview
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  scroll_to_index: ^1.0.6
+  scroll_to_index: ^2.0.0
 
   flutter:
     sdk: flutter

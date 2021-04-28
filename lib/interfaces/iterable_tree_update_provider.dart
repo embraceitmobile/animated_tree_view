@@ -13,19 +13,19 @@ abstract class IterableTreeUpdateProvider<T extends Node<T>> {
       StreamController<NodeEvent<T>>.broadcast();
 
   @protected
-  void emitAddItems(Iterable<T> iterable, {String path}) {
-    _addedItemsController.sink.add(NodeEvent(iterable, path: path));
+  void emitAddItems(Iterable<T> iterable, {String? path}) {
+    _addedItemsController.sink.add(NodeEvent(iterable as List<T>, path: path));
   }
 
   @protected
-  void emitInsertItems(Iterable<T> iterable, int index, {String path}) {
+  void emitInsertItems(Iterable<T> iterable, int index, {String? path}) {
     _insertedItemsController.sink
-        .add(NodeEvent(iterable, index: index, path: path));
+        .add(NodeEvent(iterable as List<T>, index: index, path: path));
   }
 
   @protected
-  void emitRemoveItems(Iterable<T> iterable, {String path}) {
-    _removedItemsController.sink.add(NodeEvent(iterable, path: path));
+  void emitRemoveItems(Iterable<T> iterable, {String? path}) {
+    _removedItemsController.sink.add(NodeEvent(iterable as List<T>, path: path));
   }
 
   Stream<NodeEvent<T>> get addedItems => _addedItemsController.stream;
@@ -43,8 +43,8 @@ abstract class IterableTreeUpdateProvider<T extends Node<T>> {
 
 class NodeEvent<T extends Node<T>> {
   final List<T> items;
-  final int index;
-  final String path;
+  final int? index;
+  final String? path;
 
   const NodeEvent(this.items, {this.index, this.path});
 }

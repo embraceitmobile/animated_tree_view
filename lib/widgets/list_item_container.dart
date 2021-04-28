@@ -3,19 +3,19 @@ import 'package:multi_level_list_view/tree_structures/node.dart';
 
 class ListItemContainer<T extends Node<T>> extends StatelessWidget {
   final Animation<double> animation;
-  final ValueSetter<T> onTap;
+  final ValueSetter<T>? onTap;
   final T item;
   final bool showExpansionIndicator;
-  final Icon expandedIndicatorIcon;
-  final double indentPadding;
+  final Icon? expandedIndicatorIcon;
+  final double? indentPadding;
   final Widget child;
 
   const ListItemContainer({
-    Key key,
-    @required this.animation,
-    @required this.onTap,
-    @required this.child,
-    @required this.item,
+    Key? key,
+    required this.animation,
+    required this.onTap,
+    required this.child,
+    required this.item,
     this.expandedIndicatorIcon,
     this.indentPadding,
     this.showExpansionIndicator = true,
@@ -28,11 +28,11 @@ class ListItemContainer<T extends Node<T>> extends StatelessWidget {
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () => onTap(item),
+        onTap: () => onTap!(item),
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: indentPadding),
+              padding: EdgeInsets.only(left: indentPadding!),
               child: child,
             ),
             if (showExpansionIndicator)

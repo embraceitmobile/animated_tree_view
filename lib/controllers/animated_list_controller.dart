@@ -13,9 +13,9 @@ class AnimatedListController<T extends Node<T>> {
   final ListenableList<Node<T>> _items;
 
   AnimatedListController(
-      {@required GlobalKey<AnimatedListState> listKey,
-      @required dynamic removedItemBuilder,
-      ListenableIterableTree<T> tree})
+      {required GlobalKey<AnimatedListState> listKey,
+      required dynamic removedItemBuilder,
+      required ListenableIterableTree<T> tree})
       : _listKey = listKey,
         _items = ListenableList.from(tree.root.children),
         _removedItemBuilder = removedItemBuilder,
@@ -33,14 +33,14 @@ class AnimatedListController<T extends Node<T>> {
 
   int get length => _items.length;
 
-  AnimatedListState get _animatedList => _listKey.currentState;
+  AnimatedListState? get _animatedList => _listKey.currentState;
 
   int indexOf(T item) =>
       _items.nodeIndexWhere((e) => e.path == item.path && e.key == item.key);
 
   void insert(int index, Node<T> item) {
     _items.insert(index, item);
-    _animatedList.insertItem(index);
+    _animatedList!.insertItem(index);
   }
 
   void insertAll(int index, List<Node<T>> items) {
@@ -52,7 +52,7 @@ class AnimatedListController<T extends Node<T>> {
   Node<T> removeAt(int index) {
     final removedItem = _items.removeAt(index);
     if (removedItem != null) {
-      _animatedList.removeItem(
+      _animatedList!.removeItem(
         index,
         (BuildContext context, Animation<double> animation) =>
             _removedItemBuilder(removedItem, context, animation),
@@ -61,16 +61,16 @@ class AnimatedListController<T extends Node<T>> {
     return removedItem;
   }
 
-  void remove(Node<T> item) => removeAt(indexOf(item));
+  void remove(Node<T> item) => removeAt(indexOf(item as T));
 
   void removeAll(List<Node<T>> items) {
     for (final item in items) {
       item.isExpanded = false;
-      Future.microtask(() => removeAt(indexOf(item)));
+      Future.microtask(() => removeAt(indexOf(item as T)));
     }
   }
 
-  List<Node<T>> childrenAt([String path]) {
+  List<Node<T>> childrenAt([String? path]) {
     if (path?.isEmpty ?? true) return _items.value;
     var children = _items.value;
     var nodes = Node.normalizePath(path).split(Node.PATH_SEPARATOR);
@@ -81,7 +81,7 @@ class AnimatedListController<T extends Node<T>> {
   }
 
   void collapseNode(Node<T> item) {
-    final removeItems = _items.where((element) => element.path
+    final removeItems = _items.where((element) => element.path!
         .startsWith('${item.path}${Node.PATH_SEPARATOR}${item.key}'));
 
     removeAll(removeItems.toList());
@@ -90,7 +90,7 @@ class AnimatedListController<T extends Node<T>> {
 
   void expandNode(Node<T> item) {
     if (item.children.isEmpty) return;
-    insertAll(indexOf(item) + 1, item.children);
+    insertAll(indexOf(item as T) + 1, item.children);
     item.isExpanded = true;
   }
 
@@ -103,7 +103,7 @@ class AnimatedListController<T extends Node<T>> {
 
   @visibleForTesting
   void handleAddItemsEvent(NodeEvent<T> event) {
-    final parentKey = event.path.split(Node.PATH_SEPARATOR).last;
+    final parentKey = event.path!.split(Node.PATH_SEPARATOR).last;
     final parentIndex =
         _items.indexWhere((element) => element.key == parentKey);
     final parentNode = _items[parentIndex];
@@ -128,7 +128,7 @@ class AnimatedListController<T extends Node<T>> {
       final firstChild =
           _items.firstWhere((element) => element.path == event.path);
       // for visible path, add the items in the flatList and the animatedList
-      insertAll(indexOf(firstChild) + event.index, event.items);
+      insertAll(indexOf(firstChild as T) + event.index!, event.items);
     }
   }
 
@@ -142,7 +142,7 @@ class AnimatedListController<T extends Node<T>> {
         if (item.isExpanded) {
           //if the item is expanded, also remove its children
           removeAll(_items
-              .where((element) => element.path.startsWith(item.childrenPath))
+              .where((element) => element.path!.startsWith(item.childrenPath))
               .toList());
         }
       }

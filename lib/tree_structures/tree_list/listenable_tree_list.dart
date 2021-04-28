@@ -25,28 +25,28 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   Node<T> get root => _value.root;
 
   @override
-  void add(T item, {String path}) {
+  void add(T item, {String? path}) {
     _value.add(item, path: path);
     notifyListeners();
     emitAddItems([item], path: path);
   }
 
   @override
-  void addAll(Iterable<T> iterable, {String path}) {
+  void addAll(Iterable<T> iterable, {String? path}) {
     _value.addAll(iterable, path: path);
     notifyListeners();
     emitAddItems(iterable, path: path);
   }
 
   @override
-  void insert(T item, int index, {String path}) {
+  void insert(T item, int index, {String? path}) {
     _value.insert(item, index, path: path);
     notifyListeners();
     emitInsertItems([item], index, path: path);
   }
 
   @override
-  int insertBefore(T value, T itemBefore, {String path}) {
+  int insertBefore(T value, T itemBefore, {String? path}) {
     final index = _value.insertBefore(value, itemBefore, path: path);
     notifyListeners();
     emitInsertItems([value], index, path: path);
@@ -54,7 +54,7 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
-  int insertAfter(T value, T itemAfter, {String path}) {
+  int insertAfter(T value, T itemAfter, {String? path}) {
     final index = _value.insertAfter(value, itemAfter, path: path);
     notifyListeners();
     emitInsertItems([value], index, path: path);
@@ -62,14 +62,14 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
-  void insertAll(Iterable<T> iterable, int index, {String path}) {
+  void insertAll(Iterable<T> iterable, int index, {String? path}) {
     _value.insertAll(iterable, index, path: path);
     notifyListeners();
     emitInsertItems(iterable, index, path: path);
   }
 
   @override
-  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String path}) {
+  int insertAllBefore(Iterable<T> iterable, T itemBefore, {String? path}) {
     final index = _value.insertAllAfter(iterable, itemBefore, path: path);
     notifyListeners();
     emitInsertItems(iterable, index, path: path);
@@ -77,7 +77,7 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
-  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String path}) {
+  int insertAllAfter(Iterable<T> iterable, T itemAfter, {String? path}) {
     final index = _value.insertAllAfter(iterable, itemAfter, path: path);
     notifyListeners();
     emitInsertItems(iterable, index, path: path);
@@ -85,14 +85,14 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
-  void remove(T value, {String path}) {
+  void remove(T value, {String? path}) {
     _value.remove(value, path: path);
     notifyListeners();
     emitRemoveItems([value], path: path);
   }
 
   @override
-  T removeAt(int index, {String path}) {
+  T removeAt(int index, {String? path}) {
     final item = _value.removeAt(index, path: path);
     notifyListeners();
     emitRemoveItems([item], path: path);
@@ -100,17 +100,17 @@ class ListenableTreeList<T extends Node<T>> extends ChangeNotifier
   }
 
   @override
-  void removeItems(Iterable<Node<T>> iterable, {String path}) {
+  void removeItems(Iterable<Node<T>> iterable, {String? path}) {
     _value.removeItems(iterable, path: path);
     notifyListeners();
-    emitRemoveItems(iterable, path: path);
+    emitRemoveItems(iterable as Iterable<T>, path: path);
   }
 
   @override
-  Iterable<Node<T>> clearAll({String path}) {
+  Iterable<Node<T>> clearAll({String? path}) {
     final clearedItems = _value.clearAll(path: path);
     notifyListeners();
-    emitRemoveItems(clearedItems, path: path);
+    emitRemoveItems(clearedItems as Iterable<T>, path: path);
     return clearedItems;
   }
 }

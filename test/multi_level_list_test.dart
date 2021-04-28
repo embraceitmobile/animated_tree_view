@@ -18,8 +18,8 @@ void main() {
 
   test('child paths are assigned when a TreeList is initialized', () async {
     final treeList = TreeList.from(List.of(itemsWithoutIds));
-    expect(treeList.children.firstNode.path.isNotEmpty, isTrue);
-    expect(treeList.children.at(2).children.firstNode.path.isNotEmpty,
+    expect(treeList.children.firstNode.path!.isNotEmpty, isTrue);
+    expect(treeList.children.at(2).children.firstNode.path!.isNotEmpty,
         isTrue);
   });
 

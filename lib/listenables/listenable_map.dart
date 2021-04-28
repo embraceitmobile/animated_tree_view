@@ -29,7 +29,7 @@ class ListenableMap<K, V> extends ChangeNotifier
   factory ListenableMap.identity() => ListenableMap._(LinkedHashMap.identity());
 
   factory ListenableMap.fromIterable(Iterable iterable,
-          {K key(element), V value(element)}) =>
+          {K key(element)?, V value(element)?}) =>
       ListenableMap._(
           LinkedHashMap<K, V>.fromIterable(iterable, key: key, value: value));
 
@@ -53,7 +53,7 @@ class ListenableMap<K, V> extends ChangeNotifier
   }
 
   @override
-  V operator [](Object key) => _value[key];
+  V? operator [](Object? key) => _value[key as K];
 
   @override
   void operator []=(K key, V value) {
@@ -77,7 +77,7 @@ class ListenableMap<K, V> extends ChangeNotifier
   Map<RK, RV> cast<RK, RV>() {
     final cast = _value.cast();
     notifyListeners();
-    return cast;
+    return cast as Map<RK, RV>;
   }
 
   @override
@@ -87,10 +87,10 @@ class ListenableMap<K, V> extends ChangeNotifier
   }
 
   @override
-  bool containsKey(Object key) => _value.containsKey(key);
+  bool containsKey(Object? key) => _value.containsKey(key);
 
   @override
-  bool containsValue(Object value) => _value.containsValue(value);
+  bool containsValue(Object? value) => _value.containsValue(value);
 
   @override
   Iterable<MapEntry<K, V>> get entries => _value.entries;
@@ -126,7 +126,7 @@ class ListenableMap<K, V> extends ChangeNotifier
   }
 
   @override
-  V remove(Object key) {
+  V? remove(Object? key) {
     final v = _value.remove(key);
     notifyListeners();
     return v;
@@ -139,7 +139,7 @@ class ListenableMap<K, V> extends ChangeNotifier
   }
 
   @override
-  V update(K key, V Function(V value) update, {V Function() ifAbsent}) {
+  V update(K key, V Function(V value) update, {V Function()? ifAbsent}) {
     final v = _value.update(key, update, ifAbsent: ifAbsent);
     notifyListeners();
     return v;

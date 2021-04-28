@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 extension NodeList<T extends _Node<T>> on List<_Node<T>> {
-  Node<T> get firstNode => this.first.populateChildrenPath();
+  Node<T> get firstNode => this.first.populateChildrenPath() as Node<T>;
 
-  Node<T> get lastNode => this.last.populateChildrenPath();
+  Node<T> get lastNode => this.last.populateChildrenPath() as Node<T>;
 
-  Node<T> at(int index) => this[index].populateChildrenPath();
+  Node<T> at(int index) => this[index].populateChildrenPath() as Node<T>;
 
   //TODO: optimize this method, it is simply getting the first element in a loop
-  Node<T> firstNodeWhere(bool test(T element), {T orElse()}) =>
-      this.firstWhere((e) => test(e), orElse: orElse).populateChildrenPath();
+  Node<T> firstNodeWhere(bool test(T element), {T orElse()?}) =>
+      this.firstWhere((e) => test(e as T), orElse: orElse).populateChildrenPath() as Node<T>;
 
   //TODO: optimize this method, it is simply getting the last element in a loop
-  Node<T> lastNodeWhere(bool Function(T element) test, {T Function() orElse}) =>
-      this.lastWhere((e) => test(e), orElse: orElse).populateChildrenPath();
+  Node<T> lastNodeWhere(bool Function(T element) test, {T Function()? orElse}) =>
+      this.lastWhere((e) => test(e as T), orElse: orElse).populateChildrenPath() as Node<T>;
 
   int nodeIndexWhere(bool Function(T element) test, [int start = 0]) {
-    final index = this.indexWhere((e) => test(e), start);
+    final index = this.indexWhere((e) => test(e as T), start);
     this[index].populateChildrenPath();
     return index;
   }
@@ -38,23 +38,23 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
   /// [key] should be unique, if you are overriding it then make sure that it has a unique value
   final String key = UniqueKey().toString();
 
-  String path = "";
+  String? path = "";
 
   bool isExpanded = false;
 
   bool get hasChildren => children.isNotEmpty;
 
-  int get level => PATH_SEPARATOR.allMatches(path).length - 1;
+  int get level => PATH_SEPARATOR.allMatches(path!).length - 1;
 
   String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
-  Node<T> getNodeAt(String path) {
-    assert(key != ROOT_KEY ? !path.contains(ROOT_KEY) : true,
+  Node<T> getNodeAt(String? path) {
+    assert(key != ROOT_KEY ? !path!.contains(ROOT_KEY) : true,
         "Path with ROOT_KEY = $ROOT_KEY can only be called from the root node");
 
     final nodes = Node.normalizePath(path).split(PATH_SEPARATOR);
 
-    var currentNode = this;
+    Node<T> currentNode = this;
     for (final node in nodes) {
       if (node.isEmpty) {
         return currentNode;
@@ -65,16 +65,16 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
     return currentNode;
   }
 
-  Node<T> populateChildrenPath({bool refresh = false}) {
+  Node<T> populateChildrenPath({bool? refresh = false}) {
     if (children.isEmpty) return this;
-    if (!refresh && children.first.path.isNotEmpty) return this;
+    if (!refresh! && children.first.path!.isNotEmpty) return this;
     for (final child in children) {
       child.path = this.childrenPath;
     }
     return this;
   }
 
-  static String normalizePath(String path) {
+  static String normalizePath(String? path) {
     if (path?.isEmpty ?? true) return "";
     var _path = path
         .toString()
@@ -101,11 +101,11 @@ mixin Node<T extends _Node<T>> implements _Node<T> {
 mixin _Node<T> {
   String get key;
 
-  String path;
+  String? path;
 
   List<_Node<T>> get children;
 
-  _Node<T> populateChildrenPath({bool refresh});
+  _Node<T> populateChildrenPath({bool? refresh});
 
   @override
   bool operator ==(Object other) =>
