@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'node.dart';
 
@@ -13,9 +13,10 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   String path;
 
   @mustCallSuper
-  MapNode([String key])
+  MapNode([String? key])
       : children = <String, MapNode<T>>{},
-        key = key ?? UniqueKey().toString();
+        key = key ?? UniqueKey().toString(),
+        path = "";
 
   UnmodifiableListView<Node<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
@@ -25,7 +26,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
     final updatedValue = _updateChildrenPaths(value as MapNode);
-    children[value.key] = updatedValue;
+    children[value.key] = updatedValue as MapNode<T>;
   }
 
   @override
@@ -34,7 +35,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     value.path = childrenPath;
     final updatedValue =
         await compute(_updateChildrenPaths, (value as MapNode));
-    children[value.key] = updatedValue;
+    children[value.key] = updatedValue as MapNode<T>;
   }
 
   @override
@@ -46,7 +47,8 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
 
   @override
   Future<void> addAllAsync(Iterable<Node<T>> iterable) async {
-    await Future.forEach(iterable, (node) async => await addAsync(node));
+    await Future.forEach(
+        iterable, (dynamic node) async => await addAsync(node));
   }
 
   @override
@@ -74,7 +76,7 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
 
   @override
   MapNode<T> elementAt(String path) {
-    var currentNode = this;
+    MapNode<T> currentNode = this;
     for (final node in path.splitToNodes) {
       if (node == currentNode.key) {
         continue;
@@ -95,5 +97,10 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
       }
     });
     return node;
+  }
+
+  @override
+  String toString() {
+    return 'MapNode{children: $children, key: $key, path: $path}';
   }
 }

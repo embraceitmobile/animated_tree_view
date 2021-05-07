@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/node/list_node.dart';
-import 'package:multi_level_list_view/node/node.dart';
-import 'package:multi_level_list_view/tree/base/i_listenable_tree.dart';
-import 'package:multi_level_list_view/tree/base/i_tree.dart';
-import 'package:multi_level_list_view/tree/indexed_tree.dart';
-import 'package:multi_level_list_view/tree/tree_update_notifier.dart';
+import 'package:tree_structure_view/node/list_node.dart';
+import 'package:tree_structure_view/node/node.dart';
+import 'package:tree_structure_view/tree/base/i_listenable_tree.dart';
+import 'package:tree_structure_view/tree/base/i_tree.dart';
+import 'package:tree_structure_view/tree/indexed_tree.dart';
+import 'package:tree_structure_view/tree/tree_update_notifier.dart';
 
 class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     implements IIndexedTree<T> {
@@ -19,10 +19,10 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   final IndexedTree<T> _value;
 
   @override
-  ListNode<T> first;
+  ListNode<T>? first;
 
   @override
-  ListNode<T> last;
+  ListNode<T>? last;
 
   @override
   Node<T> operator [](covariant at) {
@@ -31,17 +31,17 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   }
 
   @override
-  void add(Node<T> value, {String path}) {
+  void add(Node<T> value, {String? path}) {
     // TODO: implement add
   }
 
   @override
-  void addAll(Iterable<Node<T>> iterable, {String path}) {
+  void addAll(Iterable<Node<T>> iterable, {String? path}) {
     // TODO: implement addAll
   }
 
   @override
-  void clear({String path}) {
+  void clear({String? path}) {
     // TODO: implement clear
   }
 
@@ -53,41 +53,41 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
 
   @override
   Node<T> firstWhere(bool Function(Node<T> element) test,
-      {Node<T> Function() orElse, String path}) {
+      {Node<T> Function()? orElse, String? path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
 
   @override
   int indexWhere(bool Function(Node<T> element) test,
-      {int start = 0, String path}) {
+      {int start = 0, String? path}) {
     // TODO: implement indexWhere
     throw UnimplementedError();
   }
 
   @override
-  void insert(int index, Node<T> element, {String path}) {
+  void insert(int index, Node<T> element, {String? path}) {
     // TODO: implement insert
   }
 
   @override
-  void insertAfter(Node<T> element, {String path}) {
+  void insertAfter(Node<T> element, {String? path}) {
     // TODO: implement insertAfter
   }
 
   @override
-  void insertAll(int index, Iterable<Node<T>> iterable, {String path}) {
+  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
     // TODO: implement insertAll
   }
 
   @override
-  void insertBefore(Node<T> element, {String path}) {
+  void insertBefore(Node<T> element, {String? path}) {
     // TODO: implement insertBefore
   }
 
   @override
   Node<T> lastWhere(bool Function(Node<T> element) test,
-      {Node<T> Function() orElse, String path}) {
+      {Node<T> Function()? orElse, String? path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
@@ -97,13 +97,13 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   int get length => throw UnimplementedError();
 
   @override
-  Node<T> removeAt(int index, {String path}) {
+  Node<T> removeAt(int index, {String? path}) {
     // TODO: implement removeAt
     throw UnimplementedError();
   }
 
   @override
-  void removeWhere(bool Function(Node<T> element) test, {String path}) {
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
     // TODO: implement removeWhere
   }
 
@@ -116,12 +116,12 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   IndexedTree<T> get value => throw UnimplementedError();
 
   @override
-  void remove(String key, {String path}) {
+  void remove(String key, {String? path}) {
     // TODO: implement remove
   }
 
   @override
-  void removeAll(Iterable<String> keys, {String path}) {
+  void removeAll(Iterable<String> keys, {String? path}) {
     // TODO: implement removeAll
   }
 

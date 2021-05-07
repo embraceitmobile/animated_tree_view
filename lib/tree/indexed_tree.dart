@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/node/list_node.dart';
+import 'package:tree_structure_view/node/list_node.dart';
 import 'base/i_tree.dart';
 import '../node/node.dart';
 
@@ -25,15 +24,15 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   }
 
 
-  void add(Node<T> value, {String path}) {
+  void add(Node<T> value, {String? path}) {
     // TODO: implement add
   }
 
-  void addAll(Iterable<Node<T>> iterable, {String path}) {
+  void addAll(Iterable<Node<T>> iterable, {String? path}) {
     // TODO: implement addAll
   }
 
-  void clear({String path}) {
+  void clear({String? path}) {
     // TODO: implement clear
   }
 
@@ -42,66 +41,66 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     throw UnimplementedError();
   }
 
-  void remove(String key, {String path}) {
+  void remove(String key, {String? path}) {
     // TODO: implement remove
   }
 
-  void removeAll(Iterable<String> keys, {String path}) {
+  void removeAll(Iterable<String> keys, {String? path}) {
     // TODO: implement removeAll
   }
 
-  void removeWhere(bool Function(Node<T> element) test, {String path}) {
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
     // TODO: implement removeWhere
   }
 
   @override
-  ListNode<T> first;
+  ListNode<T>? first;
 
   @override
-  ListNode<T> last;
+  ListNode<T>? last;
 
   @override
   ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
-      {Node<T> Function() orElse, String path}) {
+      {Node<T> Function()? orElse, String? path}) {
     // TODO: implement firstWhere
     throw UnimplementedError();
   }
 
   @override
-  int indexWhere(bool Function(ListNode<T> element) test, {int start = 0, String path}) {
+  int indexWhere(bool Function(ListNode<T> element) test, {int start = 0, String? path}) {
     // TODO: implement indexWhere
     throw UnimplementedError();
   }
 
   @override
-  void insert(int index, Node<T> element, {String path}) {
+  void insert(int index, Node<T> element, {String? path}) {
     // TODO: implement insert
   }
 
   @override
-  void insertAfter(Node<T> element, {String path}) {
+  void insertAfter(Node<T> element, {String? path}) {
     // TODO: implement insertAfter
   }
 
   @override
-  void insertAll(int index, Iterable<Node<T>> iterable, {String path}) {
+  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
     // TODO: implement insertAll
   }
 
   @override
-  void insertBefore(Node<T> element, {String path}) {
+  void insertBefore(Node<T> element, {String? path}) {
     // TODO: implement insertBefore
   }
 
   @override
   ListNode<T> lastWhere(bool Function(Node<T> element) test,
-      {Node<T> Function() orElse, String path}) {
+      {Node<T> Function()? orElse, String? path}) {
     // TODO: implement lastWhere
     throw UnimplementedError();
   }
 
   @override
-  ListNode<T> removeAt(int index, {String path}) {
+  ListNode<T> removeAt(int index, {String? path}) {
     // TODO: implement removeAt
     throw UnimplementedError();
   }

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_level_list_view/listenable_collections/listenable_tree.dart';
-import 'package:multi_level_list_view/node/map_node.dart';
+import 'package:tree_structure_view/listenable_collections/listenable_tree.dart';
+import 'package:tree_structure_view/node/map_node.dart';
 
 import '../mocks/mocks.dart';
 

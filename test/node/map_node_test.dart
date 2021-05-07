@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_level_list_view/node/map_node.dart';
+import 'package:tree_structure_view/node/map_node.dart';
 
 import '../mocks/mocks.dart';
 
@@ -136,7 +136,7 @@ void main() {
   group('accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
       final mapNode = mockMapNode1;
-      expect(mapNode.children["0A"].key, equals("0A"));
+      expect(mapNode.children["0A"]!.key, equals("0A"));
     });
 
     test('Correct node is returned elementAt method', () async {

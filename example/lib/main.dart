@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/multi_level_list_view.dart';
-
 import 'mocks.dart';
+import 'package:tree_structure_view/tree_structure_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,18 +11,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Multi Level List View Demo',
+      title: 'Tree List View Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Multi Level List View Demo'),
+      home: MyHomePage(title: 'Tree List View Demo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -48,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            MultiLevelListView<RowItem>(
+            TreeListView<RowItem>(
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

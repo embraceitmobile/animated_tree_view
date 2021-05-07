@@ -9,7 +9,7 @@ mixin NodeViewData<T> {
 
   int get level => Node.PATH_SEPARATOR.allMatches(path).length - 1;
 
-  String get childrenPath => "${path ?? ""}${Node.PATH_SEPARATOR}$key";
+  String get childrenPath => "$path${Node.PATH_SEPARATOR}$key";
 
   UnmodifiableListView<Node<T>> get childrenAsList;
 

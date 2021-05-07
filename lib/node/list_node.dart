@@ -8,10 +8,10 @@ export 'node.dart';
 class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
   final List<Node<T>> children;
   final String key;
-  String path;
+  late String path;
 
   @mustCallSuper
-  ListNode([String key])
+  ListNode([String? key])
       : children = <Node<T>>[],
         key = key ?? UniqueKey().toString();
 

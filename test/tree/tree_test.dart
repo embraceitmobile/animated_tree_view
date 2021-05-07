@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_level_list_view/node/map_node.dart';
-import 'package:multi_level_list_view/tree/tree.dart';
+import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/tree/tree.dart';
 
 import '../mocks/mocks.dart';
 
@@ -109,7 +109,7 @@ void main() {
   group('test accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
       final tree = mockTreeWithIds;
-      expect(tree.root.children["0A"].key, equals("0A"));
+      expect(tree.root.children["0A"]!.key, equals("0A"));
     });
 
     test('Correct node is returned elementAt method', () async {

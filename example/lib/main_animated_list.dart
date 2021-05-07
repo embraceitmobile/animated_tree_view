@@ -13,9 +13,11 @@ class AnimatedListSample extends StatefulWidget {
 
 class _AnimatedListSampleState extends State<AnimatedListSample> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  ListModel<int> _list;
-  int _selectedItem;
-  int _nextItem; // The next item inserted when the user presses the '+' button.
+  late ListModel<int> _list;
+
+  /// The next item inserted when the user presses the '+' button.
+  late int _nextItem;
+  int? _selectedItem;
 
   @override
   void initState() {
@@ -62,14 +64,14 @@ class _AnimatedListSampleState extends State<AnimatedListSample> {
   // Insert the "next item" into the list model.
   void _insert() {
     final int index =
-    _selectedItem == null ? _list.length : _list.indexOf(_selectedItem);
+        _selectedItem == null ? _list.length : _list.indexOf(_selectedItem!);
     _list.insert(index, _nextItem++);
   }
 
   // Remove the selected item from the list model.
   void _remove() {
     if (_selectedItem != null) {
-      _list.removeAt(_list.indexOf(_selectedItem));
+      _list.removeAt(_list.indexOf(_selectedItem!));
       setState(() {
         _selectedItem = null;
       });
@@ -119,30 +121,29 @@ class _AnimatedListSampleState extends State<AnimatedListSample> {
 /// of [AnimatedListState.insertItem] and [AnimatedList.removeItem].
 class ListModel<E> {
   ListModel({
-    @required this.listKey,
-    @required this.removedItemBuilder,
-    Iterable<E> initialItems,
-  })  : assert(listKey != null),
-        assert(removedItemBuilder != null),
-        _items = List<E>.from(initialItems ?? <E>[]);
+    required this.listKey,
+    required this.removedItemBuilder,
+    Iterable<E> initialItems = const [],
+  })  : assert(removedItemBuilder != null),
+        _items = List<E>.from(initialItems);
 
   final GlobalKey<AnimatedListState> listKey;
   final dynamic removedItemBuilder;
   final List<E> _items;
 
-  AnimatedListState get _animatedList => listKey.currentState;
+  AnimatedListState? get _animatedList => listKey.currentState;
 
   void insert(int index, E item) {
     _items.insert(index, item);
-    _animatedList.insertItem(index);
+    _animatedList?.insertItem(index);
   }
 
   E removeAt(int index) {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
-      _animatedList.removeItem(
+      _animatedList?.removeItem(
         index,
-            (BuildContext context, Animation<double> animation) =>
+        (BuildContext context, Animation<double> animation) =>
             removedItemBuilder(removedItem, context, animation),
       );
     }
@@ -164,26 +165,24 @@ class ListModel<E> {
 /// varies from 0 to 128 as the animation varies from 0.0 to 1.0.
 class CardItem extends StatelessWidget {
   const CardItem(
-      {Key key,
-        @required this.animation,
-        this.onTap,
-        @required this.item,
-        this.selected = false})
-      : assert(animation != null),
-        assert(item != null && item >= 0),
-        assert(selected != null),
+      {Key? key,
+      required this.animation,
+      this.onTap,
+      required this.item,
+      this.selected = false})
+      : assert(item >= 0),
         super(key: key);
 
   final Animation<double> animation;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final int item;
   final bool selected;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.headline4;
+    TextStyle? textStyle = Theme.of(context).textTheme.headline4;
     if (selected)
-      textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);
+      textStyle = textStyle?.copyWith(color: Colors.lightGreenAccent[400]);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: SizeTransition(

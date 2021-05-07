@@ -1,5 +1,5 @@
-import 'package:multi_level_list_view/exceptions/exceptions.dart';
-import 'package:multi_level_list_view/node/map_node.dart';
+import 'package:tree_structure_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/node/map_node.dart';
 import 'base/i_tree.dart';
 import '../node/node.dart';
 
@@ -21,32 +21,32 @@ class Tree<T> implements ITree<T> {
 
   MapNode<T> operator [](String at) => elementAt(at);
 
-  void add(Node<T> value, {String path}) {
+  void add(Node<T> value, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.add(value);
   }
 
-  void addAll(Iterable<Node<T>> iterable, {String path}) {
+  void addAll(Iterable<Node<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.addAll(iterable);
   }
 
-  void clear({String path}) {
+  void clear({String? path}) {
     final node = path == null ? _root : _root[path];
     node.children.clear();
   }
 
-  void remove(String key, {String path}) {
+  void remove(String key, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.remove(key);
   }
 
-  void removeAll(Iterable<String> keys, {String path}) {
+  void removeAll(Iterable<String> keys, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.removeAll(keys);
   }
 
-  void removeWhere(bool Function(Node<T> element) test, {String path}) {
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.removeWhere(test);
   }

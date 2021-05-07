@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/node/node.dart';
+import 'package:tree_structure_view/node/node.dart';
 
 class ListItemContainer<T extends Node<T>> extends StatelessWidget {
   final Animation<double> animation;
