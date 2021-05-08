@@ -1,3 +1,5 @@
+import 'package:tree_structure_view/node/node.dart';
+
 class DuplicateKeyException implements Exception {
   final String message;
 
@@ -8,6 +10,9 @@ class DuplicateKeyException implements Exception {
 class NodeNotFoundException implements Exception {
   final String message;
 
-  NodeNotFoundException(String path, String key)
-      : message = "The node <$key> does not exist in the path <$path>";
+  NodeNotFoundException({required String key, String? path})
+      : message = "The node <$key> does not exist in the path <${path ?? ""}>";
+
+  factory NodeNotFoundException.fromNode(Node node) =>
+      NodeNotFoundException(key: node.key, path: node.path);
 }

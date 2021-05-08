@@ -1,130 +1,156 @@
 import 'dart:collection';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'node.dart';
 
 export 'node.dart';
 
 class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
-  final List<Node<T>> children;
+  final List<ListNode<T>> children;
   final String key;
-  late String path;
+  String path;
 
   @mustCallSuper
   ListNode([String? key])
-      : children = <Node<T>>[],
-        key = key ?? UniqueKey().toString();
+      : children = <ListNode<T>>[],
+        key = key ?? UniqueKey().toString(),
+        path = "";
 
   UnmodifiableListView<Node<T>> get childrenAsList =>
       UnmodifiableListView(children);
 
-  @override
   void add(Node<T> value) {
-    // TODO: implement add
+    value.path = childrenPath;
+    final updatedValue = _updateChildrenPaths<T>(value as ListNode<T>);
+    children.add(updatedValue);
   }
 
-  @override
+  Future<void> addAsync(Node<T> value) async {
+    value.path = childrenPath;
+    final updatedValue =
+        await compute(_updateChildrenPaths, (value as ListNode<T>));
+    children.add(updatedValue as ListNode<T>);
+  }
+
   void addAll(Iterable<Node<T>> iterable) {
-    // TODO: implement addAll
+    for (final node in iterable) {
+      add(node);
+    }
   }
 
-  @override
-  void clear() {
-    // TODO: implement clear
+  Future<void> addAllAsync(Iterable<Node<T>> iterable) async {
+    await Future.forEach(
+        iterable, (dynamic node) async => await addAsync(node));
   }
 
-  @override
   void insert(int index, Node<T> element) {
-    // TODO: implement insert
+    element.path = childrenPath;
+    final updatedValue = _updateChildrenPaths<T>(element as ListNode<T>);
+    children.insert(index, updatedValue);
   }
 
-  @override
+  Future<void> insertAsync(int index, Node<T> element) async {
+    element.path = childrenPath;
+    final updatedValue =
+        await compute(_updateChildrenPaths, (element as ListNode<T>));
+    children.insert(index, updatedValue as ListNode<T>);
+  }
+
   void insertAfter(Node<T> element) {
-    // TODO: implement insertAfter
+    final index = children.indexWhere((node) => node.key == element.key);
+    if (index < 0) throw NodeNotFoundException.fromNode(element);
+    insert(index + 1, element);
   }
 
-  @override
-  void insertAll(int index, Iterable<Node<T>> iterable) {
-    // TODO: implement insertAll
+  Future<void> insertAfterAsync(Node<T> element) async {
+    final index = children.indexWhere((node) => node.key == element.key);
+    if (index < 0) throw NodeNotFoundException.fromNode(element);
+    await insertAsync(index + 1, element);
   }
 
-  @override
   void insertBefore(Node<T> element) {
-    // TODO: implement insertBefore
+    final index = children.indexWhere((node) => node.key == element.key);
+    if (index < 0) throw NodeNotFoundException.fromNode(element);
+    insert(index, element);
   }
 
-  @override
-  Node<T> removeAt(int index) {
-    // TODO: implement removeAt
-    throw UnimplementedError();
+  Future<void> insertBeforeAsync(Node<T> element) async {
+    final index = children.indexWhere((node) => node.key == element.key);
+    if (index < 0) throw NodeNotFoundException.fromNode(element);
+    await insertAsync(index, element);
   }
 
-  @override
+  void insertAll(int index, Iterable<Node<T>> iterable) {
+    final updatedNodes = iterable.map((node) {
+      node.path = childrenPath;
+      return _updateChildrenPaths<T>(node as ListNode<T>);
+    });
+
+    children.insertAll(index, updatedNodes);
+  }
+
+  Future<void> insertAllAsync(int index, Iterable<Node<T>> iterable) async {
+    final updatedNodes = List<ListNode<T>>.empty();
+    for (final node in iterable) {
+      node.path = childrenPath;
+      updatedNodes
+          .add(await compute(_updateChildrenPaths, (node as ListNode<T>)));
+    }
+
+    children.insertAll(index, updatedNodes);
+  }
+
   void removeWhere(bool Function(Node<T> element) test) {
-    // TODO: implement removeWhere
+    children.removeWhere(test);
   }
 
-  @override
-  Future<void> addAllAsync(Iterable<Node<T>> iterable) {
-    // TODO: implement addAllAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> addAsync(Node<T> value) {
-    // TODO: implement addAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> insertAfterAsync(Node<T> element) {
-    // TODO: implement insertAfterAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> insertAllAsync(int index, Iterable<Node<T>> iterable) {
-    // TODO: implement insertAllAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> insertAsync(int index, Node<T> element) {
-    // TODO: implement insertAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> insertBeforeAsync(Node<T> element) {
-    // TODO: implement insertBeforeAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Node<T>> removeAtAsync(int index) {
-    // TODO: implement removeAtAsync
-    throw UnimplementedError();
-  }
-
-  @override
-  ListNode<T> operator [](String path) {
-    // TODO: implement removeAtAsync
-    throw UnimplementedError();
-  }
-
-  @override
   void remove(String key) {
-    // TODO: implement remove
+    final index = children.indexWhere((node) => node.key == key);
+    if (index < 0) throw NodeNotFoundException(key: key);
+    children.removeAt(index);
   }
 
-  @override
+  Node<T> removeAt(int index) {
+    return children.removeAt(index);
+  }
+
   void removeAll(Iterable<String> keys) {
-    // TODO: implement removeAll
+    for (final key in keys) {
+      remove(key);
+    }
   }
 
-  @override
+  void clear() {
+    children.clear();
+  }
+
   Node<T> elementAt(String path) {
-    // TODO: implement elementAt
-    throw UnimplementedError();
+    ListNode<T> currentNode = this;
+    for (final nodeKey in path.splitToNodes) {
+      if (nodeKey == currentNode.key) {
+        continue;
+      } else {
+        final index =
+            currentNode.children.indexWhere((node) => node.key == nodeKey);
+        if (index < 0) throw NodeNotFoundException(path: path, key: nodeKey);
+        final nextNode = currentNode.children[index];
+        currentNode = nextNode;
+      }
+    }
+    return currentNode;
+  }
+
+  ListNode<T> operator [](String path) => elementAt(path) as ListNode<T>;
+
+  static ListNode<E> _updateChildrenPaths<E>(ListNode<E> node) {
+    for (final childNode in node.children) {
+      childNode.path = node.childrenPath;
+      if (childNode.children.isNotEmpty) {
+        _updateChildrenPaths(childNode);
+      }
+    }
+    return node;
   }
 }

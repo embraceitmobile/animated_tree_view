@@ -77,12 +77,13 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   @override
   MapNode<T> elementAt(String path) {
     MapNode<T> currentNode = this;
-    for (final node in path.splitToNodes) {
-      if (node == currentNode.key) {
+    for (final nodeKey in path.splitToNodes) {
+      if (nodeKey == currentNode.key) {
         continue;
       } else {
-        final nextNode = currentNode.children[node];
-        if (nextNode == null) throw NodeNotFoundException(path, node);
+        final nextNode = currentNode.children[nodeKey];
+        if (nextNode == null)
+          throw NodeNotFoundException(path: path, key: nodeKey);
         currentNode = nextNode;
       }
     }
