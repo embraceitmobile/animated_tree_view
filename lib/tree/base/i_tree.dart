@@ -4,8 +4,6 @@ import 'package:tree_structure_view/node/map_node.dart';
 abstract class ITree<T> {
   external factory ITree();
 
-  external factory ITree.fromList(List<Node<T>> list);
-
   external factory ITree.fromMap(Map<String, Node<T>> map);
 
   Node<T> get root;
@@ -44,19 +42,19 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   Node<T> removeAt(int index, {String? path});
 
-  set first(ListNode<T>? value);
+  set first(ListNode<T> value);
 
-  ListNode<T>? get first;
+  ListNode<T> get first;
 
-  set last(ListNode<T>? value);
+  set last(ListNode<T> value);
 
-  ListNode<T>? get last;
+  ListNode<T> get last;
 
   int indexWhere(bool test(Node<T> element), {int start = 0, String? path});
 
-  Node<T> firstWhere(bool test(Node<T> element),
-      {Node<T> orElse()?, String? path});
+  ListNode<T> firstWhere(bool test(ListNode<T> element),
+      {ListNode<T> orElse()?, String? path});
 
-  Node<T> lastWhere(bool test(Node<T> element),
-      {Node<T> orElse()?, String? path});
+  ListNode<T> lastWhere(bool test(ListNode<T> element),
+      {ListNode<T> orElse()?, String? path});
 }

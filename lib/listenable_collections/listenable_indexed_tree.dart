@@ -10,19 +10,18 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     implements IIndexedTree<T> {
   ListenableIndexedTree(IndexedTree<T> tree) : _value = tree;
 
-  factory ListenableIndexedTree.fromList(List<Node<T>> list) =>
+  factory ListenableIndexedTree.fromList(List<ListNode<T>> list) =>
       ListenableIndexedTree(IndexedTree<T>.fromList(list));
-
-  factory ListenableIndexedTree.fromMap(Map<String, Node<T>> map) =>
-      ListenableIndexedTree(IndexedTree.fromMap(map));
 
   final IndexedTree<T> _value;
 
-  @override
-  ListNode<T>? first;
+  set first(ListNode<T> value){}
 
-  @override
-  ListNode<T>? last;
+  ListNode<T> get first;
+
+  set last(ListNode<T> value){}
+
+  ListNode<T> get last;
 
   @override
   Node<T> operator [](covariant at) {

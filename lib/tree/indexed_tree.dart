@@ -1,107 +1,108 @@
 import 'package:tree_structure_view/node/list_node.dart';
+import 'package:tree_structure_view/node/map_node.dart';
 import 'base/i_tree.dart';
 import '../node/node.dart';
 
 class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
-  IndexedTree() : children = <ListNode<T>>[];
+  IndexedTree() : _root = ListNode<T>(Node.ROOT_KEY);
 
-  factory IndexedTree.fromMap(Map<String, Node<T>> map) => IndexedTree();
+  factory IndexedTree.fromList(List<ListNode<T>> list) =>
+      IndexedTree()..addAll(list);
 
-  factory IndexedTree.fromList(List<Node<T>> list) => IndexedTree();
+  final ListNode<T> _root;
 
-  final List<ListNode<T>> children;
+  List<ListNode<T>> get children => _root.children;
 
-  @override
   int get length => children.length;
 
-  @override
-  // TODO: implement root
-  ListNode<T> get root => throw UnimplementedError();
+  ListNode<T> get root => _root;
 
-  ListNode<T> operator [](int at) {
-    // TODO: implement []
-    throw UnimplementedError();
+  ListNode<T> elementAt(String path) => _root.elementAt(path) as ListNode<T>;
+
+  ListNode<T> operator [](int at) => _root.children[at];
+
+  ListNode<T> get first => _root.children.first;
+
+  set first(ListNode<T> value) {
+    _root.children.first = value;
   }
 
+  ListNode<T> get last => _root.children.last;
+
+  set last(ListNode<T> value) {
+    _root.children.last = value;
+  }
+
+  ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
+      {ListNode<T> orElse()?, String? path}) {
+    final node = path == null ? _root : _root[path];
+    return node.children.firstWhere(test, orElse: orElse);
+  }
+
+  int indexWhere(bool Function(ListNode<T> element) test,
+      {int start = 0, String? path}) {
+    final node = path == null ? _root : _root[path];
+    return node.children.indexWhere(test, start);
+  }
+
+  ListNode<T> lastWhere(bool Function(ListNode<T> element) test,
+      {ListNode<T> orElse()?, String? path}) {
+    final node = path == null ? _root : _root[path];
+    return node.children.lastWhere(test, orElse: orElse);
+  }
 
   void add(Node<T> value, {String? path}) {
-    // TODO: implement add
+    final node = path == null ? _root : _root[path];
+    node.add(value);
   }
 
   void addAll(Iterable<Node<T>> iterable, {String? path}) {
-    // TODO: implement addAll
+    final node = path == null ? _root : _root[path];
+    node.addAll(iterable);
   }
 
-  void clear({String? path}) {
-    // TODO: implement clear
+  void insert(int index, Node<T> element, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.insert(index, element);
   }
 
-  ListNode<T> elementAt(String path) {
-    // TODO: implement elementAt
-    throw UnimplementedError();
+  void insertAfter(Node<T> element, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.insertAfter(element);
+  }
+
+  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.insertAll(index, iterable);
+  }
+
+  void insertBefore(Node<T> element, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.insertBefore(element);
   }
 
   void remove(String key, {String? path}) {
-    // TODO: implement remove
+    final node = path == null ? _root : _root[path];
+    node.remove(key);
   }
 
-  void removeAll(Iterable<String> keys, {String? path}) {
-    // TODO: implement removeAll
+  ListNode<T> removeAt(int index, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    return node.removeAt(index) as ListNode<T>;
   }
 
   void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-    // TODO: implement removeWhere
+    final node = path == null ? _root : _root[path];
+    node.removeWhere(test);
   }
 
-  @override
-  ListNode<T>? first;
-
-  @override
-  ListNode<T>? last;
-
-  @override
-  ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
-      {Node<T> Function()? orElse, String? path}) {
-    // TODO: implement firstWhere
-    throw UnimplementedError();
+  void removeAll(Iterable<String> keys, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.removeAll(keys);
   }
 
-  @override
-  int indexWhere(bool Function(ListNode<T> element) test, {int start = 0, String? path}) {
-    // TODO: implement indexWhere
-    throw UnimplementedError();
-  }
-
-  @override
-  void insert(int index, Node<T> element, {String? path}) {
-    // TODO: implement insert
-  }
-
-  @override
-  void insertAfter(Node<T> element, {String? path}) {
-    // TODO: implement insertAfter
-  }
-
-  @override
-  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
-    // TODO: implement insertAll
-  }
-
-  @override
-  void insertBefore(Node<T> element, {String? path}) {
-    // TODO: implement insertBefore
-  }
-
-  @override
-  ListNode<T> lastWhere(bool Function(Node<T> element) test,
-      {Node<T> Function()? orElse, String? path}) {
-    // TODO: implement lastWhere
-    throw UnimplementedError();
-  }
-
-  @override
-  ListNode<T> removeAt(int index, {String? path}) {
-    // TODO: implement removeAt
-    throw UnimplementedError();
+  void clear({String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.clear();
   }
 }
