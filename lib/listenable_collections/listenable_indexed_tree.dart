@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
 import 'package:tree_structure_view/node/list_node.dart';
 import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/tree/base/i_listenable_tree.dart';
@@ -15,124 +16,134 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
 
   final IndexedTree<T> _value;
 
-  set first(ListNode<T> value){}
+  final StreamController<NodeAddEvent<T>> _addedNodes =
+      StreamController<NodeAddEvent<T>>.broadcast();
 
-  ListNode<T> get first;
+  final StreamController<NodeRemoveEvent> _removedNodes =
+      StreamController<NodeRemoveEvent>.broadcast();
 
-  set last(ListNode<T> value){}
+  final StreamController<NodeInsertEvent<T>> _insertedNodes =
+      StreamController<NodeInsertEvent<T>>.broadcast();
 
-  ListNode<T> get last;
+  ListNode<T> get root => _value.root;
 
-  @override
-  Node<T> operator [](covariant at) {
-    // TODO: implement []
-    throw UnimplementedError();
+  IndexedTree<T> get value => _value;
+
+  int get length => _value.length;
+
+  Stream<NodeAddEvent<T>> get addedNodes => _addedNodes.stream;
+
+  Stream<NodeInsertEvent<T>> get insertedNodes => _insertedNodes.stream;
+
+  Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
+
+  ListNode<T> get first => _value.first;
+
+  Node<T> operator [](covariant at) => _value[at];
+
+  Node<T> elementAt(String path) => _value.elementAt(path);
+
+  set first(ListNode<T> value) {
+    _value.first = value;
   }
 
-  @override
-  void add(Node<T> value, {String? path}) {
-    // TODO: implement add
+  ListNode<T> get last => _value.last;
+
+  set last(ListNode<T> value) {
+    _value.last = value;
   }
 
-  @override
-  void addAll(Iterable<Node<T>> iterable, {String? path}) {
-    // TODO: implement addAll
-  }
-
-  @override
-  void clear({String? path}) {
-    // TODO: implement clear
-  }
-
-  @override
-  Node<T> elementAt(String path) {
-    // TODO: implement elementAt
-    throw UnimplementedError();
-  }
-
-  @override
-  Node<T> firstWhere(bool Function(Node<T> element) test,
-      {Node<T> Function()? orElse, String? path}) {
-    // TODO: implement firstWhere
-    throw UnimplementedError();
-  }
-
-  @override
   int indexWhere(bool Function(Node<T> element) test,
       {int start = 0, String? path}) {
-    // TODO: implement indexWhere
-    throw UnimplementedError();
+    return _value.indexWhere(test, start: start, path: path);
   }
 
-  @override
+  ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
+      {ListNode<T> orElse()?, String? path}) {
+    return _value.firstWhere(test, orElse: orElse);
+  }
+
+  ListNode<T> lastWhere(bool Function(ListNode<T> element) test,
+      {ListNode<T> orElse()?, String? path}) {
+    return _value.lastWhere(test, orElse: orElse);
+  }
+
+  void add(Node<T> value, {String? path}) {
+    _value.add(value, path: path);
+    _notifyNodesAdded([value], path: path);
+  }
+
+  void addAll(Iterable<Node<T>> iterable, {String? path}) {
+    _value.addAll(iterable, path: path);
+    _notifyNodesAdded(iterable, path: path);
+  }
+
+  void clear({String? path}) {
+    final allKeys = path == null
+        ? _value.children
+        : elementAt(path).children as List<ListNode<T>>;
+    _value.clear(path: path);
+    _notifyNodesRemoved((allKeys).map((node) => node.key), path: path);
+  }
+
   void insert(int index, Node<T> element, {String? path}) {
-    // TODO: implement insert
+    _value.insert(index, element, path: path);
+    _notifyNodesInserted([element], index, path: path);
   }
 
-  @override
-  void insertAfter(Node<T> element, {String? path}) {
-    // TODO: implement insertAfter
+  int insertAfter(Node<T> element, {String? path}) {
+    final index = _value.insertAfter(element, path: path);
+    _notifyNodesInserted([element], index);
+    return index;
   }
 
-  @override
+  int insertBefore(Node<T> element, {String? path}) {
+    final index = _value.insertBefore(element, path: path);
+    _notifyNodesInserted([element], index);
+    return index;
+  }
+
   void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
-    // TODO: implement insertAll
+    _value.insertAll(index, iterable, path: path);
+    _notifyNodesInserted(iterable, index, path: path);
   }
 
-  @override
-  void insertBefore(Node<T> element, {String? path}) {
-    // TODO: implement insertBefore
-  }
-
-  @override
-  Node<T> lastWhere(bool Function(Node<T> element) test,
-      {Node<T> Function()? orElse, String? path}) {
-    // TODO: implement lastWhere
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement length
-  int get length => throw UnimplementedError();
-
-  @override
   Node<T> removeAt(int index, {String? path}) {
-    // TODO: implement removeAt
-    throw UnimplementedError();
+    final removedNode = _value.removeAt(index, path: path);
+    _notifyNodesRemoved([removedNode.key], path: path);
+    return removedNode;
   }
 
-  @override
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-    // TODO: implement removeWhere
-  }
-
-  @override
-  // TODO: implement root
-  Node<T> get root => throw UnimplementedError();
-
-  @override
-  // TODO: implement value
-  IndexedTree<T> get value => throw UnimplementedError();
-
-  @override
   void remove(String key, {String? path}) {
-    // TODO: implement remove
+    _value.remove(key, path: path);
+    _notifyNodesRemoved([key], path: path);
   }
 
-  @override
   void removeAll(Iterable<String> keys, {String? path}) {
-    // TODO: implement removeAll
+    _value.removeAll(keys, path: path);
+    _notifyNodesRemoved(keys, path: path);
   }
 
-  @override
-  // TODO: implement addedNodes
-  Stream<NodeAddEvent<T>> get addedNodes => throw UnimplementedError();
+  void _notifyNodesAdded(Iterable<Node<T>> iterable, {String? path}) {
+    _addedNodes.sink.add(NodeAddEvent(iterable, path: path));
+    notifyListeners();
+  }
 
-  @override
-  // TODO: implement insertedNodes
-  Stream<NodeInsertEvent<T>> get insertedNodes => throw UnimplementedError();
+  void _notifyNodesInserted(Iterable<Node<T>> iterable, int index,
+      {String? path}) {
+    _insertedNodes.sink.add(NodeInsertEvent(iterable, index, path: path));
+    notifyListeners();
+  }
 
-  @override
-  // TODO: implement removedNodes
-  Stream<NodeRemoveEvent> get removedNodes => throw UnimplementedError();
+  void _notifyNodesRemoved(Iterable<String> keys, {String? path}) {
+    _removedNodes.sink.add(NodeRemoveEvent(keys, path: path));
+    notifyListeners();
+  }
+
+  void dispose() {
+    _addedNodes.close();
+    _removedNodes.close();
+    _insertedNodes.close();
+    super.dispose();
+  }
 }

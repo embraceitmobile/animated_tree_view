@@ -16,8 +16,6 @@ abstract class ITree<T> {
 
   void removeAll(Iterable<String> keys, {String? path});
 
-  void removeWhere(bool test(Node<T> element), {String? path});
-
   void clear({String? path});
 
   Node<T> elementAt(String path);
@@ -36,9 +34,9 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   void insertAll(int index, Iterable<Node<T>> iterable, {String? path});
 
-  void insertAfter(Node<T> element, {String? path});
+  int insertAfter(Node<T> element, {String? path});
 
-  void insertBefore(Node<T> element, {String? path});
+  int insertBefore(Node<T> element, {String? path});
 
   Node<T> removeAt(int index, {String? path});
 

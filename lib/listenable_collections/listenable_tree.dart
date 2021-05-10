@@ -10,10 +10,7 @@ import 'package:tree_structure_view/tree/tree_update_notifier.dart';
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   ListenableTree([Tree<T>? tree]) : _value = tree ?? Tree<T>();
 
-  factory ListenableTree.fromList(List<Node<T>> list) =>
-      ListenableTree(Tree<T>.fromList(list));
-
-  factory ListenableTree.fromMap(Map<String, Node<T>> map) =>
+  factory ListenableTree.fromMap(Map<String, MapNode<T>> map) =>
       ListenableTree(Tree<T>.fromMap(map));
 
   final Tree<T> _value;
@@ -24,68 +21,54 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   final StreamController<NodeRemoveEvent> _removedNodes =
       StreamController<NodeRemoveEvent>.broadcast();
 
-  @override
   Tree<T> get value => _value;
 
-  @override
   MapNode<T> get root => _value.root;
 
-  @override
   int get length => _value.length;
 
-  @override
   Stream<NodeAddEvent<T>> get addedNodes => _addedNodes.stream;
 
-  @override
   Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
 
-  @override
   Stream<NodeInsertEvent<T>> get insertedNodes =>
       StreamController<NodeInsertEvent<T>>().stream;
 
-  @override
   MapNode<T> elementAt(String? path) =>
       path == null ? root : _value.elementAt(path);
 
-  @override
   MapNode<T> operator [](String at) => _value[at];
 
-  @override
   void add(Node<T> value, {String? path}) {
     _value.add(value, path: path);
     _notifyNodesAdded([value], path: path);
   }
 
-  @override
   void addAll(Iterable<Node<T>> iterable, {String? path}) {
     _value.addAll(iterable, path: path);
     _notifyNodesAdded(iterable, path: path);
   }
 
-  @override
   void remove(String key, {String? path}) {
     _value.remove(key, path: path);
     _notifyNodesRemoved([key], path: path);
   }
 
-  @override
   void removeAll(Iterable<String> keys, {String? path}) {
     _value.removeAll(keys, path: path);
     _notifyNodesRemoved(keys, path: path);
   }
 
-  @override
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-    final allKeysInPath = elementAt(path).children.keys.toSet();
+  // void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+  //   final allKeysInPath = elementAt(path).children.keys.toSet();
+  //
+  //   _value.removeWhere(test, path: path);
+  //
+  //   final remainingKeysInPath = elementAt(path).children.keys.toSet();
+  //   allKeysInPath.removeAll(remainingKeysInPath);
+  //   if (allKeysInPath.isNotEmpty) _notifyNodesRemoved(allKeysInPath);
+  // }
 
-    _value.removeWhere(test, path: path);
-
-    final remainingKeysInPath = elementAt(path).children.keys.toSet();
-    allKeysInPath.removeAll(remainingKeysInPath);
-    if (allKeysInPath.isNotEmpty) _notifyNodesRemoved(allKeysInPath);
-  }
-
-  @override
   void clear({String? path}) {
     final allKeys = elementAt(path).children.keys;
     _value.clear(path: path);

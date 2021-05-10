@@ -45,9 +45,4 @@ class Tree<T> implements ITree<T> {
     final node = path == null ? _root : _root[path];
     node.removeAll(keys);
   }
-
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-    final node = path == null ? _root : _root[path];
-    node.removeWhere(test);
-  }
 }

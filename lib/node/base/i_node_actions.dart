@@ -13,8 +13,6 @@ abstract class IMapNodeActions<T> {
 
   void removeAll(Iterable<String> keys);
 
-  void removeWhere(bool test(Node<T> element));
-
   void clear();
 }
 
@@ -27,13 +25,13 @@ abstract class IListNodeActions<T> implements IMapNodeActions<T> {
 
   Future<void> insertAllAsync(int index, Iterable<Node<T>> iterable);
 
-  void insertAfter(Node<T> element);
+  int insertAfter(Node<T> element);
 
-  Future<void> insertAfterAsync(Node<T> element);
+  Future<int> insertAfterAsync(Node<T> element);
 
-  void insertBefore(Node<T> element);
+  int insertBefore(Node<T> element);
 
-  Future<void> insertBeforeAsync(Node<T> element);
+  Future<int> insertBeforeAsync(Node<T> element);
 
   Node<T> removeAt(int index);
 }

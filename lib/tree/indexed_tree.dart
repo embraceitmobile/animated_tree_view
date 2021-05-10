@@ -66,9 +66,9 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.insert(index, element);
   }
 
-  void insertAfter(Node<T> element, {String? path}) {
+  int insertAfter(Node<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
-    node.insertAfter(element);
+    return node.insertAfter(element);
   }
 
   void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
@@ -76,9 +76,9 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.insertAll(index, iterable);
   }
 
-  void insertBefore(Node<T> element, {String? path}) {
+  int insertBefore(Node<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
-    node.insertBefore(element);
+    return node.insertBefore(element);
   }
 
   void remove(String key, {String? path}) {
@@ -89,11 +89,6 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   ListNode<T> removeAt(int index, {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.removeAt(index) as ListNode<T>;
-  }
-
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-    final node = path == null ? _root : _root[path];
-    node.removeWhere(test);
   }
 
   void removeAll(Iterable<String> keys, {String? path}) {

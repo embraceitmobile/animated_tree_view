@@ -58,28 +58,32 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     children.insert(index, updatedValue as ListNode<T>);
   }
 
-  void insertAfter(Node<T> element) {
+  int insertAfter(Node<T> element) {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     insert(index + 1, element);
+    return index + 1;
   }
 
-  Future<void> insertAfterAsync(Node<T> element) async {
+  Future<int> insertAfterAsync(Node<T> element) async {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     await insertAsync(index + 1, element);
+    return index + 1;
   }
 
-  void insertBefore(Node<T> element) {
+  int insertBefore(Node<T> element) {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     insert(index, element);
+    return index;
   }
 
-  Future<void> insertBeforeAsync(Node<T> element) async {
+  Future<int> insertBeforeAsync(Node<T> element) async {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     await insertAsync(index, element);
+    return index;
   }
 
   void insertAll(int index, Iterable<Node<T>> iterable) {
@@ -102,9 +106,6 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     children.insertAll(index, updatedNodes);
   }
 
-  void removeWhere(bool Function(Node<T> element) test) {
-    children.removeWhere(test);
-  }
 
   void remove(String key) {
     final index = children.indexWhere((node) => node.key == key);
