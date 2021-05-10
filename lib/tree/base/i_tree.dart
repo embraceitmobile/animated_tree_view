@@ -16,9 +16,11 @@ abstract class ITree<T> {
 
   void removeAll(Iterable<String> keys, {String? path});
 
+  void removeWhere(bool test(Node<T> element), {String? path});
+
   void clear({String? path});
 
-  Node<T> elementAt(String path);
+  Node<T> elementAt(String? path);
 
   Node<T> operator [](covariant dynamic at);
 

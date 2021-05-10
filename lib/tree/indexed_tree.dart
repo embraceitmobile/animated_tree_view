@@ -17,7 +17,8 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
 
   ListNode<T> get root => _root;
 
-  ListNode<T> elementAt(String path) => _root.elementAt(path) as ListNode<T>;
+  ListNode<T> elementAt(String? path) =>
+      path == null ? _root : _root.elementAt(path) as ListNode<T>;
 
   ListNode<T> operator [](int at) => _root.children[at];
 
@@ -94,6 +95,11 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   void removeAll(Iterable<String> keys, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.removeAll(keys);
+  }
+
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.removeWhere(test);
   }
 
   void clear({String? path}) {

@@ -21,7 +21,6 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
   UnmodifiableListView<Node<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
 
-  @override
   void add(Node<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
@@ -29,7 +28,6 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     children[value.key] = updatedValue as MapNode<T>;
   }
 
-  @override
   Future<void> addAsync(Node<T> value) async {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
@@ -38,43 +36,35 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     children[value.key] = updatedValue as MapNode<T>;
   }
 
-  @override
   void addAll(Iterable<Node<T>> iterable) {
     for (final node in iterable) {
       add(node);
     }
   }
 
-  @override
   Future<void> addAllAsync(Iterable<Node<T>> iterable) async {
     await Future.forEach(
         iterable, (dynamic node) async => await addAsync(node));
   }
 
-  @override
   void clear() {
     children.clear();
   }
 
-  @override
   void remove(String key) {
     children.remove(key);
   }
 
-  @override
   void removeAll(Iterable<String> keys) {
     keys.forEach((key) => children.remove(key));
   }
 
-  @override
   void removeWhere(bool Function(Node<T> element) test) {
     children.removeWhere((key, value) => test(value));
   }
 
-  @override
   MapNode<T> operator [](String path) => elementAt(path);
 
-  @override
   MapNode<T> elementAt(String path) {
     MapNode<T> currentNode = this;
     for (final nodeKey in path.splitToNodes) {
@@ -100,7 +90,6 @@ class MapNode<T> with NodeViewData<T> implements Node<T>, IMapNodeActions<T> {
     return node;
   }
 
-  @override
   String toString() {
     return 'MapNode{children: $children, key: $key, path: $path}';
   }

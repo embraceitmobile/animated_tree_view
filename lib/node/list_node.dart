@@ -106,7 +106,6 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     children.insertAll(index, updatedNodes);
   }
 
-
   void remove(String key) {
     final index = children.indexWhere((node) => node.key == key);
     if (index < 0) throw NodeNotFoundException(key: key);
@@ -121,6 +120,10 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     for (final key in keys) {
       remove(key);
     }
+  }
+
+  void removeWhere(bool Function(Node<T> element) test) {
+    children.removeWhere(test);
   }
 
   void clear() {

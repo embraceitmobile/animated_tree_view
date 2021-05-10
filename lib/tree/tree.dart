@@ -17,7 +17,8 @@ class Tree<T> implements ITree<T> {
 
   MapNode<T> get root => _root;
 
-  MapNode<T> elementAt(String path) => _root.elementAt(path);
+  MapNode<T> elementAt(String? path) =>
+      path == null ? _root : _root.elementAt(path);
 
   MapNode<T> operator [](String at) => elementAt(at);
 
@@ -39,6 +40,11 @@ class Tree<T> implements ITree<T> {
   void remove(String key, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.remove(key);
+  }
+
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.removeWhere(test);
   }
 
   void removeAll(Iterable<String> keys, {String? path}) {

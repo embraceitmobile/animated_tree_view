@@ -41,7 +41,8 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
 
   Node<T> operator [](covariant at) => _value[at];
 
-  Node<T> elementAt(String path) => _value.elementAt(path);
+  ListNode<T> elementAt(String? path) =>
+      path == null ? root : _value.elementAt(path);
 
   set first(ListNode<T> value) {
     _value.first = value;
@@ -122,6 +123,19 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   void removeAll(Iterable<String> keys, {String? path}) {
     _value.removeAll(keys, path: path);
     _notifyNodesRemoved(keys, path: path);
+  }
+
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+    final allKeysInPath =
+        elementAt(path).children.map((node) => node.key).toSet();
+
+    _value.removeWhere(test, path: path);
+
+    final remainingKeysInPath =
+        elementAt(path).children.map((node) => node.key).toSet();
+
+    allKeysInPath.removeAll(remainingKeysInPath);
+    if (allKeysInPath.isNotEmpty) _notifyNodesRemoved(allKeysInPath);
   }
 
   void _notifyNodesAdded(Iterable<Node<T>> iterable, {String? path}) {

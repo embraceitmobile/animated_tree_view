@@ -59,15 +59,15 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
     _notifyNodesRemoved(keys, path: path);
   }
 
-  // void removeWhere(bool Function(Node<T> element) test, {String? path}) {
-  //   final allKeysInPath = elementAt(path).children.keys.toSet();
-  //
-  //   _value.removeWhere(test, path: path);
-  //
-  //   final remainingKeysInPath = elementAt(path).children.keys.toSet();
-  //   allKeysInPath.removeAll(remainingKeysInPath);
-  //   if (allKeysInPath.isNotEmpty) _notifyNodesRemoved(allKeysInPath);
-  // }
+  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+    final allKeysInPath = elementAt(path).children.keys.toSet();
+
+    _value.removeWhere(test, path: path);
+
+    final remainingKeysInPath = elementAt(path).children.keys.toSet();
+    allKeysInPath.removeAll(remainingKeysInPath);
+    if (allKeysInPath.isNotEmpty) _notifyNodesRemoved(allKeysInPath);
+  }
 
   void clear({String? path}) {
     final allKeys = elementAt(path).children.keys;

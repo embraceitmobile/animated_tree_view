@@ -13,6 +13,8 @@ abstract class IMapNodeActions<T> {
 
   void removeAll(Iterable<String> keys);
 
+  void removeWhere(bool test(Node<T> element));
+
   void clear();
 }
 
