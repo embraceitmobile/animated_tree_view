@@ -40,6 +40,8 @@ class IndexedTreeListViewController<T extends Node<T>>
 
   Node<T> operator [](String at) => _listenableTree[at];
 
+  ListNode<T> at(int index) => _listenableTree.at(index);
+
   ListNode<T> get first => _listenableTree.first;
 
   set first(ListNode<T> value) {
@@ -73,19 +75,19 @@ class IndexedTreeListViewController<T extends Node<T>>
   void addAll(Iterable<Node<T>> iterable, {String? path}) =>
       _listenableTree.addAll(iterable, path: path);
 
-  void insert(int index, Node<T> element, {String? path}) {
+  void insert(int index, ListNode<T> element, {String? path}) {
     _listenableTree.insert(index, element, path: path);
   }
 
-  int insertAfter(Node<T> element, {String? path}) {
+  int insertAfter(ListNode<T> element, {String? path}) {
     return _listenableTree.insertAfter(element, path: path);
   }
 
-  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
+  void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path}) {
     _listenableTree.insertAll(index, iterable, path: path);
   }
 
-  int insertBefore(Node<T> element, {String? path}) {
+  int insertBefore(ListNode<T> element, {String? path}) {
     return _listenableTree.insertBefore(element, path: path);
   }
 

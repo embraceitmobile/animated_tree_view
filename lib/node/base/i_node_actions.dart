@@ -1,3 +1,5 @@
+import 'package:tree_structure_view/node/list_node.dart';
+
 import '../node.dart';
 
 abstract class IMapNodeActions<T> {
@@ -19,21 +21,24 @@ abstract class IMapNodeActions<T> {
 }
 
 abstract class IListNodeActions<T> implements IMapNodeActions<T> {
-  void insert(int index, Node<T> element);
+  void insert(int index, ListNode<T> element);
 
-  Future<void> insertAsync(int index, Node<T> element);
+  Future<void> insertAsync(int index, ListNode<T> element);
 
-  void insertAll(int index, Iterable<Node<T>> iterable);
+  void insertAll(int index, Iterable<ListNode<T>> iterable);
 
-  Future<void> insertAllAsync(int index, Iterable<Node<T>> iterable);
+  Future<void> insertAllAsync(int index, Iterable<ListNode<T>> iterable);
 
-  int insertAfter(Node<T> element);
+  int insertAfter(ListNode<T> element);
 
-  Future<int> insertAfterAsync(Node<T> element);
+  Future<int> insertAfterAsync(ListNode<T> element);
 
-  int insertBefore(Node<T> element);
+  int insertBefore(ListNode<T> element);
 
-  Future<int> insertBeforeAsync(Node<T> element);
+  Future<int> insertBeforeAsync(ListNode<T> element);
 
-  Node<T> removeAt(int index);
+  ListNode<T> removeAt(int index);
+  
+  ListNode<T> at(int index);
+
 }

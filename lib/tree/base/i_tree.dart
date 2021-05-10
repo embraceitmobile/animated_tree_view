@@ -32,13 +32,13 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   external factory IIndexedTree.from(List<Node<T>> list);
 
-  void insert(int index, Node<T> element, {String? path});
+  void insert(int index, ListNode<T> element, {String? path});
 
-  void insertAll(int index, Iterable<Node<T>> iterable, {String? path});
+  void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path});
 
-  int insertAfter(Node<T> element, {String? path});
+  int insertAfter(ListNode<T> element, {String? path});
 
-  int insertBefore(Node<T> element, {String? path});
+  int insertBefore(ListNode<T> element, {String? path});
 
   Node<T> removeAt(int index, {String? path});
 
@@ -49,6 +49,8 @@ abstract class IIndexedTree<T> implements ITree<T> {
   set last(ListNode<T> value);
 
   ListNode<T> get last;
+
+  ListNode<T> at(int index);
 
   int indexWhere(bool test(Node<T> element), {int start = 0, String? path});
 

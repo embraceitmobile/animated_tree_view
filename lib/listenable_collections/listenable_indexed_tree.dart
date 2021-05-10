@@ -37,12 +37,14 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
 
   Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
 
-  ListNode<T> get first => _value.first;
-
   Node<T> operator [](covariant at) => _value[at];
 
   ListNode<T> elementAt(String? path) =>
       path == null ? root : _value.elementAt(path);
+
+  ListNode<T> at(int index) => _value.at(index);
+
+  ListNode<T> get first => _value.first;
 
   set first(ListNode<T> value) {
     _value.first = value;
@@ -80,31 +82,29 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
   }
 
   void clear({String? path}) {
-    final allKeys = path == null
-        ? _value.children
-        : elementAt(path).children as List<ListNode<T>>;
+    final allKeys = path == null ? _value.children : elementAt(path).children;
     _value.clear(path: path);
     _notifyNodesRemoved((allKeys).map((node) => node.key), path: path);
   }
 
-  void insert(int index, Node<T> element, {String? path}) {
+  void insert(int index, ListNode<T> element, {String? path}) {
     _value.insert(index, element, path: path);
     _notifyNodesInserted([element], index, path: path);
   }
 
-  int insertAfter(Node<T> element, {String? path}) {
+  int insertAfter(ListNode<T> element, {String? path}) {
     final index = _value.insertAfter(element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }
 
-  int insertBefore(Node<T> element, {String? path}) {
+  int insertBefore(ListNode<T> element, {String? path}) {
     final index = _value.insertBefore(element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }
 
-  void insertAll(int index, Iterable<Node<T>> iterable, {String? path}) {
+  void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path}) {
     _value.insertAll(index, iterable, path: path);
     _notifyNodesInserted(iterable, index, path: path);
   }

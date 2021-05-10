@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/listenable_collections/listenable_tree.dart';
 import 'package:tree_structure_view/node/map_node.dart';
 
-import '../mocks/mocks.dart';
+import '../mocks/tree_mocks.dart';
 
 void main() {
   group('test new tree construction', () {

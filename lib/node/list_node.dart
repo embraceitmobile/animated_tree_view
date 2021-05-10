@@ -45,62 +45,60 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
         iterable, (dynamic node) async => await addAsync(node));
   }
 
-  void insert(int index, Node<T> element) {
+  void insert(int index, ListNode<T> element) {
     element.path = childrenPath;
-    final updatedValue = _updateChildrenPaths<T>(element as ListNode<T>);
+    final updatedValue = _updateChildrenPaths<T>(element);
     children.insert(index, updatedValue);
   }
 
-  Future<void> insertAsync(int index, Node<T> element) async {
+  Future<void> insertAsync(int index, ListNode<T> element) async {
     element.path = childrenPath;
-    final updatedValue =
-        await compute(_updateChildrenPaths, (element as ListNode<T>));
+    final updatedValue = await compute(_updateChildrenPaths, (element));
     children.insert(index, updatedValue as ListNode<T>);
   }
 
-  int insertAfter(Node<T> element) {
+  int insertAfter(ListNode<T> element) {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     insert(index + 1, element);
     return index + 1;
   }
 
-  Future<int> insertAfterAsync(Node<T> element) async {
+  Future<int> insertAfterAsync(ListNode<T> element) async {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     await insertAsync(index + 1, element);
     return index + 1;
   }
 
-  int insertBefore(Node<T> element) {
+  int insertBefore(ListNode<T> element) {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     insert(index, element);
     return index;
   }
 
-  Future<int> insertBeforeAsync(Node<T> element) async {
+  Future<int> insertBeforeAsync(ListNode<T> element) async {
     final index = children.indexWhere((node) => node.key == element.key);
     if (index < 0) throw NodeNotFoundException.fromNode(element);
     await insertAsync(index, element);
     return index;
   }
 
-  void insertAll(int index, Iterable<Node<T>> iterable) {
+  void insertAll(int index, Iterable<ListNode<T>> iterable) {
     final updatedNodes = iterable.map((node) {
       node.path = childrenPath;
-      return _updateChildrenPaths<T>(node as ListNode<T>);
+      return _updateChildrenPaths<T>(node);
     });
 
     children.insertAll(index, updatedNodes);
   }
 
-  Future<void> insertAllAsync(int index, Iterable<Node<T>> iterable) async {
+  Future<void> insertAllAsync(int index, Iterable<ListNode<T>> iterable) async {
     final updatedNodes = List<ListNode<T>>.empty();
     for (final node in iterable) {
       node.path = childrenPath;
-      updatedNodes
-          .add(await compute(_updateChildrenPaths, (node as ListNode<T>)));
+      updatedNodes.add(await compute(_updateChildrenPaths, (node)));
     }
 
     children.insertAll(index, updatedNodes);
@@ -112,7 +110,7 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     children.removeAt(index);
   }
 
-  Node<T> removeAt(int index) {
+  ListNode<T> removeAt(int index) {
     return children.removeAt(index);
   }
 
@@ -145,6 +143,8 @@ class ListNode<T> with NodeViewData<T> implements Node<T>, IListNodeActions<T> {
     }
     return currentNode;
   }
+
+  ListNode<T> at(int index) => children[index];
 
   ListNode<T> operator [](String path) => elementAt(path) as ListNode<T>;
 
