@@ -1,85 +1,85 @@
-import 'package:tree_structure_view/node/list_node.dart';
-import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/node/indexed_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 import 'base/i_tree.dart';
-import '../node/node.dart';
+import '../node/base/i_node.dart';
 
 class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
-  IndexedTree() : _root = ListNode<T>(Node.ROOT_KEY);
+  IndexedTree() : _root = IndexedNode<T>(INode.ROOT_KEY);
 
-  factory IndexedTree.fromList(List<ListNode<T>> list) =>
+  factory IndexedTree.fromList(List<IndexedNode<T>> list) =>
       IndexedTree()..addAll(list);
 
-  final ListNode<T> _root;
+  final IndexedNode<T> _root;
 
-  List<ListNode<T>> get children => _root.children;
+  List<IndexedNode<T>> get children => _root.children;
 
   int get length => children.length;
 
-  ListNode<T> get root => _root;
+  IndexedNode<T> get root => _root;
 
-  ListNode<T> elementAt(String? path) =>
-      path == null ? _root : _root.elementAt(path) as ListNode<T>;
+  IndexedNode<T> elementAt(String? path) =>
+      path == null ? _root : _root.elementAt(path) as IndexedNode<T>;
 
-  ListNode<T> operator [](int at) => _root.children[at];
+  IndexedNode<T> operator [](String at) => _root[at];
 
-  ListNode<T> at(int index) => _root.children[index];
+  IndexedNode<T> at(int index) => _root.at(index);
 
-  ListNode<T> get first => _root.children.first;
+  IndexedNode<T> get first => _root.first;
 
-  set first(ListNode<T> value) {
-    _root.children.first = value;
+  set first(IndexedNode<T> value) {
+    _root.first = value;
   }
 
-  ListNode<T> get last => _root.children.last;
+  IndexedNode<T> get last => _root.last;
 
-  set last(ListNode<T> value) {
-    _root.children.last = value;
+  set last(IndexedNode<T> value) {
+    _root.last = value;
   }
 
-  ListNode<T> firstWhere(bool Function(ListNode<T> element) test,
-      {ListNode<T> orElse()?, String? path}) {
+  IndexedNode<T> firstWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?, String? path}) {
     final node = path == null ? _root : _root[path];
     return node.children.firstWhere(test, orElse: orElse);
   }
 
-  int indexWhere(bool Function(ListNode<T> element) test,
+  int indexWhere(bool Function(IndexedNode<T> element) test,
       {int start = 0, String? path}) {
     final node = path == null ? _root : _root[path];
     return node.children.indexWhere(test, start);
   }
 
-  ListNode<T> lastWhere(bool Function(ListNode<T> element) test,
-      {ListNode<T> orElse()?, String? path}) {
+  IndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?, String? path}) {
     final node = path == null ? _root : _root[path];
     return node.children.lastWhere(test, orElse: orElse);
   }
 
-  void add(Node<T> value, {String? path}) {
+  void add(INode<T> value, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.add(value);
   }
 
-  void addAll(Iterable<Node<T>> iterable, {String? path}) {
+  void addAll(Iterable<INode<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.addAll(iterable);
   }
 
-  void insert(int index, ListNode<T> element, {String? path}) {
+  void insert(int index, IndexedNode<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.insert(index, element);
   }
 
-  int insertAfter(ListNode<T> after, ListNode<T> element, {String? path}) {
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.insertAfter(after, element);
   }
 
-  void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path}) {
+  void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.insertAll(index, iterable);
   }
 
-  int insertBefore(ListNode<T> before, ListNode<T> element, {String? path}) {
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.insertBefore(before, element);
   }
@@ -89,7 +89,7 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.remove(key);
   }
 
-  ListNode<T> removeAt(int index, {String? path}) {
+  IndexedNode<T> removeAt(int index, {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.removeAt(index);
   }
@@ -99,7 +99,7 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.removeAll(keys);
   }
 
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+  void removeWhere(bool Function(INode<T> element) test, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.removeWhere(test);
   }

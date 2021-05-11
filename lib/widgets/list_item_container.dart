@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/node/node.dart';
+import 'package:tree_structure_view/node/base/i_node.dart';
 
-class ListItemContainer<T extends Node<T>> extends StatelessWidget {
+class ListItemContainer<T extends INode<T>> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<T>? onTap;
   final T item;

@@ -1,44 +1,51 @@
-import 'package:tree_structure_view/node/list_node.dart';
+import 'package:tree_structure_view/node/indexed_node.dart';
 
-import '../node.dart';
+import 'i_node.dart';
 
-abstract class IMapNodeActions<T> {
-  void add(Node<T> value);
+abstract class INodeActions<T> {
+  void add(INode<T> value);
 
-  Future<void> addAsync(Node<T> value);
+  Future<void> addAsync(INode<T> value);
 
-  void addAll(Iterable<Node<T>> iterable);
+  void addAll(Iterable<INode<T>> iterable);
 
-  Future<void> addAllAsync(Iterable<Node<T>> iterable);
+  Future<void> addAllAsync(Iterable<INode<T>> iterable);
 
   void remove(String key);
 
   void removeAll(Iterable<String> keys);
 
-  void removeWhere(bool test(Node<T> element));
+  void removeWhere(bool test(INode<T> element));
 
   void clear();
 }
 
-abstract class IListNodeActions<T> implements IMapNodeActions<T> {
-  void insert(int index, ListNode<T> element);
+abstract class IIndexedNodeActions<T> implements INodeActions<T> {
+  IndexedNode<T> at(int index);
 
-  Future<void> insertAsync(int index, ListNode<T> element);
+  set first(IndexedNode<T> value);
 
-  void insertAll(int index, Iterable<ListNode<T>> iterable);
+  IndexedNode<T> get first;
 
-  Future<void> insertAllAsync(int index, Iterable<ListNode<T>> iterable);
+  set last(IndexedNode<T> value);
 
-  int insertAfter(ListNode<T> after, ListNode<T> element);
+  IndexedNode<T> get last;
 
-  Future<int> insertAfterAsync(ListNode<T> after, ListNode<T> element);
+  void insert(int index, IndexedNode<T> element);
 
-  int insertBefore(ListNode<T> before, ListNode<T> element);
+  Future<void> insertAsync(int index, IndexedNode<T> element);
 
-  Future<int> insertBeforeAsync(ListNode<T> before,ListNode<T> element);
+  void insertAll(int index, Iterable<IndexedNode<T>> iterable);
 
-  ListNode<T> removeAt(int index);
-  
-  ListNode<T> at(int index);
+  Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable);
 
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element);
+
+  Future<int> insertAfterAsync(IndexedNode<T> after, IndexedNode<T> element);
+
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element);
+
+  Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element);
+
+  IndexedNode<T> removeAt(int index);
 }

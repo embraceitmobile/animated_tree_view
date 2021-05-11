@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/listenable_collections/listenable_tree.dart';
-import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 
 import '../mocks/tree_mocks.dart';
 
@@ -18,13 +18,13 @@ void main() {
       tree.addedNodes.listen(
           expectAsync1((event) => expect(event.items.length, isNonZero)));
 
-      tree.add(MapNode());
+      tree.add(Node());
     });
 
     test('On adding multiple nodes, respective items in the event are emitted',
         () async {
       final tree = ListenableTree(mockTreeWithIds);
-      final nodesUnderTest = [MapNode(), MapNode(), MapNode()];
+      final nodesUnderTest = [Node(), Node(), Node()];
       tree.addedNodes.listen(expectAsync1((event) {
         print("AddEvent received: $event");
         expect(event.items.length, nodesUnderTest.length);

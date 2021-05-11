@@ -1,31 +1,31 @@
 import 'package:tree_structure_view/exceptions/exceptions.dart';
-import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 import 'base/i_tree.dart';
-import '../node/node.dart';
+import '../node/base/i_node.dart';
 
 class Tree<T> implements ITree<T> {
-  Tree() : _root = MapNode<T>(Node.ROOT_KEY);
+  Tree() : _root = Node<T>(INode.ROOT_KEY);
 
-  factory Tree.fromMap(Map<String, Node<T>> nodes) =>
+  factory Tree.fromMap(Map<String, INode<T>> nodes) =>
       Tree()..addAll(nodes.values);
 
-  final MapNode<T> _root;
+  final Node<T> _root;
 
   int get length => _root.children.length;
 
-  MapNode<T> get root => _root;
+  Node<T> get root => _root;
 
-  MapNode<T> elementAt(String? path) =>
+  Node<T> elementAt(String? path) =>
       path == null ? _root : _root.elementAt(path);
 
-  MapNode<T> operator [](String at) => elementAt(at);
+  Node<T> operator [](String at) => elementAt(at);
 
-  void add(Node<T> value, {String? path}) {
+  void add(INode<T> value, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.add(value);
   }
 
-  void addAll(Iterable<Node<T>> iterable, {String? path}) {
+  void addAll(Iterable<INode<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.addAll(iterable);
   }
@@ -40,7 +40,7 @@ class Tree<T> implements ITree<T> {
     node.remove(key);
   }
 
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+  void removeWhere(bool Function(INode<T> element) test, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.removeWhere(test);
   }

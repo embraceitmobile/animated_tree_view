@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/tree/tree.dart';
 
 import '../mocks/tree_mocks.dart';
@@ -18,7 +18,7 @@ void main() {
 
     test('On constructing a new tree, the root key is /', () async {
       final tree = Tree();
-      expect(tree.root.key, Node.ROOT_KEY);
+      expect(tree.root.key, INode.ROOT_KEY);
     });
 
     test('On constructing a new tree, the root children are not null',
@@ -33,7 +33,7 @@ void main() {
         'On adding a node to the root, the size of root children increases respectively',
         () async {
       final tree = Tree();
-      tree.add(MapNode());
+      tree.add(Node());
       expect(tree.root.children.length, equals(1));
     });
 
@@ -41,8 +41,8 @@ void main() {
         'On adding a node to a child node, the size of the children increases respectively',
         () async {
       final tree = Tree();
-      tree.add(MapNode());
-      tree.root.children.values.first.add(MapNode());
+      tree.add(Node());
+      tree.root.children.values.first.add(Node());
       expect(tree.root.children.values.first.children.length, equals(1));
     });
 
@@ -50,7 +50,7 @@ void main() {
         'On adding a collection of nodes to a child node, the size of the children increases respectively',
         () async {
       final tree = Tree();
-      final nodesUnderTest = [MapNode(), MapNode(), MapNode()];
+      final nodesUnderTest = [Node(), Node(), Node()];
       tree.addAll(nodesUnderTest);
       expect(tree.root.children.length, equals(nodesUnderTest.length));
     });
@@ -133,7 +133,7 @@ void main() {
     test('Correct node is returned using a path in the elementAt method',
         () async {
       final tree = mockTreeWithIds;
-      const _s = Node.PATH_SEPARATOR;
+      const _s = INode.PATH_SEPARATOR;
       expect(tree.elementAt("0A${_s}0A1A").key, equals("0A1A"));
       expect(tree.elementAt("0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A").key,
           equals("0C1C2A3A"));
@@ -141,7 +141,7 @@ void main() {
 
     test('Correct node is returned using a path in the [] operator', () async {
       final tree = mockTreeWithIds;
-      const _s = Node.PATH_SEPARATOR;
+      const _s = INode.PATH_SEPARATOR;
       expect(tree["0A${_s}0A1A"].key, equals("0A1A"));
       expect(
           tree["0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A"].key, equals("0C1C2A3A"));
@@ -151,14 +151,14 @@ void main() {
         'Exception is thrown if an incorrect path is provided to elementAt method',
         () async {
       final tree = mockTreeWithIds;
-      const _s = Node.PATH_SEPARATOR;
+      const _s = INode.PATH_SEPARATOR;
       expect(() => tree.elementAt("0A${_s}0C1A"), throwsException);
     });
 
     test('Exception is thrown if an incorrect path is provided to [] operator',
         () async {
       final tree = mockTreeWithIds;
-      const _s = Node.PATH_SEPARATOR;
+      const _s = INode.PATH_SEPARATOR;
       expect(() => tree["0A${_s}0C1A"], throwsException);
     });
   });

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/node/list_node.dart';
+import 'package:tree_structure_view/node/indexed_node.dart';
 import 'package:tree_structure_view/controllers/animated_list_controller.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 import 'package:tree_structure_view/widgets/list_item_container.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-class TreeNodeItem<T extends Node<T>> extends StatelessWidget {
+class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
   final LeveledItemWidgetBuilder<T> builder;
   final AnimatedListController<T> animatedListController;
   final AutoScrollController scrollController;
-  final Node<T> node;
+  final INode<T> node;
   final Animation<double> animation;
   final double? indentPadding;
   final bool? showExpansionIndicator;

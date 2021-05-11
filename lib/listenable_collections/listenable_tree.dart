@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:tree_structure_view/node/map_node.dart';
 import 'package:tree_structure_view/node/node.dart';
+import 'package:tree_structure_view/node/base/i_node.dart';
 import 'package:tree_structure_view/tree/base/i_listenable_tree.dart';
 import 'package:tree_structure_view/tree/base/i_tree.dart';
 import 'package:tree_structure_view/tree/tree.dart';
@@ -10,7 +10,7 @@ import 'package:tree_structure_view/tree/tree_update_notifier.dart';
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   ListenableTree([Tree<T>? tree]) : _value = tree ?? Tree<T>();
 
-  factory ListenableTree.fromMap(Map<String, MapNode<T>> map) =>
+  factory ListenableTree.fromMap(Map<String, Node<T>> map) =>
       ListenableTree(Tree<T>.fromMap(map));
 
   final Tree<T> _value;
@@ -23,7 +23,7 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
 
   Tree<T> get value => _value;
 
-  MapNode<T> get root => _value.root;
+  Node<T> get root => _value.root;
 
   int get length => _value.length;
 
@@ -34,17 +34,17 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   Stream<NodeInsertEvent<T>> get insertedNodes =>
       StreamController<NodeInsertEvent<T>>().stream;
 
-  MapNode<T> elementAt(String? path) =>
+  Node<T> elementAt(String? path) =>
       path == null ? root : _value.elementAt(path);
 
-  MapNode<T> operator [](String at) => _value[at];
+  Node<T> operator [](String at) => _value[at];
 
-  void add(Node<T> value, {String? path}) {
+  void add(INode<T> value, {String? path}) {
     _value.add(value, path: path);
     _notifyNodesAdded([value], path: path);
   }
 
-  void addAll(Iterable<Node<T>> iterable, {String? path}) {
+  void addAll(Iterable<INode<T>> iterable, {String? path}) {
     _value.addAll(iterable, path: path);
     _notifyNodesAdded(iterable, path: path);
   }
@@ -59,7 +59,7 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
     _notifyNodesRemoved(keys, path: path);
   }
 
-  void removeWhere(bool Function(Node<T> element) test, {String? path}) {
+  void removeWhere(bool Function(INode<T> element) test, {String? path}) {
     final allKeysInPath = elementAt(path).children.keys.toSet();
 
     _value.removeWhere(test, path: path);
@@ -75,7 +75,7 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
     _notifyNodesRemoved(allKeys, path: path);
   }
 
-  void _notifyNodesAdded(Iterable<Node<T>> iterable, {String? path}) {
+  void _notifyNodesAdded(Iterable<INode<T>> iterable, {String? path}) {
     _addedNodes.sink.add(NodeAddEvent(iterable, path: path));
     notifyListeners();
   }

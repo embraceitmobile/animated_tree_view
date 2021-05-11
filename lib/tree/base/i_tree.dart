@@ -1,28 +1,28 @@
-import 'package:tree_structure_view/node/list_node.dart';
-import 'package:tree_structure_view/node/map_node.dart';
+import 'package:tree_structure_view/node/indexed_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 
 abstract class ITree<T> {
   external factory ITree();
 
-  external factory ITree.fromMap(Map<String, Node<T>> map);
+  external factory ITree.fromMap(Map<String, INode<T>> map);
 
-  Node<T> get root;
+  INode<T> get root;
 
-  void add(Node<T> value, {String? path});
+  void add(INode<T> value, {String? path});
 
   void remove(String key, {String? path});
 
-  void addAll(Iterable<Node<T>> iterable, {String? path});
+  void addAll(Iterable<INode<T>> iterable, {String? path});
 
   void removeAll(Iterable<String> keys, {String? path});
 
-  void removeWhere(bool test(Node<T> element), {String? path});
+  void removeWhere(bool test(INode<T> element), {String? path});
 
   void clear({String? path});
 
-  Node<T> elementAt(String? path);
+  INode<T> elementAt(String? path);
 
-  Node<T> operator [](covariant dynamic at);
+  INode<T> operator [](String at);
 
   int get length;
 }
@@ -30,33 +30,33 @@ abstract class ITree<T> {
 abstract class IIndexedTree<T> implements ITree<T> {
   external factory IIndexedTree();
 
-  external factory IIndexedTree.from(List<Node<T>> list);
+  external factory IIndexedTree.from(List<INode<T>> list);
 
-  void insert(int index, ListNode<T> element, {String? path});
+  void insert(int index, IndexedNode<T> element, {String? path});
 
-  void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path});
+  void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path});
 
-  int insertAfter(ListNode<T> after, ListNode<T> element, {String? path});
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path});
 
-  int insertBefore(ListNode<T> before, ListNode<T> element, {String? path});
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path});
 
-  Node<T> removeAt(int index, {String? path});
+  INode<T> removeAt(int index, {String? path});
 
-  set first(ListNode<T> value);
+  set first(IndexedNode<T> value);
 
-  ListNode<T> get first;
+  IndexedNode<T> get first;
 
-  set last(ListNode<T> value);
+  set last(IndexedNode<T> value);
 
-  ListNode<T> get last;
+  IndexedNode<T> get last;
 
-  ListNode<T> at(int index);
+  IndexedNode<T> at(int index);
 
-  int indexWhere(bool test(Node<T> element), {int start = 0, String? path});
+  int indexWhere(bool test(INode<T> element), {int start = 0, String? path});
 
-  ListNode<T> firstWhere(bool test(ListNode<T> element),
-      {ListNode<T> orElse()?, String? path});
+  IndexedNode<T> firstWhere(bool test(IndexedNode<T> element),
+      {IndexedNode<T> orElse()?, String? path});
 
-  ListNode<T> lastWhere(bool test(ListNode<T> element),
-      {ListNode<T> orElse()?, String? path});
+  IndexedNode<T> lastWhere(bool test(IndexedNode<T> element),
+      {IndexedNode<T> orElse()?, String? path});
 }
