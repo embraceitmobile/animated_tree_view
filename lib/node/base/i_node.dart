@@ -15,7 +15,7 @@ mixin INodeViewData<T> {
 
   bool get isLeaf => childrenAsList.isEmpty;
 
-  bool get isRoot => key == INode.ROOT_KEY;
+  bool get isRoot => path.isEmpty || path.endsWith(INode.ROOT_KEY);
 }
 
 abstract class INode<T> with INodeViewData<T> {

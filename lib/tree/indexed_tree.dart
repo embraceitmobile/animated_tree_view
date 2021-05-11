@@ -4,7 +4,7 @@ import 'base/i_tree.dart';
 import '../node/base/i_node.dart';
 
 class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
-  IndexedTree() : _root = IndexedNode<T>(INode.ROOT_KEY);
+  IndexedTree() : _root = IndexedNode<T>.root();
 
   factory IndexedTree.fromList(List<IndexedNode<T>> list) =>
       IndexedTree()..addAll(list);
@@ -69,7 +69,8 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.insert(index, element);
   }
 
-  int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path}) {
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element,
+      {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.insertAfter(after, element);
   }
@@ -79,7 +80,8 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.insertAll(index, iterable);
   }
 
-  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path}) {
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.insertBefore(before, element);
   }

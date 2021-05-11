@@ -20,6 +20,8 @@ class IndexedNode<T>
         key = key ?? UniqueKey().toString(),
         path = "";
 
+  factory IndexedNode.root() => IndexedNode(INode.ROOT_KEY);
+
   UnmodifiableListView<INode<T>> get childrenAsList =>
       UnmodifiableListView(children);
 

@@ -4,7 +4,7 @@ import 'base/i_tree.dart';
 import '../node/base/i_node.dart';
 
 class Tree<T> implements ITree<T> {
-  Tree() : _root = Node<T>(INode.ROOT_KEY);
+  Tree() : _root = Node<T>.root();
 
   factory Tree.fromMap(Map<String, INode<T>> nodes) =>
       Tree()..addAll(nodes.values);

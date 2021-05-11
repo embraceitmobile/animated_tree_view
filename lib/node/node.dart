@@ -18,6 +18,8 @@ class Node<T> with INodeViewData<T> implements INode<T>, INodeActions<T> {
         key = key ?? UniqueKey().toString(),
         path = "";
 
+  factory Node.root() => Node(INode.ROOT_KEY);
+
   UnmodifiableListView<INode<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
 
@@ -31,8 +33,7 @@ class Node<T> with INodeViewData<T> implements INode<T>, INodeActions<T> {
   Future<void> addAsync(INode<T> value) async {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
-    final updatedValue =
-        await compute(_updateChildrenPaths, (value as Node));
+    final updatedValue = await compute(_updateChildrenPaths, (value as Node));
     children[value.key] = updatedValue as Node<T>;
   }
 
