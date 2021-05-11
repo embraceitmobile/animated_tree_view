@@ -29,6 +29,7 @@ class IndexedNode<T>
   }
 
   set first(IndexedNode<T> value) {
+    if (children.isEmpty) throw ChildrenNotFoundException(this);
     children.first = value;
   }
 
@@ -38,6 +39,7 @@ class IndexedNode<T>
   }
 
   set last(IndexedNode<T> value) {
+    if (children.isEmpty) throw ChildrenNotFoundException(this);
     children.last = value;
   }
 

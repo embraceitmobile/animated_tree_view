@@ -481,15 +481,32 @@ void main() {
     });
 
     test('Exception is thrown if first getter is used on an empty node',
-            () async {
-          final indexedNode = IndexedNode();
-          expect(() => indexedNode.first, throwsA(isA<ChildrenNotFoundException>()));
-        });
+        () async {
+      final indexedNode = IndexedNode();
+      expect(
+          () => indexedNode.first, throwsA(isA<ChildrenNotFoundException>()));
+    });
+
+    test(
+        'Exception is thrown if an element is assigned using first setter to an empty node',
+        () async {
+      final indexedNode = IndexedNode();
+      expect(() => indexedNode.first = IndexedNode(),
+          throwsA(isA<ChildrenNotFoundException>()));
+    });
 
     test('Exception is thrown if last getter is used on an empty node',
+        () async {
+      final indexedNode = IndexedNode();
+      expect(() => indexedNode.last, throwsA(isA<ChildrenNotFoundException>()));
+    });
+
+    test(
+        'Exception is thrown if an element is assigned using last setter to an empty node',
             () async {
           final indexedNode = IndexedNode();
-          expect(() => indexedNode.last, throwsA(isA<ChildrenNotFoundException>()));
+          expect(() => indexedNode.last = IndexedNode(),
+              throwsA(isA<ChildrenNotFoundException>()));
         });
   });
 }
