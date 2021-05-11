@@ -29,13 +29,13 @@ abstract class IListNodeActions<T> implements IMapNodeActions<T> {
 
   Future<void> insertAllAsync(int index, Iterable<ListNode<T>> iterable);
 
-  int insertAfter(ListNode<T> element);
+  int insertAfter(ListNode<T> after, ListNode<T> element);
 
-  Future<int> insertAfterAsync(ListNode<T> element);
+  Future<int> insertAfterAsync(ListNode<T> after, ListNode<T> element);
 
-  int insertBefore(ListNode<T> element);
+  int insertBefore(ListNode<T> before, ListNode<T> element);
 
-  Future<int> insertBeforeAsync(ListNode<T> element);
+  Future<int> insertBeforeAsync(ListNode<T> before,ListNode<T> element);
 
   ListNode<T> removeAt(int index);
   

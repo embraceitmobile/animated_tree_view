@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/node/map_node.dart';
 
-import '../mocks/mocks.dart';
+import '../mocks/tree_mocks.dart';
 
 void main() {
   group('new tree construction', () {
@@ -17,7 +17,7 @@ void main() {
     });
   });
 
-  group('test adding nodes to the tree', () {
+  group('test adding children to a node', () {
     test('On adding a node, the size of children increases correspondingly',
         () async {
       final node = MapNode();
@@ -58,8 +58,8 @@ void main() {
     });
 
     test(
-        'On adding a node with children, all the children path across the length and breadth are updated',
-        () async {
+        'On adding a node with children, all the children path across the length '
+        'and breadth are updated', () async {
       final node = MapNode(Node.ROOT_KEY);
       node.add(mockMapNode1);
       expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
@@ -67,7 +67,8 @@ void main() {
     });
 
     test(
-        'On adding a node with children asynchronously, all the children path across the length and breadth are updated',
+        'On adding a node with children asynchronously, '
+        'all the children path across the length and breadth are updated',
         () async {
       final node = MapNode(Node.ROOT_KEY);
       await node.addAsync(mockMapNode1);
@@ -76,7 +77,22 @@ void main() {
     });
 
     test(
-        'On adding a list of nodes node with children asynchronously, all the children path across the length and breadth are updated',
+        'On adding a list of nodes node with children, '
+        'all the children path across the length and breadth are updated',
+        () async {
+      final node = MapNode(Node.ROOT_KEY);
+      node.addAll([mockMapNode1, mockMapNode2, mockMapNode3]);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M1.0C.0C1C.0C1C2A"));
+      expect(node["M2"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M2.0C.0C1C.0C1C2A"));
+      expect(node["M3"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M3.0C.0C1C.0C1C2A"));
+    });
+
+    test(
+        'On adding a list of nodes node with children asynchronously, '
+        'all the children path across the length and breadth are updated',
         () async {
       final node = MapNode(Node.ROOT_KEY);
       await node.addAllAsync([mockMapNode1, mockMapNode2, mockMapNode3]);
@@ -89,7 +105,7 @@ void main() {
     });
   });
 
-  group('test removing nodes from the tree', () {
+  group('test removing children from the nodes', () {
     test('On removing a node, the size of children decreases correspondingly',
         () async {
       final node = MapNode();

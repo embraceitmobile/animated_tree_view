@@ -92,14 +92,14 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     _notifyNodesInserted([element], index, path: path);
   }
 
-  int insertAfter(ListNode<T> element, {String? path}) {
-    final index = _value.insertAfter(element, path: path);
+  int insertAfter(ListNode<T> after, ListNode<T> element, {String? path}) {
+    final index = _value.insertAfter(after, element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }
 
-  int insertBefore(ListNode<T> element, {String? path}) {
-    final index = _value.insertBefore(element, path: path);
+  int insertBefore(ListNode<T> before, ListNode<T> element, {String? path}) {
+    final index = _value.insertBefore(before, element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }

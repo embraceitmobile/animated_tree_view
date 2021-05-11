@@ -36,9 +36,9 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path});
 
-  int insertAfter(ListNode<T> element, {String? path});
+  int insertAfter(ListNode<T> after, ListNode<T> element, {String? path});
 
-  int insertBefore(ListNode<T> element, {String? path});
+  int insertBefore(ListNode<T> before, ListNode<T> element, {String? path});
 
   Node<T> removeAt(int index, {String? path});
 

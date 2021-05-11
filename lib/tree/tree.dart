@@ -9,8 +9,6 @@ class Tree<T> implements ITree<T> {
   factory Tree.fromMap(Map<String, Node<T>> nodes) =>
       Tree()..addAll(nodes.values);
 
-  factory Tree.fromList(List<Node<T>> list) => Tree()..addAll(list);
-
   final MapNode<T> _root;
 
   int get length => _root.children.length;

@@ -79,16 +79,16 @@ class IndexedTreeListViewController<T extends Node<T>>
     _listenableTree.insert(index, element, path: path);
   }
 
-  int insertAfter(ListNode<T> element, {String? path}) {
-    return _listenableTree.insertAfter(element, path: path);
+  int insertAfter(ListNode<T> after, ListNode<T> element, {String? path}) {
+    return _listenableTree.insertAfter(after, element, path: path);
   }
 
   void insertAll(int index, Iterable<ListNode<T>> iterable, {String? path}) {
     _listenableTree.insertAll(index, iterable, path: path);
   }
 
-  int insertBefore(ListNode<T> element, {String? path}) {
-    return _listenableTree.insertBefore(element, path: path);
+  int insertBefore(ListNode<T> before, ListNode<T> element, {String? path}) {
+    return _listenableTree.insertBefore(before, element, path: path);
   }
 
   void remove(String key, {String? path}) =>

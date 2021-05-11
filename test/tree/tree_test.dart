@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/node/map_node.dart';
 import 'package:tree_structure_view/tree/tree.dart';
 
-import '../mocks/mocks.dart';
+import '../mocks/tree_mocks.dart';
 
 void main() {
   group('test new tree construction', () {
@@ -86,17 +86,17 @@ void main() {
       expect(tree.root.children.containsKey(nodesToRemoveKeys.last), false);
     });
 
-    // test(
-    //     'On removing a node using removeWhere method, the correct node matching the predicate is removed',
-    //     () async {
-    //   final tree = mockTreeWithIds;
-    //   final originalTreeLength = tree.length;
-    //   final nodeToRemove = tree.root.children.values.first;
-    //
-    //   tree.removeWhere((node) => node.key == nodeToRemove.key);
-    //   expect(tree.length, originalTreeLength - 1);
-    //   expect(tree.root.children.containsKey(nodeToRemove.key), false);
-    // });
+    test(
+        'On removing a node using removeWhere method, the correct node matching the predicate is removed',
+        () async {
+      final tree = mockTreeWithIds;
+      final originalTreeLength = tree.length;
+      final nodeToRemove = tree.root.children.values.first;
+
+      tree.removeWhere((node) => node.key == nodeToRemove.key);
+      expect(tree.length, originalTreeLength - 1);
+      expect(tree.root.children.containsKey(nodeToRemove.key), false);
+    });
 
     test('On clearing a tree, the root children become empty', () async {
       final tree = mockTreeWithIds;
