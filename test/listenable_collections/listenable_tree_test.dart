@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/listenable_collections/listenable_tree.dart';
+import 'package:tree_structure_view/listenable_tree/listenable_tree.dart';
 import 'package:tree_structure_view/node/node.dart';
 
 import '../mocks/tree_mocks.dart';

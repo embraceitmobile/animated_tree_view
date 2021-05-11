@@ -38,7 +38,8 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path});
 
-  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path});
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path});
 
   INode<T> removeAt(int index, {String? path});
 
@@ -60,3 +61,5 @@ abstract class IIndexedTree<T> implements ITree<T> {
   IndexedNode<T> lastWhere(bool test(IndexedNode<T> element),
       {IndexedNode<T> orElse()?, String? path});
 }
+
+

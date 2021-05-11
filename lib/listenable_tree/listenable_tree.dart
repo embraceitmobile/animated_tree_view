@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
-import 'package:tree_structure_view/tree/base/i_listenable_tree.dart';
+import 'package:tree_structure_view/listenable_tree/base/i_listenable_tree.dart';
 import 'package:tree_structure_view/tree/base/i_tree.dart';
 import 'package:tree_structure_view/tree/tree.dart';
-import 'package:tree_structure_view/tree/tree_update_notifier.dart';
+import 'package:tree_structure_view/tree/base/tree_update_notifier.dart';
 
 class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
   ListenableTree([Tree<T>? tree]) : _value = tree ?? Tree<T>();

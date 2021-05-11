@@ -1,5 +1,5 @@
 import 'package:tree_structure_view/controllers/animated_list_controller.dart';
-import 'package:tree_structure_view/listenable_collections/listenable_indexed_tree.dart';
+import 'package:tree_structure_view/listenable_tree/listenable_indexed_tree.dart';
 import 'package:tree_structure_view/node/indexed_node.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 import 'package:tree_structure_view/tree/base/i_tree.dart';

@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:tree_structure_view/node/indexed_node.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
-import 'package:tree_structure_view/tree/base/i_listenable_tree.dart';
+import 'package:tree_structure_view/listenable_tree/base/i_listenable_tree.dart';
 import 'package:tree_structure_view/tree/base/i_tree.dart';
 import 'package:tree_structure_view/tree/indexed_tree.dart';
-import 'package:tree_structure_view/tree/tree_update_notifier.dart';
+import 'package:tree_structure_view/tree/base/tree_update_notifier.dart';
 
 class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
-    implements IIndexedTree<T> {
+    implements ITree<T>, IIndexedTree<T> {
   ListenableIndexedTree(IndexedTree<T> tree) : _value = tree;
 
   factory ListenableIndexedTree.fromList(List<IndexedNode<T>> list) =>
@@ -92,13 +92,15 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     _notifyNodesInserted([element], index, path: path);
   }
 
-  int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path}) {
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element,
+      {String? path}) {
     final index = _value.insertAfter(after, element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }
 
-  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path}) {
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path}) {
     final index = _value.insertBefore(before, element, path: path);
     _notifyNodesInserted([element], index);
     return index;
