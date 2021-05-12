@@ -59,14 +59,30 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     node.add(value);
   }
 
+  Future<void> addAsync(INode<T> value, {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.addAsync(value);
+  }
+
   void addAll(Iterable<INode<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.addAll(iterable);
   }
 
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.addAllAsync(iterable);
+  }
+
   void insert(int index, IndexedNode<T> element, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.insert(index, element);
+  }
+
+  Future<void> insertAsync(int index, IndexedNode<T> element,
+      {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.insertAsync(index, element);
   }
 
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element,
@@ -75,15 +91,33 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
     return node.insertAfter(after, element);
   }
 
-  void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path}) {
+  Future<int> insertAfterAsync(IndexedNode<T> after, IndexedNode<T> element,
+      {String? path}) async {
     final node = path == null ? _root : _root[path];
-    node.insertAll(index, iterable);
+    return await node.insertAfterAsync(after, element);
   }
 
   int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
       {String? path}) {
     final node = path == null ? _root : _root[path];
     return node.insertBefore(before, element);
+  }
+
+  Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    return await node.insertBeforeAsync(before, element);
+  }
+
+  void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path}) {
+    final node = path == null ? _root : _root[path];
+    node.insertAll(index, iterable);
+  }
+
+  Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable,
+      {String? path}) {
+    // TODO: implement insertAllAsync
+    throw UnimplementedError();
   }
 
   void remove(String key, {String? path}) {

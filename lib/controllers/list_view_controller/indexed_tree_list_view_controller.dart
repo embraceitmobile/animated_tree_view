@@ -55,48 +55,65 @@ class IndexedTreeListViewController<T extends INode<T>>
   }
 
   IndexedNode<T> firstWhere(bool Function(IndexedNode<T> element) test,
-      {IndexedNode<T> orElse()?, String? path}) {
-    return _listenableTree.firstWhere(test, orElse: orElse);
-  }
+          {IndexedNode<T> orElse()?, String? path}) =>
+      _listenableTree.firstWhere(test, orElse: orElse);
 
   IndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
-      {IndexedNode<T> orElse()?, String? path}) {
-    return _listenableTree.lastWhere(test, orElse: orElse);
-  }
+          {IndexedNode<T> orElse()?, String? path}) =>
+      _listenableTree.lastWhere(test, orElse: orElse);
 
   int indexWhere(bool Function(INode<T> element) test,
-      {int start = 0, String? path}) {
-    return _listenableTree.indexWhere(test, start: start, path: path);
-  }
+          {int start = 0, String? path}) =>
+      _listenableTree.indexWhere(test, start: start, path: path);
 
   void add(INode<T> value, {String? path}) =>
       _listenableTree.add(value, path: path);
 
+  Future<void> addAsync(INode<T> value, {String? path}) async =>
+      _listenableTree.addAsync(value, path: path);
+
   void addAll(Iterable<INode<T>> iterable, {String? path}) =>
       _listenableTree.addAll(iterable, path: path);
 
-  void insert(int index, IndexedNode<T> element, {String? path}) {
-    _listenableTree.insert(index, element, path: path);
-  }
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path}) async =>
+      await _listenableTree.addAllAsync(iterable, path: path);
 
-  int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path}) {
-    return _listenableTree.insertAfter(after, element, path: path);
-  }
+  void insert(int index, IndexedNode<T> element, {String? path}) =>
+      _listenableTree.insert(index, element, path: path);
 
-  void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path}) {
-    _listenableTree.insertAll(index, iterable, path: path);
-  }
+  int insertAfter(IndexedNode<T> after, IndexedNode<T> element,
+          {String? path}) =>
+      _listenableTree.insertAfter(after, element, path: path);
 
-  int insertBefore(IndexedNode<T> before, IndexedNode<T> element, {String? path}) {
-    return _listenableTree.insertBefore(before, element, path: path);
-  }
+  Future<void> insertAsync(int index, IndexedNode<T> element,
+          {String? path}) async =>
+      _listenableTree.insertAsync(index, element, path: path);
+
+  Future<int> insertAfterAsync(IndexedNode<T> after, IndexedNode<T> element,
+          {String? path}) async =>
+      await _listenableTree.insertAfterAsync(after, element, path: path);
+
+  void insertAll(int index, Iterable<IndexedNode<T>> iterable,
+          {String? path}) =>
+      _listenableTree.insertAll(index, iterable, path: path);
+
+  Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable,
+          {String? path}) async =>
+      _listenableTree.insertAllAsync(index, iterable, path: path);
+
+  int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
+          {String? path}) =>
+      _listenableTree.insertBefore(before, element, path: path);
+
+  Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element,
+          {String? path}) async =>
+      _listenableTree.insertBeforeAsync(before, element, path: path);
 
   void remove(String key, {String? path}) =>
       _listenableTree.remove(key, path: path);
 
-  INode<T> removeAt(int index, {String? path}) {
-    return _listenableTree.removeAt(index, path: path);
-  }
+  INode<T> removeAt(int index, {String? path}) =>
+      _listenableTree.removeAt(index, path: path);
 
   void removeAll(Iterable<String> keys, {String? path}) =>
       _listenableTree.removeAll(keys, path: path);

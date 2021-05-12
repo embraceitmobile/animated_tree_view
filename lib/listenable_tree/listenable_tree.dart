@@ -44,8 +44,18 @@ class ListenableTree<T> extends IListenableTree<T> implements ITree<T> {
     _notifyNodesAdded([value], path: path);
   }
 
+  Future<void> addAsync(INode<T> value, {String? path}) async {
+    await _value.addAsync(value, path: path);
+    _notifyNodesAdded([value], path: path);
+  }
+
   void addAll(Iterable<INode<T>> iterable, {String? path}) {
     _value.addAll(iterable, path: path);
+    _notifyNodesAdded(iterable, path: path);
+  }
+
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path}) async {
+    await _value.addAllAsync(iterable, path: path);
     _notifyNodesAdded(iterable, path: path);
   }
 

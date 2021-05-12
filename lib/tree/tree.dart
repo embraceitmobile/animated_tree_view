@@ -25,9 +25,19 @@ class Tree<T> implements ITree<T> {
     node.add(value);
   }
 
+  Future<void> addAsync(INode<T> value, {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.addAsync(value);
+  }
+
   void addAll(Iterable<INode<T>> iterable, {String? path}) {
     final node = path == null ? _root : _root[path];
     node.addAll(iterable);
+  }
+
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.addAllAsync(iterable);
   }
 
   void clear({String? path}) {

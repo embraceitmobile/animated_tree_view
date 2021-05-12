@@ -76,8 +76,18 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     _notifyNodesAdded([value], path: path);
   }
 
+  Future<void> addAsync(INode<T> value, {String? path}) async {
+    await _value.addAsync(value, path: path);
+    _notifyNodesAdded([value], path: path);
+  }
+
   void addAll(Iterable<INode<T>> iterable, {String? path}) {
     _value.addAll(iterable, path: path);
+    _notifyNodesAdded(iterable, path: path);
+  }
+
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path}) async {
+    await _value.addAllAsync(iterable, path: path);
     _notifyNodesAdded(iterable, path: path);
   }
 
@@ -92,9 +102,22 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     _notifyNodesInserted([element], index, path: path);
   }
 
+  Future<void> insertAsync(int index, IndexedNode<T> element,
+      {String? path}) async {
+    await _value.insertAsync(index, element, path: path);
+    _notifyNodesInserted([element], index, path: path);
+  }
+
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element,
       {String? path}) {
     final index = _value.insertAfter(after, element, path: path);
+    _notifyNodesInserted([element], index);
+    return index;
+  }
+
+  Future<int> insertAfterAsync(IndexedNode<T> after, IndexedNode<T> element,
+      {String? path}) async {
+    final index = await _value.insertAfterAsync(after, element, path: path);
     _notifyNodesInserted([element], index);
     return index;
   }
@@ -106,8 +129,22 @@ class ListenableIndexedTree<T> extends IListenableIndexedTree<T>
     return index;
   }
 
+  Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path}) async {
+    final index = await _value.insertBeforeAsync(before, element, path: path);
+    _notifyNodesInserted([element], index);
+    return index;
+  }
+
   void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path}) {
     _value.insertAll(index, iterable, path: path);
+    _notifyNodesInserted(iterable, index, path: path);
+  }
+
+  @override
+  Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable,
+      {String? path}) async {
+    await _value.insertAllAsync(index, iterable, path: path);
     _notifyNodesInserted(iterable, index, path: path);
   }
 

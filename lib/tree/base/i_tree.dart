@@ -10,9 +10,13 @@ abstract class ITree<T> {
 
   void add(INode<T> value, {String? path});
 
+  Future<void> addAsync(INode<T> value, {String? path});
+
   void remove(String key, {String? path});
 
   void addAll(Iterable<INode<T>> iterable, {String? path});
+
+  Future<void> addAllAsync(Iterable<INode<T>> iterable, {String? path});
 
   void removeAll(Iterable<String> keys, {String? path});
 
@@ -34,11 +38,22 @@ abstract class IIndexedTree<T> implements ITree<T> {
 
   void insert(int index, IndexedNode<T> element, {String? path});
 
+  Future<void> insertAsync(int index, IndexedNode<T> element, {String? path});
+
   void insertAll(int index, Iterable<IndexedNode<T>> iterable, {String? path});
+
+  Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable,
+      {String? path});
 
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element, {String? path});
 
+  Future<int> insertAfterAsync(IndexedNode<T> after, IndexedNode<T> element,
+      {String? path});
+
   int insertBefore(IndexedNode<T> before, IndexedNode<T> element,
+      {String? path});
+
+  Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element,
       {String? path});
 
   INode<T> removeAt(int index, {String? path});
@@ -61,5 +76,3 @@ abstract class IIndexedTree<T> implements ITree<T> {
   IndexedNode<T> lastWhere(bool test(IndexedNode<T> element),
       {IndexedNode<T> orElse()?, String? path});
 }
-
-
