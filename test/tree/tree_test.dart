@@ -31,7 +31,7 @@ void main() {
   group('test adding nodes to the tree', () {
     test(
         'On adding a node to the root, the size of root children increases respectively',
-        () async {
+        () {
       final tree = Tree();
       tree.add(Node());
       expect(tree.length, equals(1));
@@ -39,7 +39,7 @@ void main() {
 
     test(
         'On adding a node to a child node, the size of the children increases respectively',
-        () async {
+        () {
       final tree = Tree();
       tree.add(Node());
       tree.root.children.values.first.add(Node());
@@ -48,7 +48,7 @@ void main() {
 
     test(
         'On adding a collection of nodes to a child node, the size of the children increases respectively',
-        () async {
+        () {
       final tree = Tree();
       final nodesUnderTest = [Node(), Node(), Node()];
       tree.addAll(nodesUnderTest);
@@ -57,7 +57,7 @@ void main() {
 
     test(
         'On adding a node to a child node at a specified path, the correct node'
-            'is updated', () async {
+        'is updated', () {
       final tree = mockTreeWithIds;
       tree.add(Node(), path: "0C.0C1A");
       expect(tree["0C"]["0C1A"].length, equals(1));
@@ -65,7 +65,7 @@ void main() {
 
     test(
         'On adding a collection of nodes at a specified, the correct node is updated'
-            'with the respective node collection', () async {
+        'with the respective node collection', () {
       final tree = mockTreeWithIds;
       final nodesUnderTest = [Node(), Node(), Node()];
       tree.addAll(nodesUnderTest, path: "0C.0C1A");
@@ -73,7 +73,52 @@ void main() {
     });
   });
 
-  group('test removing nodes from the tree', () {
+  group('test adding nodes to the tree asynchronously', () {
+    test(
+        'On adding a node to the root asynchronously, the size of root children increases respectively',
+        () async {
+      final tree = Tree();
+      await tree.addAsync(Node());
+      expect(tree.length, equals(1));
+    });
+
+    test(
+        'On adding a node to a child node asynchronously, the size of the children increases respectively',
+        () async {
+      final tree = Tree();
+      await tree.addAsync(Node());
+      tree.root.children.values.first.add(Node());
+      expect(tree.root.children.values.first.children.length, equals(1));
+    });
+
+    test(
+        'On adding a collection of nodes to a child node asynchronously, the size of the children increases respectively',
+        () async {
+      final tree = Tree();
+      final nodesUnderTest = [Node(), Node(), Node()];
+      await tree.addAllAsync(nodesUnderTest);
+      expect(tree.root.children.length, equals(nodesUnderTest.length));
+    });
+
+    test(
+        'On adding a node to a child node at a specified path asynchronously, the correct node'
+        'is updated', () async {
+      final tree = mockTreeWithIds;
+      await tree.addAsync(Node(), path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(1));
+    });
+
+    test(
+        'On adding a collection of nodes at a specified, the correct node is updated'
+        'with the respective node collection', () async {
+      final tree = mockTreeWithIds;
+      final nodesUnderTest = [Node(), Node(), Node()];
+      await tree.addAllAsync(nodesUnderTest, path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(nodesUnderTest.length));
+    });
+  });
+
+  group('test removing nodes from the tree ', () {
     test(
         'On removing a node from the root, the size of root children decreases respectively',
         () async {
