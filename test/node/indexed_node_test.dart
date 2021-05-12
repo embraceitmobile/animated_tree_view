@@ -385,11 +385,6 @@ void main() {
       expect(indexedNode.at(0).key, equals("0A"));
     });
 
-    test('Correct node is returned using at method', () async {
-      final indexedNode = mockIndexedNode1;
-      expect(indexedNode.at(0).key, equals("0A"));
-    });
-
     test('Correct node is returned using the [] operator', () async {
       final indexedNode = mockIndexedNode1;
       expect(indexedNode["0A"].key, equals("0A"));

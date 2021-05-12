@@ -26,14 +26,15 @@ class Node<T> with INodeViewData<T> implements INode<T>, INodeActions<T> {
   void add(INode<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
-    final updatedValue = _updateChildrenPaths(value as Node);
-    children[value.key] = updatedValue as Node<T>;
+    final updatedValue = _updateChildrenPaths<T>(value as Node<T>);
+    children[value.key] = updatedValue;
   }
 
   Future<void> addAsync(INode<T> value) async {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.path = childrenPath;
-    final updatedValue = await compute(_updateChildrenPaths, (value as Node));
+    final updatedValue =
+        await compute(_updateChildrenPaths, (value as Node<T>));
     children[value.key] = updatedValue as Node<T>;
   }
 
@@ -81,7 +82,7 @@ class Node<T> with INodeViewData<T> implements INode<T>, INodeActions<T> {
     return currentNode;
   }
 
-  static Node _updateChildrenPaths(Node node) {
+  static Node<E> _updateChildrenPaths<E>(Node<E> node) {
     node.children.forEach((_, childNode) {
       childNode.path = node.childrenPath;
       if (childNode.children.isNotEmpty) {

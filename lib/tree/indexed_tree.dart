@@ -13,7 +13,7 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
 
   List<IndexedNode<T>> get children => _root.children;
 
-  int get length => children.length;
+  int get length => _root.length;
 
   IndexedNode<T> get root => _root;
 
@@ -39,19 +39,19 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   IndexedNode<T> firstWhere(bool Function(IndexedNode<T> element) test,
       {IndexedNode<T> orElse()?, String? path}) {
     final node = path == null ? _root : _root[path];
-    return node.children.firstWhere(test, orElse: orElse);
+    return node.firstWhere(test, orElse: orElse);
   }
 
   int indexWhere(bool Function(IndexedNode<T> element) test,
       {int start = 0, String? path}) {
     final node = path == null ? _root : _root[path];
-    return node.children.indexWhere(test, start);
+    return node.indexWhere(test, start);
   }
 
   IndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
       {IndexedNode<T> orElse()?, String? path}) {
     final node = path == null ? _root : _root[path];
-    return node.children.lastWhere(test, orElse: orElse);
+    return node.lastWhere(test, orElse: orElse);
   }
 
   void add(INode<T> value, {String? path}) {

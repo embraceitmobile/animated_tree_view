@@ -11,7 +11,7 @@ class Tree<T> implements ITree<T> {
 
   final Node<T> _root;
 
-  int get length => _root.children.length;
+  int get length => _root.length;
 
   Node<T> get root => _root;
 
@@ -32,7 +32,7 @@ class Tree<T> implements ITree<T> {
 
   void clear({String? path}) {
     final node = path == null ? _root : _root[path];
-    node.children.clear();
+    node.clear();
   }
 
   void remove(String key, {String? path}) {

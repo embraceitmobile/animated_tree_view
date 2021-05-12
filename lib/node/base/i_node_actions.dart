@@ -48,4 +48,12 @@ abstract class IIndexedNodeActions<T> implements INodeActions<T> {
   Future<int> insertBeforeAsync(IndexedNode<T> before, IndexedNode<T> element);
 
   IndexedNode<T> removeAt(int index);
+
+  IndexedNode<T> firstWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?});
+
+  int indexWhere(bool Function(IndexedNode<T> element) test, [int start = 0]);
+
+  IndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?});
 }

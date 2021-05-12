@@ -45,6 +45,20 @@ class IndexedNode<T>
     children.last = value;
   }
 
+  IndexedNode<T> firstWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?}) {
+    return children.firstWhere(test, orElse: orElse);
+  }
+
+  int indexWhere(bool Function(IndexedNode<T> element) test, [int start = 0]) {
+    return children.indexWhere(test, start);
+  }
+
+  IndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
+      {IndexedNode<T> orElse()?}) {
+    return children.lastWhere(test, orElse: orElse);
+  }
+
   void add(INode<T> value) {
     value.path = childrenPath;
     final updatedValue = _updateChildrenPaths<T>(value as IndexedNode<T>);

@@ -13,6 +13,8 @@ mixin INodeViewData<T> {
 
   UnmodifiableListView<INode<T>> get childrenAsList;
 
+  int get length => childrenAsList.length;
+
   bool get isLeaf => childrenAsList.isEmpty;
 
   bool get isRoot => path.isEmpty || path.endsWith(INode.ROOT_KEY);

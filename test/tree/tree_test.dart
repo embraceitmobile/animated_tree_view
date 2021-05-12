@@ -34,7 +34,7 @@ void main() {
         () async {
       final tree = Tree();
       tree.add(Node());
-      expect(tree.root.children.length, equals(1));
+      expect(tree.length, equals(1));
     });
 
     test(
@@ -53,6 +53,23 @@ void main() {
       final nodesUnderTest = [Node(), Node(), Node()];
       tree.addAll(nodesUnderTest);
       expect(tree.root.children.length, equals(nodesUnderTest.length));
+    });
+
+    test(
+        'On adding a node to a child node at a specified path, the correct node'
+            'is updated', () async {
+      final tree = mockTreeWithIds;
+      tree.add(Node(), path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(1));
+    });
+
+    test(
+        'On adding a collection of nodes at a specified, the correct node is updated'
+            'with the respective node collection', () async {
+      final tree = mockTreeWithIds;
+      final nodesUnderTest = [Node(), Node(), Node()];
+      tree.addAll(nodesUnderTest, path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(nodesUnderTest.length));
     });
   });
 
