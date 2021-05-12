@@ -1,5 +1,4 @@
 import 'package:tree_structure_view/node/indexed_node.dart';
-
 import 'i_node.dart';
 
 abstract class INodeActions<T> {

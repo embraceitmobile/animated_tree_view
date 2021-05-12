@@ -26,7 +26,6 @@ void main() {
       final tree = ListenableTree(mockTreeWithIds);
       final nodesUnderTest = [Node(), Node(), Node()];
       tree.addedNodes.listen(expectAsync1((event) {
-        print("AddEvent received: $event");
         expect(event.items.length, nodesUnderTest.length);
       }));
 

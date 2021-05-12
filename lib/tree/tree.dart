@@ -1,4 +1,3 @@
-import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'package:tree_structure_view/node/node.dart';
 import 'base/i_tree.dart';
 import '../node/base/i_node.dart';

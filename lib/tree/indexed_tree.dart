@@ -115,9 +115,9 @@ class IndexedTree<T> implements ITree<T>, IIndexedTree<T> {
   }
 
   Future<void> insertAllAsync(int index, Iterable<IndexedNode<T>> iterable,
-      {String? path}) {
-    // TODO: implement insertAllAsync
-    throw UnimplementedError();
+      {String? path}) async {
+    final node = path == null ? _root : _root[path];
+    await node.insertAllAsync(index, iterable);
   }
 
   void remove(String key, {String? path}) {
