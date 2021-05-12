@@ -30,17 +30,6 @@ void main() {
     });
 
     test(
-        'On adding a node asynchronously, the size of children increases correspondingly',
-        () async {
-      final node = Node();
-      const count = 3;
-      for (int i = 0; i < count; i++) {
-        await node.addAsync(Node());
-      }
-      expect(node.children.length, equals(count));
-    });
-
-    test(
         'On adding a list of nodes, the size of children increases correspondingly',
         () async {
       final node = Node();
@@ -50,29 +39,10 @@ void main() {
     });
 
     test(
-        'On adding a list of nodes asynchronously, the size of children increases correspondingly',
-        () async {
-      final node = Node();
-      final nodesToAdd = [Node(), Node(), Node()];
-      await node.addAllAsync(nodesToAdd);
-      expect(node.children.length, equals(nodesToAdd.length));
-    });
-
-    test(
         'On adding a node with children, all the children path across the length '
         'and breadth are updated', () async {
       final node = Node(INode.ROOT_KEY);
       node.add(mockNode1);
-      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
-          equals("./.M1.0C.0C1C.0C1C2A"));
-    });
-
-    test(
-        'On adding a node with children asynchronously, '
-        'all the children path across the length and breadth are updated',
-        () async {
-      final node = Node(INode.ROOT_KEY);
-      await node.addAsync(mockNode1);
       expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
           equals("./.M1.0C.0C1C.0C1C2A"));
     });
@@ -89,6 +59,38 @@ void main() {
           equals("./.M2.0C.0C1C.0C1C2A"));
       expect(node["M3"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
           equals("./.M3.0C.0C1C.0C1C2A"));
+    });
+  });
+
+  group('test adding children to a node asynchronously', () {
+    test(
+        'On adding a node asynchronously, the size of children increases correspondingly',
+        () async {
+      final node = Node();
+      const count = 3;
+      for (int i = 0; i < count; i++) {
+        await node.addAsync(Node());
+      }
+      expect(node.children.length, equals(count));
+    });
+
+    test(
+        'On adding a list of nodes asynchronously, the size of children increases correspondingly',
+        () async {
+      final node = Node();
+      final nodesToAdd = [Node(), Node(), Node()];
+      await node.addAllAsync(nodesToAdd);
+      expect(node.children.length, equals(nodesToAdd.length));
+    });
+
+    test(
+        'On adding a node with children asynchronously, '
+        'all the children path across the length and breadth are updated',
+        () async {
+      final node = Node(INode.ROOT_KEY);
+      await node.addAsync(mockNode1);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("./.M1.0C.0C1C.0C1C2A"));
     });
 
     test(
@@ -171,8 +173,7 @@ void main() {
         () async {
       final node = mockNode1;
       expect(node["0A"]["0A1A"].key, equals("0A1A"));
-      expect(
-          node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
+      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
     });
 
     test('Correct node is returned using a path in the elementAt method',
@@ -188,8 +189,8 @@ void main() {
       final node = mockNode1;
       const _s = INode.PATH_SEPARATOR;
       expect(node["0A${_s}0A1A"].key, equals("0A1A"));
-      expect(node["0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A"].key,
-          equals("0C1C2A3A"));
+      expect(
+          node["0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A"].key, equals("0C1C2A3A"));
     });
 
     test(
@@ -205,8 +206,7 @@ void main() {
         () async {
       final node = mockNode1;
       const _s = INode.PATH_SEPARATOR;
-      expect(
-          () => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
+      expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
     });
   });
 }
