@@ -45,7 +45,7 @@ void main() {
       final tree = IndexedTree();
       tree.add(IndexedNode());
       tree.first.add(IndexedNode());
-      expect(tree.first.children.length, equals(1));
+      expect(tree.length, equals(1));
     });
 
     test(
@@ -71,6 +71,54 @@ void main() {
       final tree = mockIndexedTreeWithIds;
       final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
       tree.addAll(nodesUnderTest, path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(nodesUnderTest.length));
+    });
+  });
+
+  group('test inserting nodes to a tree', () {
+    test(
+        'On inserting a node to the root, the size of root children increases respectively',
+        () async {
+      final tree = IndexedTree();
+      tree.add(IndexedNode());
+      tree.insert(1, IndexedNode());
+      expect(tree.length, equals(2));
+    });
+
+    test(
+        'On inserting a node to a child node, the size of the children increases respectively',
+        () async {
+      final tree = IndexedTree();
+      tree.add(IndexedNode());
+      tree.add(IndexedNode());
+      tree.at(1).add(IndexedNode());
+      tree.at(1).insert(1, IndexedNode());
+      expect(tree.at(1).length, equals(2));
+    });
+
+    test(
+        'On inserting a collection of nodes to a child node, the size of the '
+        'children increases respectively', () async {
+      final tree = IndexedTree();
+      final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
+      tree.insertAll(0, nodesUnderTest);
+      expect(tree.length, equals(nodesUnderTest.length));
+    });
+
+    test(
+        'On inserting a node to a child node at a specified path, the correct node'
+        'is updated', () async {
+      final tree = mockIndexedTreeWithIds;
+      tree.insert(0, IndexedNode(), path: "0C.0C1A");
+      expect(tree["0C"]["0C1A"].length, equals(1));
+    });
+
+    test(
+        'On inserting a collection of nodes at a specified, the correct node is updated'
+        'with the respective node collection', () async {
+      final tree = mockIndexedTreeWithIds;
+      final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
+      tree.insertAll(0, nodesUnderTest, path: "0C.0C1A");
       expect(tree["0C"]["0C1A"].length, equals(nodesUnderTest.length));
     });
   });
