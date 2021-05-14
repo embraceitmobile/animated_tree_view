@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 mixin INodeData<T> {
-  Map<String, dynamic> meta = {};
+  Map<String, dynamic>? meta;
 
   String get key;
 
