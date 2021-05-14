@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/node/indexed_node.dart';
-import 'package:tree_structure_view/controllers/animated_list_controller.dart';
+import 'package:tree_structure_view/tree_list_views/base/i_tree_list_view.dart';
+import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
+import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_container.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
-import 'package:tree_structure_view/widgets/list_item_container.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tree_structure_view/models/expandable_node.dart';
+import 'package:tree_structure_view/tree_list_views/models/expandable_node.dart';
 
-class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
+class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   final LeveledItemWidgetBuilder<T> builder;
   final AnimatedListController<T> animatedListController;
   final AutoScrollController scrollController;
@@ -20,7 +20,7 @@ class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
   final int? index;
   final ValueSetter<T>? onItemTap;
 
-  const TreeNodeItem(
+  const ExpandableNodeItem(
       {Key? key,
       required this.builder,
       required this.animatedListController,
@@ -38,7 +38,7 @@ class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemContainer = ListItemContainer(
+    final itemContainer = ExpandableNodeContainer(
       animation: animation,
       item: node,
       child: builder(context, node.level, node as T),

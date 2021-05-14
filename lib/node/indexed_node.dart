@@ -5,8 +5,6 @@ import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'base/i_node.dart';
 
-export 'base/i_node.dart';
-
 class IndexedNode<T>
     with INodeData<T>
     implements INode<T>, IIndexedNodeActions<T> {

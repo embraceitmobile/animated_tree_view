@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 
-class ListItemContainer<T extends INode<T>> extends StatelessWidget {
+class ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<T>? onTap;
   final T item;
@@ -10,7 +10,7 @@ class ListItemContainer<T extends INode<T>> extends StatelessWidget {
   final double? indentPadding;
   final Widget child;
 
-  const ListItemContainer({
+  const ExpandableNodeContainer({
     Key? key,
     required this.animation,
     required this.onTap,

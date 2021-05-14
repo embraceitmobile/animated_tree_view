@@ -1,4 +1,5 @@
-import '../tree_structure_view.dart';
+
+import 'package:tree_structure_view/node/base/i_node.dart';
 
 extension ExpandableNode<T extends INode<T>> on INode<T> {
   static const _isExpandedKey = "is_expanded";
