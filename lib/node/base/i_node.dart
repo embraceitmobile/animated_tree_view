@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 mixin INodeData<T> {
-  bool isExpanded = false;
+  Map<String, dynamic> meta = {};
 
   String get key;
 

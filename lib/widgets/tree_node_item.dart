@@ -4,6 +4,7 @@ import 'package:tree_structure_view/controllers/animated_list_controller.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 import 'package:tree_structure_view/widgets/list_item_container.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:tree_structure_view/models/expandable_node.dart';
 
 class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
   final LeveledItemWidgetBuilder<T> builder;
@@ -21,18 +22,18 @@ class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
 
   const TreeNodeItem(
       {Key? key,
-        required this.builder,
-        required this.animatedListController,
-        required this.scrollController,
-        required this.node,
-        required this.animation,
-        this.remove = false,
-        this.index,
-        this.indentPadding,
-        this.showExpansionIndicator,
-        this.expandIcon,
-        this.collapseIcon,
-        this.onItemTap})
+      required this.builder,
+      required this.animatedListController,
+      required this.scrollController,
+      required this.node,
+      required this.animation,
+      this.remove = false,
+      this.index,
+      this.indentPadding,
+      this.showExpansionIndicator,
+      this.expandIcon,
+      this.collapseIcon,
+      this.onItemTap})
       : super(key: key);
 
   @override
@@ -43,14 +44,14 @@ class TreeNodeItem<T extends INode<T>> extends StatelessWidget {
       child: builder(context, node.level, node as T),
       indentPadding: indentPadding! * node.level,
       showExpansionIndicator:
-      showExpansionIndicator! && node.childrenAsList.isNotEmpty,
+          showExpansionIndicator! && node.childrenAsList.isNotEmpty,
       expandedIndicatorIcon: node.isExpanded ? collapseIcon : expandIcon,
       onTap: remove
           ? null
           : (dynamic item) {
-        animatedListController.toggleExpansion(item);
-        if (onItemTap != null) onItemTap!(item);
-      },
+              animatedListController.toggleExpansion(item);
+              if (onItemTap != null) onItemTap!(item);
+            },
     );
 
     if (index == null || remove) return itemContainer;
