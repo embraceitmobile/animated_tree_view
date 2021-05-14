@@ -8,7 +8,7 @@ import 'base/i_node.dart';
 export 'base/i_node.dart';
 
 class IndexedNode<T>
-    with INodeViewData<T>
+    with INodeData<T>
     implements INode<T>, IIndexedNodeActions<T> {
   final List<IndexedNode<T>> children;
   final String key;
@@ -16,9 +16,9 @@ class IndexedNode<T>
 
   @mustCallSuper
   IndexedNode([String? key])
-      : children = <IndexedNode<T>>[],
-        key = key ?? UniqueKey().toString(),
-        path = "";
+      : this.children = <IndexedNode<T>>[],
+        this.key = key ?? UniqueKey().toString(),
+        this.path = "";
 
   factory IndexedNode.root() => IndexedNode(INode.ROOT_KEY);
 

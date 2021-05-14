@@ -7,16 +7,16 @@ import 'base/i_node.dart';
 
 export 'base/i_node.dart';
 
-class Node<T> with INodeViewData<T> implements INode<T>, INodeActions<T> {
+class Node<T> with INodeData<T> implements INode<T>, INodeActions<T> {
   final Map<String, Node<T>> children;
   final String key;
   String path;
 
   @mustCallSuper
   Node([String? key])
-      : children = <String, Node<T>>{},
-        key = key ?? UniqueKey().toString(),
-        path = "";
+      : this.children = <String, Node<T>>{},
+        this.key = key ?? UniqueKey().toString(),
+        this.path = "";
 
   factory Node.root() => Node(INode.ROOT_KEY);
 

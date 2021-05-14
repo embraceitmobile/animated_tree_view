@@ -1,17 +1,17 @@
 import 'dart:collection';
 
-mixin INodeViewData<T> {
+mixin INodeData<T> {
   bool isExpanded = false;
 
   String get key;
+
+  UnmodifiableListView<INode<T>> get childrenAsList;
 
   String path = "";
 
   int get level => INode.PATH_SEPARATOR.allMatches(path).length - 1;
 
   String get childrenPath => "$path${INode.PATH_SEPARATOR}$key";
-
-  UnmodifiableListView<INode<T>> get childrenAsList;
 
   int get length => childrenAsList.length;
 
@@ -20,7 +20,7 @@ mixin INodeViewData<T> {
   bool get isRoot => path.isEmpty || path.endsWith(INode.ROOT_KEY);
 }
 
-abstract class INode<T> with INodeViewData<T> {
+abstract class INode<T> with INodeData<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
 
