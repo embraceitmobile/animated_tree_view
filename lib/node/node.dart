@@ -7,7 +7,7 @@ import 'base/i_node.dart';
 
 export 'base/i_node.dart';
 
-class Node<T> with INodeActions<T> implements INode<T> {
+class Node<T> extends INode<T> implements INodeActions<T> {
   final Map<String, Node<T>> children;
   final String key;
   Map<String, dynamic>? meta;
@@ -30,8 +30,10 @@ class Node<T> with INodeActions<T> implements INode<T> {
   }
 
   void addAll(Iterable<INode<T>> iterable) {
-    for (final node in iterable) {
-      add(node);
+    for (final node in iterable){
+      if (children.containsKey(node.key)) throw DuplicateKeyException(node.key);
+      node.parent = this;
+      children[node.key] = node as Node<T>;
     }
   }
 

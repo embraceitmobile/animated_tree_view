@@ -5,7 +5,7 @@ import 'package:tree_structure_view/node/node.dart';
 import '../mocks/node_mocks.dart';
 
 void main() {
-  group('new tree construction', () {
+  group('new node construction', () {
     test('On constructing a new Node, the value is not null', () async {
       expect(Node(), isNotNull);
     });
@@ -157,7 +157,5 @@ void main() {
       const _s = INode.PATH_SEPARATOR;
       expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
     });
-
-
   });
 }

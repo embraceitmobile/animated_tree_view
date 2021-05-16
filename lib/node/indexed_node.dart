@@ -5,7 +5,7 @@ import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'base/i_node.dart';
 
-class IndexedNode<T> with IIndexedNodeActions<T> implements INode<T> {
+class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
   final List<IndexedNode<T>> children;
   final String key;
   INode<T>? parent;

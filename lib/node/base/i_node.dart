@@ -1,20 +1,5 @@
 import 'dart:collection';
 
-extension NodeMeta on INode {
-  int get level => parent == null ? 0 : parent!.level + 1;
-
-  int get length => childrenAsList.length;
-
-  bool get isLeaf => childrenAsList.isEmpty;
-
-  INode get root => isRoot ? this : this.parent!.root;
-
-  bool get isRoot => parent == null;
-
-  String get path =>
-      parent == null ? key : "${parent!.path}${INode.PATH_SEPARATOR}$key";
-}
-
 abstract class INode<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
@@ -32,6 +17,19 @@ abstract class INode<T> {
   INode<T> elementAt(String path);
 
   INode<T> operator [](String path);
+
+  int get level => parent == null ? 0 : parent!.level + 1;
+
+  int get length => childrenAsList.length;
+
+  bool get isLeaf => childrenAsList.isEmpty;
+
+  INode get root => isRoot ? this : this.parent!.root;
+
+  bool get isRoot => parent == null;
+
+  String get path =>
+      parent == null ? key : "${parent!.path}${INode.PATH_SEPARATOR}$key";
 
   @override
   bool operator ==(Object other) =>
