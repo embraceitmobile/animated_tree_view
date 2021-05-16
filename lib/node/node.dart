@@ -30,7 +30,7 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   }
 
   void addAll(Iterable<INode<T>> iterable) {
-    for (final node in iterable){
+    for (final node in iterable) {
       if (children.containsKey(node.key)) throw DuplicateKeyException(node.key);
       node.parent = this;
       children[node.key] = node as Node<T>;
@@ -41,12 +41,14 @@ class Node<T> extends INode<T> implements INodeActions<T> {
     children.clear();
   }
 
-  void remove(String key) {
-    children.remove(key);
+  void remove(INode<T> value) {
+    children.remove(value.key);
   }
 
-  void removeAll(Iterable<String> keys) {
-    keys.forEach((key) => children.remove(key));
+  void removeAll(Iterable<INode<T>> iterable) {
+    for (final node in iterable) {
+      children.remove(node.key);
+    }
   }
 
   void removeWhere(bool Function(INode<T> element) test) {

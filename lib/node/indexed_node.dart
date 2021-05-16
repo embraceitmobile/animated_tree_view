@@ -94,8 +94,8 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     children.insertAll(index, iterable);
   }
 
-  void remove(String key) {
-    final index = children.indexWhere((node) => node.key == key);
+  void remove(INode<T> value) {
+    final index = children.indexWhere((node) => node.key == value.key);
     if (index < 0) throw NodeNotFoundException(key: key);
     children.removeAt(index);
   }
@@ -104,9 +104,9 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     return children.removeAt(index);
   }
 
-  void removeAll(Iterable<String> keys) {
-    for (final key in keys) {
-      remove(key);
+  void removeAll(Iterable<INode<T>> iterable) {
+    for (final node in iterable) {
+      remove(node);
     }
   }
 

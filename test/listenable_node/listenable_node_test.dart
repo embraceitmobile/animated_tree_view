@@ -78,7 +78,7 @@ void main() {
       final nodeUnderTest = ListenableNode();
       node.add(nodeUnderTest);
       expect(node.children.length, equals(1));
-      node.remove(nodeUnderTest.key);
+      node.remove(nodeUnderTest);
       expect(node.children.length, equals(0));
     });
 
@@ -91,7 +91,7 @@ void main() {
         completer.complete(node.children.length);
       });
 
-      node.remove(nodeUnderTest.key);
+      node.remove(nodeUnderTest);
       expect(await completer.future, equals(0));
     });
 
@@ -110,7 +110,7 @@ void main() {
         completer.complete(node.children.length);
       });
 
-      node.removeAll(nodesUnderTest.sublist(1).map((e) => e.key));
+      node.removeAll(nodesUnderTest.sublist(1));
       expect(await completer.future, equals(1));
     });
 
@@ -198,20 +198,20 @@ void main() {
 
     test(
         'Correct nested node in hierarchy is returned using cascading of [] operator',
-            () async {
-          final node = mockListenableNode1;
-          expect(node["0A"]["0A1A"].key, equals("0A1A"));
-          expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
-        });
+        () async {
+      final node = mockListenableNode1;
+      expect(node["0A"]["0A1A"].key, equals("0A1A"));
+      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
+    });
 
     test('Correct node is returned using a path in the elementAt method',
-            () async {
-          final node = mockListenableNode1;
-          const _s = INode.PATH_SEPARATOR;
-          expect(node.elementAt("0A${_s}0A1A").key, equals("0A1A"));
-          expect(node.elementAt("0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A").key,
-              equals("0C1C2A3A"));
-        });
+        () async {
+      final node = mockListenableNode1;
+      const _s = INode.PATH_SEPARATOR;
+      expect(node.elementAt("0A${_s}0A1A").key, equals("0A1A"));
+      expect(node.elementAt("0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A").key,
+          equals("0C1C2A3A"));
+    });
 
     test('Correct node is returned using a path in the [] operator', () async {
       final node = mockListenableNode1;
@@ -240,18 +240,18 @@ void main() {
 
     test(
         'Exception is thrown if an incorrect path is provided to elementAt method',
-            () async {
-          final node = mockListenableNode1;
-          const _s = INode.PATH_SEPARATOR;
-          expect(() => node.elementAt("0A${_s}0C1A"),
-              throwsA(isA<NodeNotFoundException>()));
-        });
+        () async {
+      final node = mockListenableNode1;
+      const _s = INode.PATH_SEPARATOR;
+      expect(() => node.elementAt("0A${_s}0C1A"),
+          throwsA(isA<NodeNotFoundException>()));
+    });
 
     test('Exception is thrown if an incorrect path is provided to [] operator',
-            () async {
-          final node = mockListenableNode1;
-          const _s = INode.PATH_SEPARATOR;
-          expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
-        });
+        () async {
+      final node = mockListenableNode1;
+      const _s = INode.PATH_SEPARATOR;
+      expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
+    });
   });
 }

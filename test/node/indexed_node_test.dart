@@ -174,7 +174,7 @@ void main() {
       final nodeUnderTest = IndexedNode();
       node.add(nodeUnderTest);
       expect(node.children.length, equals(1));
-      node.remove(nodeUnderTest.key);
+      node.remove(nodeUnderTest);
       expect(node.children.length, equals(0));
     });
 
@@ -185,7 +185,7 @@ void main() {
       final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
       node.addAll(nodesUnderTest);
       expect(node.children.length, equals(nodesUnderTest.length));
-      node.removeAll(nodesUnderTest.sublist(1).map((e) => e.key));
+      node.removeAll(nodesUnderTest.sublist(1));
       expect(node.children.length, equals(1));
     });
 

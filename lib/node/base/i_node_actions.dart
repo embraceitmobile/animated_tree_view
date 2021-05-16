@@ -6,9 +6,9 @@ abstract class INodeActions<T> {
 
   void addAll(Iterable<INode<T>> iterable);
 
-  void remove(String key);
+  void remove(INode<T> value);
 
-  void removeAll(Iterable<String> keys);
+  void removeAll(Iterable<INode<T>> iterable);
 
   void removeWhere(bool test(INode<T> element));
 
