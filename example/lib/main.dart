@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         icon: Icon(Icons.delete, color: Colors.white),
         label: Text("Remove Node", style: TextStyle(color: Colors.white)),
-        onPressed: () => controller.remove(item.key, path: item.path),
+        onPressed: () => controller.remove(item.key, path: item.parentKey),
       ),
     );
   }

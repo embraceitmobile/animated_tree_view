@@ -1,32 +1,33 @@
 import 'dart:collection';
 
-mixin INodeData<T> {
-  Map<String, dynamic>? meta;
-
-  String get key;
-
-  UnmodifiableListView<INode<T>> get childrenAsList;
-
-  String path = "";
-
-  int get level => INode.PATH_SEPARATOR.allMatches(path).length - 1;
-
-  String get childrenPath => "$path${INode.PATH_SEPARATOR}$key";
+extension NodeMeta on INode {
+  int get level => parent == null ? 0 : parent!.level + 1;
 
   int get length => childrenAsList.length;
 
   bool get isLeaf => childrenAsList.isEmpty;
 
-  bool get isRoot => path.isEmpty || path.endsWith(INode.ROOT_KEY);
+  INode get root => isRoot ? this : this.parent!.root;
+
+  bool get isRoot => parent == null;
+
+  String get path =>
+      parent == null ? key : "${parent!.path}${INode.PATH_SEPARATOR}$key";
 }
 
-abstract class INode<T> with INodeData<T> {
+abstract class INode<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
 
   String get key;
 
-  Object get children;
+  INode<T>? parent;
+
+  Object? get children;
+
+  Map<String, dynamic>? meta;
+
+  UnmodifiableListView<INode<T>> get childrenAsList;
 
   INode<T> elementAt(String path);
 

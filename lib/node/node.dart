@@ -7,46 +7,32 @@ import 'base/i_node.dart';
 
 export 'base/i_node.dart';
 
-class Node<T> with INodeData<T> implements INode<T>, INodeActions<T> {
+class Node<T> with INodeActions<T> implements INode<T> {
   final Map<String, Node<T>> children;
   final String key;
-  String path;
+  Map<String, dynamic>? meta;
+  INode<T>? parent;
 
   @mustCallSuper
-  Node([String? key])
+  Node({String? key, this.parent})
       : this.children = <String, Node<T>>{},
-        this.key = key ?? UniqueKey().toString(),
-        this.path = "";
+        this.key = key ?? UniqueKey().toString();
 
-  factory Node.root() => Node(INode.ROOT_KEY);
+  factory Node.root() => Node(key: INode.ROOT_KEY);
 
   UnmodifiableListView<INode<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
 
   void add(INode<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
-    value.path = childrenPath;
-    final updatedValue = _updateChildrenPaths<T>(value as Node<T>);
-    children[value.key] = updatedValue;
-  }
-
-  Future<void> addAsync(INode<T> value) async {
-    if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
-    value.path = childrenPath;
-    final updatedValue =
-        await compute(_updateChildrenPaths, (value as Node<T>));
-    children[value.key] = updatedValue as Node<T>;
+    value.parent = this;
+    children[value.key] = value as Node<T>;
   }
 
   void addAll(Iterable<INode<T>> iterable) {
     for (final node in iterable) {
       add(node);
     }
-  }
-
-  Future<void> addAllAsync(Iterable<INode<T>> iterable) async {
-    await Future.forEach(
-        iterable, (dynamic node) async => await addAsync(node));
   }
 
   void clear() {
@@ -75,24 +61,14 @@ class Node<T> with INodeData<T> implements INode<T>, INodeActions<T> {
       } else {
         final nextNode = currentNode.children[nodeKey];
         if (nextNode == null)
-          throw NodeNotFoundException(path: path, key: nodeKey);
+          throw NodeNotFoundException(parentKey: path, key: nodeKey);
         currentNode = nextNode;
       }
     }
     return currentNode;
   }
 
-  static Node<E> _updateChildrenPaths<E>(Node<E> node) {
-    node.children.forEach((_, childNode) {
-      childNode.path = node.childrenPath;
-      if (childNode.children.isNotEmpty) {
-        _updateChildrenPaths(childNode);
-      }
-    });
-    return node;
-  }
-
   String toString() {
-    return 'MapNode{children: $children, key: $key, path: $path}';
+    return 'Node{children: $children, key: $key, parent: $parent}';
   }
 }

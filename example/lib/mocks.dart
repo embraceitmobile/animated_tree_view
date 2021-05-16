@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 
 class RowItem extends Node<RowItem> {
-  RowItem([String? key]) : super(key);
+  RowItem([String? key]) : super(key:key);
 }
 
 const Map<int, String> ALPHABET_MAPPER = {

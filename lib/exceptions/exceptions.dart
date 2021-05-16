@@ -10,16 +10,17 @@ class DuplicateKeyException implements Exception {
 class NodeNotFoundException implements Exception {
   final String message;
 
-  NodeNotFoundException({required String key, String? path})
-      : message = "The node <$key> does not exist in the path <${path ?? ""}>";
+  NodeNotFoundException({required String key, String? parentKey})
+      : message = "The node <$key> does not exist in the parent <$parentKey>";
 
   factory NodeNotFoundException.fromNode(INode node) =>
-      NodeNotFoundException(key: node.key, path: node.path);
+      NodeNotFoundException(key: node.key, parentKey: node.parent?.key);
 }
 
 class ChildrenNotFoundException implements Exception {
   final String message;
 
   ChildrenNotFoundException(INode node)
-      : message = "The node <${node.key}> at path <${node.path}> does not have any children";
+      : message =
+            "The node <${node.key}> of parent <${node.parent?.key}> does not have any children";
 }
