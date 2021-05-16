@@ -2,7 +2,7 @@
 // import 'package:tree_structure_view/listenable_tree/listenable_tree.dart';
 // import 'package:tree_structure_view/node/node.dart';
 //
-// import '../mocks/tree_mocks.dart';
+// import '../mocks/node_mocks.dart';
 //
 // void main() {
 //   group('test new tree construction', () {

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'package:tree_structure_view/node/node.dart';
 
-import '../mocks/tree_mocks.dart';
+import '../mocks/node_mocks.dart';
 
 void main() {
   group('new tree construction', () {
@@ -125,6 +125,23 @@ void main() {
           node["0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A"].key, equals("0C1C2A3A"));
     });
 
+    test('Correct path is returned from a nested node', () async {
+      final node = mockNode1;
+      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("/.0C.0C1C.0C1C2A.0C1C2A3A"));
+    });
+
+    test('Correct level is returned from a nested node', () async {
+      final node = mockNode1;
+      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].level, equals(4));
+    });
+
+    test('Correct root is returned using findRootMethod', () async {
+      final node = mockNode1;
+      final nodeToTest = node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"];
+      expect(nodeToTest.root.key, equals(INode.ROOT_KEY));
+    });
+
     test(
         'Exception is thrown if an incorrect path is provided to elementAt method',
         () async {
@@ -141,22 +158,6 @@ void main() {
       expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
     });
 
-    test('Correct path is returned from a nested node', () async {
-      final node = mockNode1;
-      final nodeToTest = node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"];
-      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
-          equals("/.0C.0C1C.0C1C2A.0C1C2A3A"));
-    });
 
-    test('Correct level is returned from a nested node', () async {
-      final node = mockNode1;
-      expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].level, equals(4));
-    });
-
-    test('Correct root is returned using findRootMethod', () async {
-      final node = mockNode1;
-      final nodeToTest = node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"];
-      expect(nodeToTest.root.key, equals(INode.ROOT_KEY));
-    });
   });
 }

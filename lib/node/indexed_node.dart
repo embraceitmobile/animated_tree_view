@@ -5,10 +5,11 @@ import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'base/i_node_actions.dart';
 import 'base/i_node.dart';
 
-class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
+class IndexedNode<T> with IIndexedNodeActions<T> implements INode<T> {
   final List<IndexedNode<T>> children;
   final String key;
-  final IndexedNode<T>? parent;
+  INode<T>? parent;
+  Map<String, dynamic>? meta;
 
   @mustCallSuper
   IndexedNode({String? key, this.parent})
@@ -60,35 +61,17 @@ class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
     children.add(value as IndexedNode<T>);
   }
 
-  // Future<void> addAsync(INode<T> value) async {
-  //   value.parent = this;
-  //   final updatedValue =
-  //       await compute(_updateChildrenPaths, (value as IndexedNode<T>));
-  //   children.add(updatedValue as IndexedNode<T>);
-  // }
-
   void addAll(Iterable<INode<T>> iterable) {
     for (final node in iterable) {
       add(node);
     }
   }
 
-  // Future<void> addAllAsync(Iterable<INode<T>> iterable) async {
-  //   await Future.forEach(
-  //       iterable, (dynamic node) async => await addAsync(node));
-  // }
-
   void insert(int index, IndexedNode<T> element) {
     element.parent = this;
     // final updatedValue = _updateChildrenPaths<T>(element);
     children.insert(index, element);
   }
-
-  // Future<void> insertAsync(int index, IndexedNode<T> element) async {
-  //   element.path = childrenPath;
-  //   final updatedValue = await compute(_updateChildrenPaths, (element));
-  //   children.insert(index, updatedValue as IndexedNode<T>);
-  // }
 
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element) {
     final index = children.indexWhere((node) => node.key == after.key);
@@ -97,14 +80,6 @@ class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
     return index + 1;
   }
 
-  // Future<int> insertAfterAsync(
-  //     IndexedNode<T> after, IndexedNode<T> element) async {
-  //   final index = children.indexWhere((node) => node.key == after.key);
-  //   if (index < 0) throw NodeNotFoundException.fromNode(after);
-  //   await insertAsync(index + 1, element);
-  //   return index + 1;
-  // }
-
   int insertBefore(IndexedNode<T> before, IndexedNode<T> element) {
     final index = children.indexWhere((node) => node.key == before.key);
     if (index < 0) throw NodeNotFoundException.fromNode(before);
@@ -112,28 +87,12 @@ class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
     return index;
   }
 
-  // Future<int> insertBeforeAsync(
-  //     IndexedNode<T> before, IndexedNode<T> element) async {
-  //   final index = children.indexWhere((node) => node.key == before.key);
-  //   if (index < 0) throw NodeNotFoundException.fromNode(before);
-  //   await insertAsync(index, element);
-  //   return index;
-  // }
-
   void insertAll(int index, Iterable<IndexedNode<T>> iterable) {
-    children.insertAll(index, iterable.map((node) => node.parent = this));
+    for (final node in iterable) {
+      node.parent = this;
+    }
+    children.insertAll(index, iterable);
   }
-
-  // Future<void> insertAllAsync(
-  //     int index, Iterable<IndexedNode<T>> iterable) async {
-  //   final updatedNodes = <IndexedNode<T>>[];
-  //   for (final node in iterable) {
-  //     node.path = childrenPath;
-  //     updatedNodes.add(await compute(_updateChildrenPaths, (node)));
-  //   }
-  //
-  //   children.insertAll(index, updatedNodes);
-  // }
 
   void remove(String key) {
     final index = children.indexWhere((node) => node.key == key);
@@ -167,7 +126,8 @@ class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
       } else {
         final index =
             currentNode.children.indexWhere((node) => node.key == nodeKey);
-        if (index < 0) throw NodeNotFoundException(parentKey: path, key: nodeKey);
+        if (index < 0)
+          throw NodeNotFoundException(parentKey: path, key: nodeKey);
         final nextNode = currentNode.children[index];
         currentNode = nextNode;
       }
@@ -178,14 +138,4 @@ class IndexedNode<T> with INode<T>, IIndexedNodeActions<T> {
   IndexedNode<T> at(int index) => children[index];
 
   IndexedNode<T> operator [](String path) => elementAt(path) as IndexedNode<T>;
-
-// static IndexedNode<E> _updateChildrenPaths<E>(IndexedNode<E> node) {
-//   for (final childNode in node.children) {
-//     childNode.path = node.childrenPath;
-//     if (childNode.children.isNotEmpty) {
-//       _updateChildrenPaths(childNode);
-//     }
-//   }
-//   return node;
-// }
 }
