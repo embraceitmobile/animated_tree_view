@@ -5,6 +5,7 @@ import 'package:tree_structure_view/listenable_node/base/i_listenable_node.dart'
 import 'package:tree_structure_view/listenable_node/base/node_update_notifier.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 import 'package:tree_structure_view/node/node.dart';
+import 'package:tree_structure_view/exceptions/exceptions.dart';
 
 class ListenableNode<T> extends Node<T>
     with ChangeNotifier
@@ -15,19 +16,29 @@ class ListenableNode<T> extends Node<T>
 
   factory ListenableNode.root() => ListenableNode(key: INode.ROOT_KEY);
 
-  final bool shouldBubbleUpEvents;
-
-  final StreamController<NodeAddEvent<T>> _addedNodes =
-      StreamController<NodeAddEvent<T>>.broadcast();
-
-  final StreamController<NodeRemoveEvent> _removedNodes =
-      StreamController<NodeRemoveEvent>.broadcast();
-
   Node<T> get value => this;
 
-  Stream<NodeAddEvent<T>> get addedNodes => _addedNodes.stream;
+  final bool shouldBubbleUpEvents;
 
-  Stream<NodeRemoveEvent> get removedNodes => _removedNodes.stream;
+  StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
+
+  StreamController<NodeRemoveEvent>? _nullableRemovedNodes;
+
+  StreamController<NodeAddEvent<T>> get _addedNodes =>
+      _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
+
+  StreamController<NodeRemoveEvent> get _removedNodes =>
+      _nullableRemovedNodes ??= StreamController<NodeRemoveEvent>.broadcast();
+
+  Stream<NodeAddEvent<T>> get addedNodes {
+    if (!isRoot) throw ListenerNotAllowedException(this);
+    return _addedNodes.stream;
+  }
+
+  Stream<NodeRemoveEvent> get removedNodes {
+    if (!isRoot) throw ListenerNotAllowedException(this);
+    return _removedNodes.stream;
+  }
 
   Stream<NodeInsertEvent<T>> get insertedNodes => Stream.empty();
 
@@ -74,8 +85,8 @@ class ListenableNode<T> extends Node<T>
   }
 
   void dispose() {
-    _addedNodes.close();
-    _removedNodes.close();
+    _nullableAddedNodes?.close();
+    _nullableRemovedNodes?.close();
     super.dispose();
   }
 
@@ -89,7 +100,7 @@ class ListenableNode<T> extends Node<T>
     if (isRoot) {
       _addedNodes.sink.add(event);
     } else {
-      (parent! as ListenableNode<T>)._notifyNodesAdded(event);
+      (root as ListenableNode<T>)._notifyNodesAdded(event);
     }
   }
 
@@ -97,7 +108,7 @@ class ListenableNode<T> extends Node<T>
     if (isRoot) {
       _removedNodes.sink.add(event);
     } else {
-      (parent! as ListenableNode<T>)._notifyNodesRemoved(event);
+      (root as ListenableNode<T>)._notifyNodesRemoved(event);
     }
   }
 }

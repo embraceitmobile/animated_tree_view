@@ -23,7 +23,7 @@ void main() {
     });
   });
 
-  group('test adding children to a ListenableNodes', () {
+  group('test adding children to a ListenableNodes ', () {
     test(
         'On adding a ListenableNode, the size of children increases correspondingly',
         () async {
@@ -70,6 +70,76 @@ void main() {
     });
   });
 
+  group('test listeners are notified on adding children', () {
+    test('On adding a ListenableNode, the listeners are notified', () async {
+      final completer = Completer<int>();
+      final node = ListenableNode();
+      node.addListener(() {
+        completer.complete(node.children.length);
+      });
+
+      node.add(ListenableNode());
+      expect(await completer.future, equals(1));
+    });
+
+    test('On adding nodes, the addedNodes event is fired', () async {
+      final node = ListenableNode();
+      node.addedNodes.listen(
+          expectAsync1((event) => expect(event.items.length, isNonZero)));
+
+      node.add(ListenableNode());
+    });
+
+    test('On adding multiple nodes, respective items in the event are emitted',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      node.addedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, nodesUnderTest.length);
+      }));
+
+      node.addAll(nodesUnderTest);
+    });
+
+    test('Exception is thrown on accessing addEvent stream on a non-root node',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = ListenableNode();
+      node.add(nodesUnderTest);
+      expect(() => nodesUnderTest.addedNodes,
+          throwsA(isA<ListenerNotAllowedException>()));
+    });
+
+    test(
+        'On adding a node on a non-root node, event is emitted on the root node',
+        () async {
+      final rootNode = ListenableNode();
+      final nodeUnderTest = ListenableNode();
+      rootNode.add(nodeUnderTest);
+      rootNode.addedNodes.listen(
+          expectAsync1((event) => expect(event.items.length, isNonZero)));
+
+      nodeUnderTest.add(ListenableNode());
+    });
+
+    test(
+        'On adding a node on list of nodes a non-root node, event is emitted on the root node',
+        () async {
+      final nodesToAdd = [ListenableNode(), ListenableNode(), ListenableNode()];
+      final rootNode = ListenableNode();
+      final nodeUnderTest = ListenableNode();
+      rootNode.add(nodeUnderTest);
+      rootNode.addedNodes.listen(expectAsync1(
+          (event) => expect(event.items.length, nodesToAdd.length)));
+
+      nodeUnderTest.addAll(nodesToAdd);
+    });
+  });
+
   group('test removing children from the ListenableNodes', () {
     test(
         'On removing a ListenableNode, the size of children decreases correspondingly',
@@ -82,6 +152,53 @@ void main() {
       expect(node.children.length, equals(0));
     });
 
+    test(
+        'On removing a list of ListenableNode, the size of children decreases correspondingly',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      node.addAll(nodesUnderTest);
+      expect(node.children.length, equals(nodesUnderTest.length));
+      node.removeAll(nodesUnderTest.sublist(1));
+      expect(node.children.length, equals(1));
+    });
+
+    test('On clearing a ListenableNode, the size of the children becomes zero',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      node.addAll(nodesUnderTest);
+      expect(node.children.length, equals(nodesUnderTest.length));
+      node.clear();
+      expect(node.children.length, equals(0));
+    });
+
+    test(
+        'On removeWhere method, the correct node matching the predicate is removed',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      final nodeToRemove = nodesUnderTest.first;
+      node.addAll(nodesUnderTest);
+      expect(node.children.length, equals(nodesUnderTest.length));
+      node.removeWhere((node) => node.key == nodeToRemove.key);
+      expect(node.children.length, equals(nodesUnderTest.length - 1));
+    });
+  });
+
+  group('test listeners are notified on removing children', () {
     test('On removing a ListenableNode, the listeners are notified', () async {
       final completer = Completer<int>();
       final node = ListenableNode();
@@ -114,20 +231,6 @@ void main() {
       expect(await completer.future, equals(1));
     });
 
-    test('On clearing a ListenableNode, the size of the children becomes zero',
-        () async {
-      final node = ListenableNode();
-      final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
-      ];
-      node.addAll(nodesUnderTest);
-      expect(node.children.length, equals(nodesUnderTest.length));
-      node.clear();
-      expect(node.children.length, equals(0));
-    });
-
     test('On clearing a ListenableNode, the listeners are notified', () async {
       final completer = Completer<int>();
       final node = ListenableNode();
@@ -143,22 +246,6 @@ void main() {
       });
       node.clear();
       expect(await completer.future, equals(0));
-    });
-
-    test(
-        'On removeWhere method, the correct node matching the predicate is removed',
-        () async {
-      final node = ListenableNode();
-      final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
-      ];
-      final nodeToRemove = nodesUnderTest.first;
-      node.addAll(nodesUnderTest);
-      expect(node.children.length, equals(nodesUnderTest.length));
-      node.removeWhere((node) => node.key == nodeToRemove.key);
-      expect(node.children.length, equals(nodesUnderTest.length - 1));
     });
 
     test('On removeWhere method, the listeners are notified', () async {
