@@ -81,7 +81,9 @@ void main() {
       node.add(ListenableNode());
       expect(await completer.future, equals(1));
     });
+  });
 
+  group('test addedNodes event on adding children', () {
     test('On adding nodes, the addedNodes event is fired', () async {
       final node = ListenableNode();
       node.addedNodes.listen(
@@ -264,6 +266,85 @@ void main() {
       });
       node.removeWhere((node) => node.key == nodeToRemove.key);
       expect(await completer.future, equals(nodesUnderTest.length - 1));
+    });
+  });
+
+  group('test removedNodes event on removing children', () {
+    test(
+        'On removing a node, the removedNodes event is fired with the corresponding removed node data',
+        () async {
+      final node = ListenableNode();
+      final nodeUnderTest = ListenableNode();
+      node.add(nodeUnderTest);
+      node.removedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, 1);
+        expect(event.items.first.key, nodeUnderTest.key);
+      }));
+
+      node.remove(nodeUnderTest);
+    });
+
+    test(
+        'On clearing a node, the removedNodes event is fired containing the correct number of removed nodes',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      node.addAll(nodesUnderTest);
+
+      node.removedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, nodesUnderTest.length);
+      }));
+
+      node.clear();
+    });
+
+    test(
+        'On removeWhere method, the removedNodes event is fired containing the correct number of removed nodes',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      final nodeToRemove = nodesUnderTest.first;
+      node.addAll(nodesUnderTest);
+      expect(node.children.length, equals(nodesUnderTest.length));
+      node.removedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, 1);
+        expect(event.items.first.key, nodeToRemove.key);
+      }));
+      node.removeWhere((node) => node.key == nodeToRemove.key);
+    });
+
+    test(
+        'Exception is thrown on accessing removedNodes stream on a non-root node',
+        () async {
+      final node = ListenableNode();
+      final nodesUnderTest = ListenableNode();
+      node.add(nodesUnderTest);
+      expect(() => nodesUnderTest.removedNodes,
+          throwsA(isA<ListenerNotAllowedException>()));
+    });
+
+    test(
+        'On removing a node on a non-root node, event is emitted on the root node',
+        () async {
+      final rootNode = ListenableNode();
+      final nodeUnderTest = ListenableNode();
+      final nodeToRemove = ListenableNode();
+      rootNode.add(nodeUnderTest);
+      rootNode.removedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, 1);
+        expect(event.items.first.key, nodeToRemove.key);
+      }));
+
+      nodeUnderTest.add(nodeToRemove);
+      nodeUnderTest.remove(nodeToRemove);
     });
   });
 
