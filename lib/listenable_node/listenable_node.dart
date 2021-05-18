@@ -10,7 +10,7 @@ import 'package:tree_structure_view/exceptions/exceptions.dart';
 class ListenableNode<T> extends Node<T>
     with ChangeNotifier
     implements IListenableNode<T> {
-  ListenableNode(
+   ListenableNode(
       {String? key, INode<T>? parent, this.shouldBubbleUpEvents = true})
       : super(key: key, parent: parent);
 
@@ -22,20 +22,20 @@ class ListenableNode<T> extends Node<T>
 
   StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
 
-  StreamController<NodeRemoveEvent>? _nullableRemovedNodes;
+  StreamController<NodeRemoveEvent<T>>? _nullableRemovedNodes;
 
   StreamController<NodeAddEvent<T>> get _addedNodes =>
       _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
 
-  StreamController<NodeRemoveEvent> get _removedNodes =>
-      _nullableRemovedNodes ??= StreamController<NodeRemoveEvent>.broadcast();
+  StreamController<NodeRemoveEvent<T>> get _removedNodes =>
+      _nullableRemovedNodes ??= StreamController<NodeRemoveEvent<T>>.broadcast();
 
   Stream<NodeAddEvent<T>> get addedNodes {
     if (!isRoot) throw ListenerNotAllowedException(this);
     return _addedNodes.stream;
   }
 
-  Stream<NodeRemoveEvent> get removedNodes {
+  Stream<NodeRemoveEvent<T>> get removedNodes {
     if (!isRoot) throw ListenerNotAllowedException(this);
     return _removedNodes.stream;
   }

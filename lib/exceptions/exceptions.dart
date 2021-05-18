@@ -8,7 +8,7 @@ class DuplicateKeyException implements Exception {
 
   @override
   String toString() {
-    return 'DuplicateKeyException{message: $message}';
+    return 'DuplicateKeyException: $message}';
   }
 }
 
@@ -23,7 +23,7 @@ class NodeNotFoundException implements Exception {
 
   @override
   String toString() {
-    return 'NodeNotFoundException{message: $message}';
+    return 'NodeNotFoundException: $message}';
   }
 }
 
@@ -36,7 +36,7 @@ class ChildrenNotFoundException implements Exception {
 
   @override
   String toString() {
-    return 'ChildrenNotFoundException{message: $message}';
+    return 'ChildrenNotFoundException: $message}';
   }
 }
 

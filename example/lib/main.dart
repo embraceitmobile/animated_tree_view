@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              initialItems: {"#01-Initial-Item": RowItem("#01-Initial-Item")},
+              node: {"#01-Initial-Item": RowItem("#01-Initial-Item")},
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,

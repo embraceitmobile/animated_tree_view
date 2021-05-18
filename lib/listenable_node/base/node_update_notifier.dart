@@ -10,7 +10,7 @@ abstract class NodeUpdateNotifier<T> {
 
   Stream<NodeInsertEvent<T>> get insertedNodes;
 
-  Stream<NodeRemoveEvent> get removedNodes;
+  Stream<NodeRemoveEvent<T>> get removedNodes;
 
   void dispose();
 }
