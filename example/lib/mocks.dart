@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:tree_structure_view/listenable_node/listenable_node.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 
-class RowItem extends Node<RowItem> {
+class RowItem extends ListenableNode<RowItem> {
   RowItem([String? key]) : super(key:key);
 }
 

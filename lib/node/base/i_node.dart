@@ -24,7 +24,7 @@ abstract class INode<T> {
 
   bool get isLeaf => childrenAsList.isEmpty;
 
-  INode get root => isRoot ? this : this.parent!.root;
+  INode<T> get root => isRoot ? this : this.parent!.root;
 
   bool get isRoot => parent == null;
 

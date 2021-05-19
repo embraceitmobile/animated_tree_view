@@ -8,6 +8,8 @@ abstract class INodeActions<T> {
 
   void remove(INode<T> value);
 
+  void delete();
+
   void removeAll(Iterable<INode<T>> iterable);
 
   void removeWhere(bool test(INode<T> element));

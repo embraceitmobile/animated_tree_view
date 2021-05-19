@@ -100,6 +100,13 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     children.removeAt(index);
   }
 
+  void delete() {
+    if (parent == null)
+      (root as IndexedNode<T>).clear();
+    else
+      (parent as IndexedNode<T>).remove(this);
+  }
+
   IndexedNode<T> removeAt(int index) {
     return children.removeAt(index);
   }

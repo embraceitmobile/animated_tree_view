@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
 import 'mocks.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 
@@ -31,7 +32,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = TreeListViewController<RowItem>();
+  final controller =
+      TreeListViewController<RowItem>(initialItems: RowItem("#00-Root-Item"));
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -51,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              node: {"#01-Initial-Item": RowItem("#01-Initial-Item")},
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -76,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: RaisedButton.icon(
-                  onPressed: () => controller.add(RowItem()),
+                  onPressed: () => controller.root.add(RowItem()),
                   icon: Icon(Icons.add),
                   label: Text("Add Node")),
             )
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         icon: Icon(Icons.add_circle, color: Colors.white),
         label: Text("Add Child", style: TextStyle(color: Colors.white)),
-        onPressed: () => controller.add(RowItem(), path: item.childrenPath),
+        onPressed: () => item.add(RowItem()),
       ),
     );
   }
@@ -106,14 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
-        color: Colors.red[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
-        icon: Icon(Icons.delete, color: Colors.white),
-        label: Text("Remove Node", style: TextStyle(color: Colors.white)),
-        onPressed: () => controller.remove(item.key, path: item.parentKey),
-      ),
+          color: Colors.red[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
+          icon: Icon(Icons.delete, color: Colors.white),
+          label: Text("Remove Node", style: TextStyle(color: Colors.white)),
+          onPressed: () => item.delete()),
     );
   }
 }

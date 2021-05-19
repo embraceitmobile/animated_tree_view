@@ -45,6 +45,13 @@ class Node<T> extends INode<T> implements INodeActions<T> {
     children.remove(value.key);
   }
 
+  void delete() {
+    if (parent == null)
+      (root as Node<T>).clear();
+    else
+      (parent as Node<T>).remove(this);
+  }
+
   void removeAll(Iterable<INode<T>> iterable) {
     for (final node in iterable) {
       children.remove(node.key);
