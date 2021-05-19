@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
           icon: Icon(Icons.delete, color: Colors.white),
-          label: Text("Remove Node", style: TextStyle(color: Colors.white)),
+          label: Text("Delete", style: TextStyle(color: Colors.white)),
           onPressed: () => item.delete()),
     );
   }
