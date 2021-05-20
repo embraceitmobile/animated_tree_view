@@ -1,6 +1,7 @@
 import 'package:tree_structure_view/node/base/i_node.dart';
+import 'package:tree_structure_view/node/node.dart';
 
-extension ExpandableNode<T extends INode<T>> on INode<T> {
+extension ExpandableINode on INode {
   static const _isExpandedKey = "is_expanded";
 
   bool get isExpanded => meta?[_isExpandedKey] == true;

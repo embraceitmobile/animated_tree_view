@@ -1,22 +1,17 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tree_structure_view/node/base/i_node.dart';
 
-import '../../tree_structure_view.dart';
+abstract class NodeUpdateNotifier {
+  Stream<NodeAddEvent> get addedNodes;
 
-abstract class NodeUpdateNotifier<T> {
-  Stream<NodeAddEvent<T>> get addedNodes;
+  Stream<NodeInsertEvent> get insertedNodes;
 
-  Stream<NodeInsertEvent<T>> get insertedNodes;
-
-  Stream<NodeRemoveEvent<T>> get removedNodes;
+  Stream<NodeRemoveEvent> get removedNodes;
 
   void dispose();
 }
 
-class NodeAddEvent<T> {
-  final Iterable<INode<T>> items;
+class NodeAddEvent {
+  final Iterable items;
 
   const NodeAddEvent(this.items);
 
@@ -26,8 +21,8 @@ class NodeAddEvent<T> {
   }
 }
 
-class NodeRemoveEvent<T> {
-  final Iterable<INode<T>> items;
+class NodeRemoveEvent {
+  final Iterable items;
 
   const NodeRemoveEvent(this.items);
 
@@ -37,8 +32,8 @@ class NodeRemoveEvent<T> {
   }
 }
 
-class NodeInsertEvent<T> {
-  final Iterable<INode<T>> items;
+class NodeInsertEvent {
+  final Iterable items;
   final int index;
 
   const NodeInsertEvent(this.items, this.index);

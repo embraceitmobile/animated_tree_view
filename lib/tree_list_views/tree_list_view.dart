@@ -11,8 +11,8 @@ import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_item
 
 import 'controllers/tree_list_view_controller.dart';
 
-typedef LeveledItemWidgetBuilder<T extends INode<T>> = Widget Function(
-    BuildContext context, int level, INode<T> item);
+typedef LeveledItemWidgetBuilder<T> = Widget Function(
+    BuildContext context, int level, T item);
 
 const DEFAULT_INDENT_PADDING = 24.0;
 const DEFAULT_EXPAND_ICON = const Icon(Icons.keyboard_arrow_down);
@@ -160,8 +160,8 @@ class _TreeListView<T extends INode<T>> extends StatefulWidget {
 class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
   static const TAG = "TreeListView";
 
-  StreamSubscription<NodeAddEvent<T>>? _addedNodesSubscription;
-  StreamSubscription<NodeInsertEvent<T>>? _insertNodesSubscription;
+  StreamSubscription<NodeAddEvent>? _addedNodesSubscription;
+  StreamSubscription<NodeInsertEvent>? _insertNodesSubscription;
 
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
@@ -233,7 +233,7 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
     _insertNodesSubscription?.cancel();
   }
 
-  void _handleItemAdditionEvent(NodeAddEvent<T> event) {
+  void _handleItemAdditionEvent(NodeAddEvent event) {
     Future.delayed(
       Duration(milliseconds: 300),
       () => widget.controller.scrollController.scrollToIndex(
@@ -243,7 +243,7 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
     );
   }
 
-  void _handleItemInsertEvent(NodeInsertEvent<T> event) {
+  void _handleItemInsertEvent(NodeInsertEvent event) {
     Future.delayed(
       Duration(milliseconds: 300),
       () => widget.controller.scrollController.scrollToIndex(

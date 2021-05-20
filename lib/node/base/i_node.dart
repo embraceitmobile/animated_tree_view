@@ -26,6 +26,8 @@ abstract class INode<T> {
 
   bool get isLeaf => childrenAsList.isEmpty;
 
+  bool get hasChildren => childrenAsList.isEmpty;
+
   bool get isRoot => parent == null;
 
   String get path =>

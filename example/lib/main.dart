@@ -67,8 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      buildAddItemChildButton(item as RowItem),
+                      buildAddItemChildButton(item),
                       if (!item.isRoot) buildRemoveItemButton(item),
+                      if (item.isRoot && item.children.isNotEmpty)
+                        buildClearAllItemButton(item)
                     ],
                   ),
                   Divider(),
@@ -108,6 +110,20 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.delete, color: Colors.white),
           label: Text("Delete", style: TextStyle(color: Colors.white)),
           onPressed: () => item.delete()),
+    );
+  }
+
+  Widget buildClearAllItemButton(RowItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: FlatButton.icon(
+          color: Colors.red[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
+          icon: Icon(Icons.delete, color: Colors.white),
+          label: Text("Clear All", style: TextStyle(color: Colors.white)),
+          onPressed: () => item.clear()),
     );
   }
 }

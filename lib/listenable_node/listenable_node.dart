@@ -23,28 +23,27 @@ class ListenableNode<T> extends Node<T>
 
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 
-  StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
+  StreamController<NodeAddEvent>? _nullableAddedNodes;
 
-  StreamController<NodeRemoveEvent<T>>? _nullableRemovedNodes;
+  StreamController<NodeRemoveEvent>? _nullableRemovedNodes;
 
-  StreamController<NodeAddEvent<T>> get _addedNodes =>
-      _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
+  StreamController<NodeAddEvent> get _addedNodes =>
+      _nullableAddedNodes ??= StreamController<NodeAddEvent>.broadcast();
 
-  StreamController<NodeRemoveEvent<T>> get _removedNodes =>
-      _nullableRemovedNodes ??=
-          StreamController<NodeRemoveEvent<T>>.broadcast();
+  StreamController<NodeRemoveEvent> get _removedNodes =>
+      _nullableRemovedNodes ??= StreamController<NodeRemoveEvent>.broadcast();
 
-  Stream<NodeAddEvent<T>> get addedNodes {
+  Stream<NodeAddEvent> get addedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _addedNodes.stream;
   }
 
-  Stream<NodeRemoveEvent<T>> get removedNodes {
+  Stream<NodeRemoveEvent> get removedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _removedNodes.stream;
   }
 
-  Stream<NodeInsertEvent<T>> get insertedNodes => Stream.empty();
+  Stream<NodeInsertEvent> get insertedNodes => Stream.empty();
 
   void add(Node<T> value) {
     super.add(value);
@@ -111,7 +110,7 @@ class ListenableNode<T> extends Node<T>
     if (shouldBubbleUpEvents && !isRoot) parent!._notifyListeners();
   }
 
-  void _notifyNodesAdded(NodeAddEvent<T> event) {
+  void _notifyNodesAdded(NodeAddEvent event) {
     if (isRoot) {
       _addedNodes.sink.add(event);
     } else {
@@ -119,7 +118,7 @@ class ListenableNode<T> extends Node<T>
     }
   }
 
-  void _notifyNodesRemoved(NodeRemoveEvent<T> event) {
+  void _notifyNodesRemoved(NodeRemoveEvent event) {
     if (isRoot) {
       _removedNodes.sink.add(event);
     } else {

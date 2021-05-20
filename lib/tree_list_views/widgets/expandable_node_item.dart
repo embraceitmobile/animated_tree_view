@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/tree_list_views/base/i_tree_list_view.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
+import 'package:tree_structure_view/tree_list_views/models/expandable_node.dart';
 import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_container.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tree_structure_view/tree_list_views/models/expandable_node.dart';
 
 class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   final LeveledItemWidgetBuilder<T> builder;
   final AnimatedListController<T> animatedListController;
   final AutoScrollController scrollController;
-  final INode<T> node;
+  final T node;
   final Animation<double> animation;
   final double? indentPadding;
   final bool? showExpansionIndicator;
@@ -41,7 +40,7 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
     final itemContainer = ExpandableNodeContainer(
       animation: animation,
       item: node,
-      child: builder(context, node.level, node as T),
+      child: builder(context, node.level, node),
       indentPadding: indentPadding! * node.level,
       showExpansionIndicator:
           showExpansionIndicator! && node.childrenAsList.isNotEmpty,
