@@ -1,4 +1,3 @@
-
 import 'package:tree_structure_view/node/base/i_node.dart';
 
 extension ExpandableNode<T extends INode<T>> on INode<T> {
