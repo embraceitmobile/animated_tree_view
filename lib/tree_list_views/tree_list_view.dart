@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tree_structure_view/listenable_node/base/i_listenable_node.dart';
 import 'package:tree_structure_view/listenable_node/base/node_update_notifier.dart';
-import 'package:tree_structure_view/node/base/i_node.dart';
-import 'package:tree_structure_view/node/indexed_node.dart';
+import 'package:tree_structure_view/listenable_node/listenable_indexed_node.dart';
+import 'package:tree_structure_view/listenable_node/listenable_node.dart';
 import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
@@ -15,7 +16,7 @@ import 'controllers/tree_list_view_controller.dart';
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
-class TreeListView<T extends Node<T>> extends StatelessWidget {
+class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
   final TreeListViewController<T> controller;
   final LeveledItemWidgetBuilder<T> builder;
   final bool showExpansionIndicator;
@@ -65,7 +66,8 @@ class TreeListView<T extends Node<T>> extends StatelessWidget {
   }
 }
 
-class IndexedTreeListView<T extends IndexedNode<T>> extends StatelessWidget {
+class IndexedTreeListView<T extends ListenableIndexedNode<T>>
+    extends StatelessWidget {
   final IndexedTreeListViewController<T> controller;
   final LeveledItemWidgetBuilder<T> builder;
   final bool showExpansionIndicator;
@@ -128,7 +130,7 @@ class IndexedTreeListView<T extends IndexedNode<T>> extends StatelessWidget {
 /// For a [TreeListView] that allows for insertion and removal of
 /// items at index positions, use the alternate [IndexedTreeListView].
 ///
-class _TreeListView<T extends INode<T>> extends StatefulWidget {
+class _TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
   final ITreeListViewController<T> controller;
   final LeveledItemWidgetBuilder<T> builder;
   final bool showExpansionIndicator;
@@ -162,7 +164,8 @@ class _TreeListView<T extends INode<T>> extends StatefulWidget {
   State<StatefulWidget> createState() => _TreeListViewState<T>();
 }
 
-class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
+class _TreeListViewState<T extends IListenableNode<T>>
+    extends State<_TreeListView<T>> {
   static const TAG = "TreeListView";
 
   StreamSubscription<NodeAddEvent>? _addedNodesSubscription;
@@ -196,18 +199,21 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap!,
-      itemBuilder: (context, index, animation) => ExpandableNodeItem<T>(
-        builder: widget.builder,
-        animatedListController: widget.controller.animatedListController,
-        scrollController: widget.controller.scrollController,
-        node: widget.controller.animatedListController.list[index],
-        animation: animation,
-        indentPadding: widget.indentPadding,
-        showExpansionIndicator: widget.showExpansionIndicator,
-        expandIcon: widget.expandIcon,
-        collapseIcon: widget.collapseIcon,
-        onItemTap: widget.onItemTap,
-        indentAfterLevel: widget.showRootNode ? 0 : 1,
+      itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
+        valueListenable: list[index],
+        builder: (context, value, child) => ExpandableNodeItem<T>(
+          builder: widget.builder,
+          animatedListController: widget.controller.animatedListController,
+          scrollController: widget.controller.scrollController,
+          node: list[index],
+          animation: animation,
+          indentPadding: widget.indentPadding,
+          showExpansionIndicator: widget.showExpansionIndicator,
+          expandIcon: widget.expandIcon,
+          collapseIcon: widget.collapseIcon,
+          onItemTap: widget.onItemTap,
+          indentAfterLevel: widget.showRootNode ? 0 : 1,
+        ),
       ),
     );
   }
@@ -226,6 +232,7 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
         expandIcon: widget.expandIcon,
         collapseIcon: widget.collapseIcon,
         onItemTap: widget.onItemTap,
+        indentAfterLevel: widget.showRootNode ? 0 : 1,
       );
 
   void observeTreeUpdates() {

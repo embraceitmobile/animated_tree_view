@@ -19,7 +19,7 @@ class ListenableNode<T> extends Node<T>
   final bool shouldBubbleUpEvents;
   ListenableNode<T>? parent;
 
-  ListenableNode<T> get value => this;
+  T get value => root as T;
 
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 

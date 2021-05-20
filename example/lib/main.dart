@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
@@ -40,6 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
@@ -53,33 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TreeListView<RowItem>(
-              controller: controller,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              showRootNode: _showRootNode,
-              builder: (context, level, item) => Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  ListTile(
-                    title: Text("Item ${item.level}-${item.key}"),
-                    subtitle: Text('Level $level'),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      buildAddItemChildButton(item),
-                      if (!item.isRoot) buildRemoveItemButton(item),
-                      if (item.isRoot && item.children.isNotEmpty)
-                        buildClearAllItemButton(item)
-                    ],
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
+                controller: controller,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                showRootNode: _showRootNode,
+                builder: (context, level, item) => buildListItem(level, item)),
             if (!_showRootNode)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -92,6 +77,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget buildListItem(int level, RowItem item) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        ListTile(
+          title: Text("Item ${item.level}-${item.key}"),
+          subtitle: Text('Level $level'),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            buildAddItemChildButton(item),
+            if (!item.isRoot) buildRemoveItemButton(item),
+            if (item.isRoot && item.children.isNotEmpty)
+              buildClearAllItemButton(item)
+          ],
+        ),
+        Divider(),
+      ],
     );
   }
 

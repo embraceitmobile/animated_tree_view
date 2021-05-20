@@ -31,5 +31,5 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
 
   @override
   // TODO: implement value
-  ListenableIndexedNode<T> get value => this;
+  T get value => this as T;
 }
