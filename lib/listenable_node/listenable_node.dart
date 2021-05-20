@@ -23,57 +23,58 @@ class ListenableNode<T> extends Node<T>
 
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 
-  StreamController<NodeAddEvent>? _nullableAddedNodes;
+  StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
 
-  StreamController<NodeRemoveEvent>? _nullableRemovedNodes;
+  StreamController<NodeRemoveEvent<T>>? _nullableRemovedNodes;
 
-  StreamController<NodeAddEvent> get _addedNodes =>
-      _nullableAddedNodes ??= StreamController<NodeAddEvent>.broadcast();
+  StreamController<NodeAddEvent<T>> get _addedNodes =>
+      _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
 
-  StreamController<NodeRemoveEvent> get _removedNodes =>
-      _nullableRemovedNodes ??= StreamController<NodeRemoveEvent>.broadcast();
+  StreamController<NodeRemoveEvent<T>> get _removedNodes =>
+      _nullableRemovedNodes ??=
+          StreamController<NodeRemoveEvent<T>>.broadcast();
 
-  Stream<NodeAddEvent> get addedNodes {
+  Stream<NodeAddEvent<T>> get addedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _addedNodes.stream;
   }
 
-  Stream<NodeRemoveEvent> get removedNodes {
+  Stream<NodeRemoveEvent<T>> get removedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _removedNodes.stream;
   }
 
-  Stream<NodeInsertEvent> get insertedNodes => Stream.empty();
+  Stream<NodeInsertEvent<T>> get insertedNodes => Stream.empty();
 
   void add(Node<T> value) {
     super.add(value);
     _notifyListeners();
-    _notifyNodesAdded(NodeAddEvent([value]));
+    _notifyNodesAdded(NodeAddEvent(List<T>.from([value])));
   }
 
   void addAll(Iterable<Node<T>> iterable) {
     super.addAll(iterable);
     _notifyListeners();
-    _notifyNodesAdded(NodeAddEvent(iterable));
+    _notifyNodesAdded(NodeAddEvent(List<T>.from(iterable)));
   }
 
   void remove(Node<T> value) {
     super.remove(value);
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent([value]));
+    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([value])));
   }
 
   void delete() {
     final nodeToRemove = this;
     super.delete();
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent([nodeToRemove]));
+    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([nodeToRemove])));
   }
 
   void removeAll(Iterable<Node<T>> iterable) {
     super.removeAll(iterable);
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(iterable));
+    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(iterable)));
   }
 
   void removeWhere(bool test(Node<T> element)) {
@@ -84,14 +85,14 @@ class ListenableNode<T> extends Node<T>
     allChildren.removeAll(remainingChildren);
 
     if (allChildren.isNotEmpty)
-      _notifyNodesRemoved(NodeRemoveEvent(allChildren));
+      _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(allChildren)));
   }
 
   void clear() {
     final clearedNodes = childrenAsList;
     super.clear();
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(clearedNodes));
+    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(clearedNodes)));
   }
 
   ListenableNode<T> elementAt(String path) =>
@@ -110,7 +111,7 @@ class ListenableNode<T> extends Node<T>
     if (shouldBubbleUpEvents && !isRoot) parent!._notifyListeners();
   }
 
-  void _notifyNodesAdded(NodeAddEvent event) {
+  void _notifyNodesAdded(NodeAddEvent<T> event) {
     if (isRoot) {
       _addedNodes.sink.add(event);
     } else {
@@ -118,7 +119,7 @@ class ListenableNode<T> extends Node<T>
     }
   }
 
-  void _notifyNodesRemoved(NodeRemoveEvent event) {
+  void _notifyNodesRemoved(NodeRemoveEvent<T> event) {
     if (isRoot) {
       _removedNodes.sink.add(event);
     } else {

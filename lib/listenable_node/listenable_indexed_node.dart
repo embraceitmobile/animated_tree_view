@@ -19,15 +19,15 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
 
   @override
   // TODO: implement addedNodes
-  Stream<NodeAddEvent> get addedNodes => throw UnimplementedError();
+  Stream<NodeAddEvent<T>> get addedNodes => throw UnimplementedError();
 
   @override
   // TODO: implement insertedNodes
-  Stream<NodeInsertEvent> get insertedNodes => throw UnimplementedError();
+  Stream<NodeInsertEvent<T>> get insertedNodes => throw UnimplementedError();
 
   @override
   // TODO: implement removedNodes
-  Stream<NodeRemoveEvent> get removedNodes => throw UnimplementedError();
+  Stream<NodeRemoveEvent<T>> get removedNodes => throw UnimplementedError();
 
   @override
   // TODO: implement value

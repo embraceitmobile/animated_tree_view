@@ -3,4 +3,4 @@ import 'package:tree_structure_view/listenable_node/base/node_update_notifier.da
 import 'package:tree_structure_view/node/node.dart';
 
 abstract class IListenableNode<T> extends INode<T>
-    implements NodeUpdateNotifier, ValueListenable<INode<T>> {}
+    implements NodeUpdateNotifier<T>, ValueListenable<INode<T>> {}

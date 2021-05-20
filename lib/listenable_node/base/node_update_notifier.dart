@@ -1,17 +1,17 @@
 import 'dart:async';
 
-abstract class NodeUpdateNotifier {
-  Stream<NodeAddEvent> get addedNodes;
+abstract class NodeUpdateNotifier<T> {
+  Stream<NodeAddEvent<T>> get addedNodes;
 
-  Stream<NodeInsertEvent> get insertedNodes;
+  Stream<NodeInsertEvent<T>> get insertedNodes;
 
-  Stream<NodeRemoveEvent> get removedNodes;
+  Stream<NodeRemoveEvent<T>> get removedNodes;
 
   void dispose();
 }
 
-class NodeAddEvent {
-  final Iterable items;
+class NodeAddEvent<T> {
+  final List<T> items;
 
   const NodeAddEvent(this.items);
 
@@ -21,8 +21,8 @@ class NodeAddEvent {
   }
 }
 
-class NodeRemoveEvent {
-  final Iterable items;
+class NodeRemoveEvent<T> {
+  final List<T> items;
 
   const NodeRemoveEvent(this.items);
 
@@ -32,8 +32,8 @@ class NodeRemoveEvent {
   }
 }
 
-class NodeInsertEvent {
-  final Iterable items;
+class NodeInsertEvent<T> {
+  final List<T> items;
   final int index;
 
   const NodeInsertEvent(this.items, this.index);
