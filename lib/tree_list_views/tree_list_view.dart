@@ -30,6 +30,7 @@ class TreeListView<T extends Node<T>> extends StatelessWidget {
   final ScrollPhysics? physics;
   final bool? shrinkWrap;
   final EdgeInsetsGeometry? padding;
+  final bool showRootNode;
 
   const TreeListView({
     Key? key,
@@ -40,6 +41,7 @@ class TreeListView<T extends Node<T>> extends StatelessWidget {
     this.physics,
     this.shrinkWrap,
     this.padding,
+    this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
     this.expandIcon = DEFAULT_EXPAND_ICON,
@@ -57,6 +59,7 @@ class TreeListView<T extends Node<T>> extends StatelessWidget {
       physics: physics,
       shrinkWrap: shrinkWrap,
       padding: padding,
+      showRootNode: showRootNode,
       showExpansionIndicator: showExpansionIndicator,
       indentPadding: indentPadding,
       expandIcon: expandIcon,
@@ -75,6 +78,7 @@ class IndexedTreeListView<T extends IndexedNode<T>> extends StatelessWidget {
   final ValueSetter<T>? onItemTap;
   final bool? primary;
   final ScrollPhysics? physics;
+  final bool showRootNode;
   final bool? shrinkWrap;
   final EdgeInsetsGeometry? padding;
 
@@ -87,6 +91,7 @@ class IndexedTreeListView<T extends IndexedNode<T>> extends StatelessWidget {
     this.physics,
     this.shrinkWrap,
     this.padding,
+    this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
     this.expandIcon = DEFAULT_EXPAND_ICON,
@@ -104,6 +109,7 @@ class IndexedTreeListView<T extends IndexedNode<T>> extends StatelessWidget {
       physics: physics,
       shrinkWrap: shrinkWrap,
       padding: padding,
+      showRootNode: showRootNode,
       showExpansionIndicator: showExpansionIndicator,
       indentPadding: indentPadding,
       expandIcon: expandIcon,
@@ -137,6 +143,7 @@ class _TreeListView<T extends INode<T>> extends StatefulWidget {
   final ScrollPhysics? physics;
   final bool? shrinkWrap;
   final EdgeInsetsGeometry? padding;
+  final bool showRootNode;
 
   const _TreeListView({
     Key? key,
@@ -147,6 +154,7 @@ class _TreeListView<T extends INode<T>> extends StatefulWidget {
     this.physics,
     this.shrinkWrap,
     this.padding,
+    this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
     this.expandIcon = DEFAULT_EXPAND_ICON,
@@ -173,6 +181,7 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
       listKey: listKey,
       listenableNode: widget.controller.root,
       removedItemBuilder: buildRemovedItem,
+      showRootNode: widget.showRootNode,
     );
 
     widget.controller.attach(animatedListController);

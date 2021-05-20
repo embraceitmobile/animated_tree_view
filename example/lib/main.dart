@@ -33,6 +33,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const _showRootNode = false;
+
   final controller =
       TreeListViewController<RowItem>(initialItem: RowItem("#00-Root-Item"));
   final globalKey = GlobalKey<ScaffoldState>();
@@ -54,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
+              showRootNode: _showRootNode,
               builder: (context, level, item) => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,6 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            if (!_showRootNode)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: RaisedButton.icon(
+                    onPressed: () => controller.root.add(RowItem()),
+                    icon: Icon(Icons.add),
+                    label: Text("Add Node")),
+              )
           ],
         ),
       ),
