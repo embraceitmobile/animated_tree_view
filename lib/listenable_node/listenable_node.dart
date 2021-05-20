@@ -1,24 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:tree_structure_view/exceptions/exceptions.dart';
 import 'package:tree_structure_view/listenable_node/base/i_listenable_node.dart';
 import 'package:tree_structure_view/listenable_node/base/node_update_notifier.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 import 'package:tree_structure_view/node/node.dart';
-import 'package:tree_structure_view/exceptions/exceptions.dart';
 
 class ListenableNode<T> extends Node<T>
     with ChangeNotifier
     implements IListenableNode<T> {
   ListenableNode(
-      {String? key, INode<T>? parent, this.shouldBubbleUpEvents = true})
+      {String? key, Node<T>? parent, this.shouldBubbleUpEvents = true})
       : super(key: key, parent: parent);
 
   factory ListenableNode.root() => ListenableNode(key: INode.ROOT_KEY);
 
-  Node<T> get value => this;
-
   final bool shouldBubbleUpEvents;
+  ListenableNode<T>? parent;
+
+  ListenableNode<T> get value => this;
+
+  ListenableNode<T> get root => super.root as ListenableNode<T>;
 
   StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
 
@@ -32,30 +35,30 @@ class ListenableNode<T> extends Node<T>
           StreamController<NodeRemoveEvent<T>>.broadcast();
 
   Stream<NodeAddEvent<T>> get addedNodes {
-    if (!isRoot) throw ListenerNotAllowedException(this);
+    if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _addedNodes.stream;
   }
 
   Stream<NodeRemoveEvent<T>> get removedNodes {
-    if (!isRoot) throw ListenerNotAllowedException(this);
+    if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _removedNodes.stream;
   }
 
   Stream<NodeInsertEvent<T>> get insertedNodes => Stream.empty();
 
-  void add(INode<T> value) {
+  void add(Node<T> value) {
     super.add(value);
     _notifyListeners();
     _notifyNodesAdded(NodeAddEvent([value]));
   }
 
-  void addAll(Iterable<INode<T>> iterable) {
+  void addAll(Iterable<Node<T>> iterable) {
     super.addAll(iterable);
     _notifyListeners();
     _notifyNodesAdded(NodeAddEvent(iterable));
   }
 
-  void remove(INode<T> value) {
+  void remove(Node<T> value) {
     super.remove(value);
     _notifyListeners();
     _notifyNodesRemoved(NodeRemoveEvent([value]));
@@ -68,13 +71,13 @@ class ListenableNode<T> extends Node<T>
     _notifyNodesRemoved(NodeRemoveEvent([nodeToRemove]));
   }
 
-  void removeAll(Iterable<INode<T>> iterable) {
+  void removeAll(Iterable<Node<T>> iterable) {
     super.removeAll(iterable);
     _notifyListeners();
     _notifyNodesRemoved(NodeRemoveEvent(iterable));
   }
 
-  void removeWhere(bool test(INode<T> element)) {
+  void removeWhere(bool test(Node<T> element)) {
     final allChildren = childrenAsList.toSet();
     super.removeWhere(test);
     _notifyListeners();
@@ -92,6 +95,11 @@ class ListenableNode<T> extends Node<T>
     _notifyNodesRemoved(NodeRemoveEvent(clearedNodes));
   }
 
+  ListenableNode<T> elementAt(String path) =>
+      super.elementAt(path) as ListenableNode<T>;
+
+  ListenableNode<T> operator [](String path) => elementAt(path);
+
   void dispose() {
     _nullableAddedNodes?.close();
     _nullableRemovedNodes?.close();
@@ -100,15 +108,14 @@ class ListenableNode<T> extends Node<T>
 
   void _notifyListeners() {
     notifyListeners();
-    if (shouldBubbleUpEvents && !isRoot)
-      (parent! as ListenableNode<T>)._notifyListeners();
+    if (shouldBubbleUpEvents && !isRoot) parent!._notifyListeners();
   }
 
   void _notifyNodesAdded(NodeAddEvent<T> event) {
     if (isRoot) {
       _addedNodes.sink.add(event);
     } else {
-      (root as ListenableNode<T>)._notifyNodesAdded(event);
+      root._notifyNodesAdded(event);
     }
   }
 
@@ -116,7 +123,7 @@ class ListenableNode<T> extends Node<T>
     if (isRoot) {
       _removedNodes.sink.add(event);
     } else {
-      (root as ListenableNode<T>)._notifyNodesRemoved(event);
+      root._notifyNodesRemoved(event);
     }
   }
 }

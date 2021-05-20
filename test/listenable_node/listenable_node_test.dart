@@ -113,7 +113,7 @@ void main() {
       final nodesUnderTest = ListenableNode();
       node.add(nodesUnderTest);
       expect(() => nodesUnderTest.addedNodes,
-          throwsA(isA<ListenerNotAllowedException>()));
+          throwsA(isA<ActionNotAllowedException>()));
     });
 
     test(
@@ -360,7 +360,7 @@ void main() {
       final nodesUnderTest = ListenableNode();
       node.add(nodesUnderTest);
       expect(() => nodesUnderTest.removedNodes,
-          throwsA(isA<ListenerNotAllowedException>()));
+          throwsA(isA<ActionNotAllowedException>()));
     });
 
     test(

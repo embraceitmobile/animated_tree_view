@@ -9,7 +9,7 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
     with ChangeNotifier
     implements IListenableNode<T> {
   ListenableIndexedNode(
-      {String? key, INode<T>? parent, this.shouldBubbleUpEvents = true})
+      {String? key, IndexedNode<T>? parent, this.shouldBubbleUpEvents = true})
       : super(key: key, parent: parent);
 
   final bool shouldBubbleUpEvents;
@@ -28,4 +28,8 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
   @override
   // TODO: implement removedNodes
   Stream<NodeRemoveEvent<T>> get removedNodes => throw UnimplementedError();
+
+  @override
+  // TODO: implement value
+  ListenableIndexedNode<T> get value => this;
 }

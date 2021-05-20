@@ -40,17 +40,28 @@ class ChildrenNotFoundException implements Exception {
   }
 }
 
-class ListenerNotAllowedException implements Exception {
+class ActionNotAllowedException implements Exception {
   final String message;
+  final INode node;
 
-  ListenerNotAllowedException(INode node)
-      : message = "Listening to event stream is not allowed for non-root nodes. "
-            "Event listeners can only be attached to the root nodes. "
-            "Use the node.root getter to get the root node."
-            "\n\nException occurred for node <${node.key}> with parent <${node.parent?.key}>";
+  ActionNotAllowedException(this.node, this.message);
+
+  factory ActionNotAllowedException.listener(INode node) =>
+      ActionNotAllowedException(
+          node,
+          "Listening to event stream is not allowed for non-root nodes. "
+          "Event listeners can only be attached to the root nodes. "
+          "Use the node.root getter to get the root node."
+          "\n\nException occurred for node <${node.key}> with parent <${node.parent?.key}>");
+
+  factory ActionNotAllowedException.deleteRoot(INode node) =>
+      ActionNotAllowedException(
+          node,
+          "Deleting the root node is not allowed. Delete method should not be used on the root."
+          "\nException occurred for node <${node.key}>");
 
   @override
   String toString() {
-    return 'ListenerNotAllowedException:\n$message}';
+    return 'ActionNotAllowedException:\n$message}';
   }
 }

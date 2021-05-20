@@ -6,7 +6,7 @@ abstract class INode<T> {
 
   String get key;
 
-  INode<T>? parent;
+  covariant INode<T>? parent;
 
   Object? get children;
 
@@ -18,13 +18,13 @@ abstract class INode<T> {
 
   INode<T> operator [](String path);
 
+  INode<T> get root => isRoot ? this : this.parent!.root;
+
   int get level => parent == null ? 0 : parent!.level + 1;
 
   int get length => childrenAsList.length;
 
   bool get isLeaf => childrenAsList.isEmpty;
-
-  INode<T> get root => isRoot ? this : this.parent!.root;
 
   bool get isRoot => parent == null;
 

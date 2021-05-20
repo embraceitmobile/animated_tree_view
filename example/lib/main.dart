@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
-import 'mocks.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
+
+import 'mocks.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller =
-      TreeListViewController<RowItem>(initialItems: RowItem("#00-Root-Item"));
+      TreeListViewController<RowItem>(initialItem: RowItem("#00-Root-Item"));
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override

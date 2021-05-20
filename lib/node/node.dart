@@ -1,9 +1,11 @@
 import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/exceptions/exceptions.dart';
-import 'base/i_node_actions.dart';
+
 import 'base/i_node.dart';
+import 'base/i_node_actions.dart';
 
 export 'base/i_node.dart';
 
@@ -11,7 +13,7 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   final Map<String, Node<T>> children;
   final String key;
   Map<String, dynamic>? meta;
-  INode<T>? parent;
+  Node<T>? parent;
 
   @mustCallSuper
   Node({String? key, this.parent})
@@ -20,20 +22,22 @@ class Node<T> extends INode<T> implements INodeActions<T> {
 
   factory Node.root() => Node(key: INode.ROOT_KEY);
 
-  UnmodifiableListView<INode<T>> get childrenAsList =>
+  Node<T> get root => super.root as Node<T>;
+
+  UnmodifiableListView<Node<T>> get childrenAsList =>
       UnmodifiableListView(children.values.toList(growable: false));
 
-  void add(INode<T> value) {
+  void add(Node<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.parent = this;
-    children[value.key] = value as Node<T>;
+    children[value.key] = value;
   }
 
-  void addAll(Iterable<INode<T>> iterable) {
+  void addAll(Iterable<Node<T>> iterable) {
     for (final node in iterable) {
       if (children.containsKey(node.key)) throw DuplicateKeyException(node.key);
       node.parent = this;
-      children[node.key] = node as Node<T>;
+      children[node.key] = node;
     }
   }
 
@@ -41,24 +45,22 @@ class Node<T> extends INode<T> implements INodeActions<T> {
     children.clear();
   }
 
-  void remove(INode<T> value) {
+  void remove(Node<T> value) {
     children.remove(value.key);
   }
 
   void delete() {
-    if (parent == null)
-      (root as Node<T>).clear();
-    else
-      (parent as Node<T>).remove(this);
+    if (isRoot) throw ActionNotAllowedException.deleteRoot(this);
+    (parent as Node<T>).remove(this);
   }
 
-  void removeAll(Iterable<INode<T>> iterable) {
+  void removeAll(Iterable<Node<T>> iterable) {
     for (final node in iterable) {
       children.remove(node.key);
     }
   }
 
-  void removeWhere(bool Function(INode<T> element) test) {
+  void removeWhere(bool Function(Node<T> element) test) {
     children.removeWhere((key, value) => test(value));
   }
 
@@ -79,7 +81,5 @@ class Node<T> extends INode<T> implements INodeActions<T> {
     return currentNode;
   }
 
-  String toString() {
-    return 'Node{children: $children, key: $key, parent: $parent}';
-  }
+  String toString() => 'Node{children: $children, key: $key, parent: $parent}';
 }

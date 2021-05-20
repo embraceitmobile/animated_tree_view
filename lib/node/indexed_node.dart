@@ -1,14 +1,16 @@
 import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/exceptions/exceptions.dart';
-import 'base/i_node_actions.dart';
+
 import 'base/i_node.dart';
+import 'base/i_node_actions.dart';
 
 class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
   final List<IndexedNode<T>> children;
   final String key;
-  INode<T>? parent;
+  IndexedNode<T>? parent;
   Map<String, dynamic>? meta;
 
   @mustCallSuper
@@ -18,7 +20,9 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   factory IndexedNode.root() => IndexedNode(key: INode.ROOT_KEY);
 
-  UnmodifiableListView<INode<T>> get childrenAsList =>
+  IndexedNode<T> get root => super.root as IndexedNode<T>;
+
+  UnmodifiableListView<IndexedNode<T>> get childrenAsList =>
       UnmodifiableListView(children);
 
   IndexedNode<T> get first {
@@ -55,13 +59,12 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     return children.lastWhere(test, orElse: orElse);
   }
 
-  void add(INode<T> value) {
+  void add(IndexedNode<T> value) {
     value.parent = this;
-    // final updatedValue = _updateChildrenPaths<T>(value as IndexedNode<T>);
-    children.add(value as IndexedNode<T>);
+    children.add(value);
   }
 
-  void addAll(Iterable<INode<T>> iterable) {
+  void addAll(Iterable<IndexedNode<T>> iterable) {
     for (final node in iterable) {
       add(node);
     }
@@ -69,7 +72,6 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   void insert(int index, IndexedNode<T> element) {
     element.parent = this;
-    // final updatedValue = _updateChildrenPaths<T>(element);
     children.insert(index, element);
   }
 
@@ -94,7 +96,7 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     children.insertAll(index, iterable);
   }
 
-  void remove(INode<T> value) {
+  void remove(IndexedNode<T> value) {
     final index = children.indexWhere((node) => node.key == value.key);
     if (index < 0) throw NodeNotFoundException(key: key);
     children.removeAt(index);
@@ -102,22 +104,22 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   void delete() {
     if (parent == null)
-      (root as IndexedNode<T>).clear();
+      root.clear();
     else
-      (parent as IndexedNode<T>).remove(this);
+      parent?.remove(this);
   }
 
   IndexedNode<T> removeAt(int index) {
     return children.removeAt(index);
   }
 
-  void removeAll(Iterable<INode<T>> iterable) {
+  void removeAll(Iterable<IndexedNode<T>> iterable) {
     for (final node in iterable) {
       remove(node);
     }
   }
 
-  void removeWhere(bool Function(INode<T> element) test) {
+  void removeWhere(bool Function(IndexedNode<T> element) test) {
     children.removeWhere(test);
   }
 
@@ -125,7 +127,7 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
     children.clear();
   }
 
-  INode<T> elementAt(String path) {
+  IndexedNode<T> elementAt(String path) {
     IndexedNode<T> currentNode = this;
     for (final nodeKey in path.splitToNodes) {
       if (nodeKey == currentNode.key) {
@@ -144,5 +146,8 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   IndexedNode<T> at(int index) => children[index];
 
-  IndexedNode<T> operator [](String path) => elementAt(path) as IndexedNode<T>;
+  IndexedNode<T> operator [](String path) => elementAt(path);
+
+  String toString() =>
+      'IndexedNode{children: $children, key: $key, parent: $parent}';
 }

@@ -1,16 +1,17 @@
 import 'package:tree_structure_view/node/indexed_node.dart';
+
 import 'i_node.dart';
 
 abstract class INodeActions<T> {
-  void add(INode<T> value);
+  void add(covariant INode<T> value);
 
-  void addAll(Iterable<INode<T>> iterable);
+  void addAll(covariant Iterable<INode<T>> iterable);
 
-  void remove(INode<T> value);
+  void remove(covariant INode<T> value);
 
   void delete();
 
-  void removeAll(Iterable<INode<T>> iterable);
+  void removeAll(covariant Iterable<INode<T>> iterable);
 
   void removeWhere(bool test(INode<T> element));
 
