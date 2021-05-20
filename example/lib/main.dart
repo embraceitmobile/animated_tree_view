@@ -68,20 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       buildAddItemChildButton(item as RowItem),
-                      buildRemoveItemButton(item),
+                      if (!item.isRoot) buildRemoveItemButton(item),
                     ],
                   ),
                   Divider(),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: RaisedButton.icon(
-                  onPressed: () => controller.root.add(RowItem()),
-                  icon: Icon(Icons.add),
-                  label: Text("Add Node")),
-            )
           ],
         ),
       ),
