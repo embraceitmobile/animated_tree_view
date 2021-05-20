@@ -9,14 +9,11 @@ import 'package:tree_structure_view/tree_list_views/controllers/animated_list_co
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
 import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_item.dart';
 
+import 'constants/constants.dart';
 import 'controllers/tree_list_view_controller.dart';
 
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
-
-const DEFAULT_INDENT_PADDING = 24.0;
-const DEFAULT_EXPAND_ICON = const Icon(Icons.keyboard_arrow_down);
-const DEFAULT_COLLAPSE_ICON = const Icon(Icons.keyboard_arrow_up);
 
 class TreeListView<T extends Node<T>> extends StatelessWidget {
   final TreeListViewController<T> controller;
@@ -210,6 +207,7 @@ class _TreeListViewState<T extends INode<T>> extends State<_TreeListView<T>> {
         expandIcon: widget.expandIcon,
         collapseIcon: widget.collapseIcon,
         onItemTap: widget.onItemTap,
+        indentAfterLevel: widget.showRootNode ? 0 : 1,
       ),
     );
   }

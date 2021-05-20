@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const _showRootNode = false;
+  static const _showRootNode = true;
 
   final controller =
       TreeListViewController<RowItem>(initialItem: RowItem("#00-Root-Item"));

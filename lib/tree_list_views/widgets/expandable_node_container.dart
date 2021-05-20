@@ -6,8 +6,8 @@ class ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
   final ValueSetter<T>? onTap;
   final T item;
   final bool showExpansionIndicator;
-  final Icon? expandedIndicatorIcon;
-  final double? indentPadding;
+  final Icon expandedIndicatorIcon;
+  final double indentPadding;
   final Widget child;
 
   const ExpandableNodeContainer({
@@ -16,9 +16,9 @@ class ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
     required this.onTap,
     required this.child,
     required this.item,
-    this.expandedIndicatorIcon,
-    this.indentPadding,
-    this.showExpansionIndicator = true,
+    required this.expandedIndicatorIcon,
+    required this.indentPadding,
+    required this.showExpansionIndicator,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: indentPadding!),
+              padding: EdgeInsets.only(left: indentPadding),
               child: child,
             ),
             if (showExpansionIndicator)
