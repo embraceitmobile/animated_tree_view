@@ -161,6 +161,17 @@ void main() {
     });
 
     test(
+        'On removing a ListenableIndexedNode using removeAt, the size of children decreases correspondingly',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      node.add(nodeUnderTest);
+      expect(node.length, equals(1));
+      node.removeAt(0);
+      expect(node.length, equals(0));
+    });
+
+    test(
         'On removing a list of ListenableIndexedNode, the size of children decreases correspondingly',
         () async {
       final node = ListenableIndexedNode();
@@ -234,6 +245,20 @@ void main() {
       });
 
       node.remove(nodeUnderTest);
+      expect(await completer.future, equals(0));
+    });
+
+    test(
+        'On removing a ListenableIndexedNode using removeAt, the listeners are notified',
+        () async {
+      final completer = Completer<int>();
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      node.add(nodeUnderTest);
+      node.addListener(() {
+        completer.complete(node.children.length);
+      });
+      node.removeAt(0);
       expect(await completer.future, equals(0));
     });
 
@@ -353,6 +378,19 @@ void main() {
       }));
 
       node.remove(nodeUnderTest);
+    });
+
+    test(
+        'On removing a ListenableIndexedNode using removeAt, the removedNodes event is fired with the corresponding removed node data',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      node.add(nodeUnderTest);
+      node.removedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, 1);
+        expect(event.items.first.key, nodeUnderTest.key);
+      }));
+      node.removeAt(0);
     });
 
     test(

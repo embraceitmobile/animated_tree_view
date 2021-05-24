@@ -135,7 +135,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   }
 
   ListenableIndexedNode<T> removeAt(int index) {
-    final removedNode = children.removeAt(index);
+    final removedNode = super.removeAt(index);
     _notifyListeners();
     _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([removedNode])));
     return removedNode as ListenableIndexedNode<T>;
