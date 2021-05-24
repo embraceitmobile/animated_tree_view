@@ -97,8 +97,8 @@ class ListenableNode<T> extends Node<T>
   ListenableNode<T> operator [](String path) => elementAt(path);
 
   void dispose() {
-    _addedNodes.dispose();
-    _removedNodes.dispose();
+    _addedNodes.close();
+    _removedNodes.close();
     super.dispose();
   }
 

@@ -14,7 +14,7 @@ class EventStreamController<T> {
     _streamController.sink.add(event);
   }
 
-  void dispose() {
+  void close() {
     _nullableStreamController?.close();
   }
 }
