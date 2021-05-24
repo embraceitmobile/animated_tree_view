@@ -265,6 +265,32 @@ void main() {
       expect(await completer.future, 2);
     });
 
+    test('On selfDelete, the node is removed from the parent', () async {
+      final completer = Completer<int>();
+      final root = ListenableNode();
+      final nodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      final childNodesUnderTest = [
+        ListenableNode(),
+        ListenableNode(),
+        ListenableNode()
+      ];
+      root.addAll(nodesUnderTest);
+      expect(root.children.length, equals(nodesUnderTest.length));
+      nodesUnderTest.first.addAll(childNodesUnderTest);
+      final nodeToRemove = childNodesUnderTest.first;
+      root.addListener(() {
+        if (!completer.isCompleted)
+          completer.complete(nodesUnderTest.first.children.length);
+      });
+      nodeToRemove.delete();
+      expect(await completer.future, 2);
+      expect(root.children.length, 3);
+    });
+
     test('On clearing a ListenableNode, the listeners are notified', () async {
       final completer = Completer<int>();
       final node = ListenableNode();
