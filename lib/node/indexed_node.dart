@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/helpers/exceptions.dart';
 
 import 'base/i_node.dart';
 import 'base/i_node_actions.dart';

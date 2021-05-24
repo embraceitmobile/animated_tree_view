@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'package:tree_structure_view/helpers/exceptions.dart';
 import 'package:tree_structure_view/listenable_node/base/node_update_notifier.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 import 'package:tree_structure_view/node/indexed_node.dart';
@@ -12,24 +15,49 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
       {String? key, IndexedNode<T>? parent, this.shouldBubbleUpEvents = true})
       : super(key: key, parent: parent);
 
-  final bool shouldBubbleUpEvents;
-
   factory ListenableIndexedNode.root() =>
       ListenableIndexedNode(key: INode.ROOT_KEY);
 
-  @override
-  // TODO: implement addedNodes
-  Stream<NodeAddEvent<T>> get addedNodes => throw UnimplementedError();
+  final bool shouldBubbleUpEvents;
 
-  @override
-  // TODO: implement insertedNodes
-  Stream<NodeInsertEvent<T>> get insertedNodes => throw UnimplementedError();
+  StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
 
-  @override
-  // TODO: implement removedNodes
-  Stream<NodeRemoveEvent<T>> get removedNodes => throw UnimplementedError();
+  StreamController<NodeInsertEvent<T>>? _nullableInsertedNodes;
 
-  @override
-  // TODO: implement value
-  T get value => this as T;
+  StreamController<NodeRemoveEvent<T>>? _nullableRemovedNodes;
+
+  StreamController<NodeAddEvent<T>> get _addedNodes =>
+      _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
+
+  StreamController<NodeInsertEvent<T>> get _insertedNodes =>
+      _nullableInsertedNodes ??=
+          StreamController<NodeInsertEvent<T>>.broadcast();
+
+  StreamController<NodeRemoveEvent<T>> get _removedNodes =>
+      _nullableRemovedNodes ??=
+          StreamController<NodeRemoveEvent<T>>.broadcast();
+
+  Stream<NodeAddEvent<T>> get addedNodes {
+    if (!isRoot) throw ActionNotAllowedException.listener(this);
+    return _addedNodes.stream;
+  }
+
+  Stream<NodeRemoveEvent<T>> get removedNodes {
+    if (!isRoot) throw ActionNotAllowedException.listener(this);
+    return _removedNodes.stream;
+  }
+
+  Stream<NodeInsertEvent<T>> get insertedNodes {
+    if (!isRoot) throw ActionNotAllowedException.listener(this);
+    return _insertedNodes.stream;
+  }
+
+  T get value => root as T;
+
+  void dispose() {
+    _nullableAddedNodes?.close();
+    _nullableRemovedNodes?.close();
+    _nullableInsertedNodes?.close();
+    super.dispose();
+  }
 }

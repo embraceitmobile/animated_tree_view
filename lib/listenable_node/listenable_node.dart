@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:tree_structure_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/helpers/event_stream_controller.dart';
+import 'package:tree_structure_view/helpers/exceptions.dart';
 import 'package:tree_structure_view/listenable_node/base/i_listenable_node.dart';
 import 'package:tree_structure_view/listenable_node/base/node_update_notifier.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
@@ -23,16 +24,11 @@ class ListenableNode<T> extends Node<T>
 
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 
-  StreamController<NodeAddEvent<T>>? _nullableAddedNodes;
+  final EventStreamController<NodeAddEvent<T>> _addedNodes =
+      EventStreamController();
 
-  StreamController<NodeRemoveEvent<T>>? _nullableRemovedNodes;
-
-  StreamController<NodeAddEvent<T>> get _addedNodes =>
-      _nullableAddedNodes ??= StreamController<NodeAddEvent<T>>.broadcast();
-
-  StreamController<NodeRemoveEvent<T>> get _removedNodes =>
-      _nullableRemovedNodes ??=
-          StreamController<NodeRemoveEvent<T>>.broadcast();
+  final EventStreamController<NodeRemoveEvent<T>> _removedNodes =
+      EventStreamController();
 
   Stream<NodeAddEvent<T>> get addedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
@@ -101,8 +97,8 @@ class ListenableNode<T> extends Node<T>
   ListenableNode<T> operator [](String path) => elementAt(path);
 
   void dispose() {
-    _nullableAddedNodes?.close();
-    _nullableRemovedNodes?.close();
+    _addedNodes.dispose();
+    _removedNodes.dispose();
     super.dispose();
   }
 
@@ -113,7 +109,7 @@ class ListenableNode<T> extends Node<T>
 
   void _notifyNodesAdded(NodeAddEvent<T> event) {
     if (isRoot) {
-      _addedNodes.sink.add(event);
+      _addedNodes.emit(event);
     } else {
       root._notifyNodesAdded(event);
     }
@@ -121,7 +117,7 @@ class ListenableNode<T> extends Node<T>
 
   void _notifyNodesRemoved(NodeRemoveEvent<T> event) {
     if (isRoot) {
-      _removedNodes.sink.add(event);
+      _removedNodes.emit(event);
     } else {
       root._notifyNodesRemoved(event);
     }

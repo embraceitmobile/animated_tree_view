@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/helpers/exceptions.dart';
 import 'package:tree_structure_view/listenable_node/listenable_node.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 

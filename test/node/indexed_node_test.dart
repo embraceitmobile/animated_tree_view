@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/exceptions/exceptions.dart';
+import 'package:tree_structure_view/helpers/exceptions.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 
 import '../mocks/indexed_node_mocks.dart';
@@ -189,17 +189,15 @@ void main() {
       expect(node.children.length, equals(1));
     });
 
-    test(
-        'On selfDelete, the node is removed from the parent',
-            () async {
-          final root = IndexedNode();
-          final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
-          root.addAll(nodesUnderTest);
-          expect(root.children.length, equals(nodesUnderTest.length));
-          final nodeToRemove = nodesUnderTest.first;
-          nodeToRemove.delete();
-          expect(root.children.length, 2);
-        });
+    test('On selfDelete, the node is removed from the parent', () async {
+      final root = IndexedNode();
+      final nodesUnderTest = [IndexedNode(), IndexedNode(), IndexedNode()];
+      root.addAll(nodesUnderTest);
+      expect(root.children.length, equals(nodesUnderTest.length));
+      final nodeToRemove = nodesUnderTest.first;
+      nodeToRemove.delete();
+      expect(root.children.length, 2);
+    });
 
     test('On clearing a node, the size of the children becomes zero', () async {
       final node = IndexedNode();
