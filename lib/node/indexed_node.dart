@@ -22,8 +22,7 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   IndexedNode<T> get root => super.root as IndexedNode<T>;
 
-  UnmodifiableListView<IndexedNode<T>> get childrenAsList =>
-      UnmodifiableListView(children);
+  List<IndexedNode<T>> get childrenAsList => UnmodifiableListView(children);
 
   IndexedNode<T> get first {
     if (children.isEmpty) throw ChildrenNotFoundException(this);
@@ -66,8 +65,9 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
 
   void addAll(Iterable<IndexedNode<T>> iterable) {
     for (final node in iterable) {
-      add(node);
+      node.parent = this;
     }
+    children.addAll(iterable);
   }
 
   void insert(int index, IndexedNode<T> element) {

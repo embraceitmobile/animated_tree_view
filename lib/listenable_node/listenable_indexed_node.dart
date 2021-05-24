@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:tree_structure_view/helpers/event_stream_controller.dart';
@@ -10,7 +9,7 @@ import 'package:tree_structure_view/node/indexed_node.dart';
 
 import 'base/i_listenable_node.dart';
 
-class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
+class ListenableIndexedNode<T> extends IndexedNode<T>
     with ChangeNotifier
     implements IListenableNode<T> {
   ListenableIndexedNode(
@@ -26,8 +25,8 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
 
   T get value => root as T;
 
-  UnmodifiableListView<ListenableIndexedNode<T>> get childrenAsList =>
-      super.childrenAsList as UnmodifiableListView<ListenableIndexedNode<T>>;
+  List<ListenableIndexedNode<T>> get childrenAsList =>
+      List<ListenableIndexedNode<T>>.from(super.childrenAsList);
 
   ListenableIndexedNode<T> get root => super.root as ListenableIndexedNode<T>;
 
@@ -143,7 +142,12 @@ class ListenableIndexedNode<T extends INode<T>> extends IndexedNode<T>
   }
 
   void removeAll(Iterable<IndexedNode<T>> iterable) {
-    super.removeAll(iterable);
+    for (final value in iterable) {
+      final index = children.indexWhere((node) => node.key == value.key);
+      if (index < 0) throw NodeNotFoundException(key: key);
+      children.removeAt(index);
+    }
+
     _notifyListeners();
     _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(iterable)));
   }

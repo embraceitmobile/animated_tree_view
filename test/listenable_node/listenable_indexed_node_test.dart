@@ -2,67 +2,78 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tree_structure_view/helpers/exceptions.dart';
-import 'package:tree_structure_view/listenable_node/listenable_node.dart';
+import 'package:tree_structure_view/listenable_node/listenable_indexed_node.dart';
 import 'package:tree_structure_view/node/base/i_node.dart';
 
-import '../mocks/listenable_node_mocks.dart';
+import '../mocks/listenable_indexed_node_mocks.dart';
 
 void main() {
   group('new node construction', () {
-    test('On constructing a new ListenableNode, the value is not null',
+    test('On constructing a new ListenableIndexedNode, the value is not null',
         () async {
-      expect(ListenableNode(), isNotNull);
+      expect(ListenableIndexedNode(), isNotNull);
     });
 
-    test('On constructing a new ListenableNode, the children are not null',
+    test(
+        'On constructing a new ListenableIndexedNode, the children are not null',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       expect(node, isNotNull);
       expect(node.children, isNotNull);
       expect(node.children.isEmpty, isTrue);
     });
   });
 
-  group('test adding children to a ListenableNodes ', () {
+  group('test adding children to a ListenableIndexedNode ', () {
     test(
         'On adding a ListenableNode, the size of children increases correspondingly',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       const count = 3;
       for (int i = 0; i < count; i++) {
-        final nodeToAdd = ListenableNode();
+        final nodeToAdd = ListenableIndexedNode();
         node.add(nodeToAdd);
       }
       expect(node.children.length, equals(count));
     });
 
     test(
-        'On adding a list of ListenableNodes, the size of children increases correspondingly',
+        'On adding a list of ListenableIndexedNode, the size of children increases correspondingly',
         () async {
-      final node = ListenableNode();
-      final nodesToAdd = [ListenableNode(), ListenableNode(), ListenableNode()];
+      final node = ListenableIndexedNode();
+      final nodesToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
       node.addAll(nodesToAdd);
       expect(node.children.length, equals(nodesToAdd.length));
     });
   });
 
   group('test listeners are notified on adding children', () {
-    test('On adding a ListenableNode, the listeners are notified', () async {
+    test('On adding a ListenableIndexedNode, the listeners are notified',
+        () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       node.addListener(() {
         completer.complete(node.children.length);
       });
 
-      node.add(ListenableNode());
+      node.add(ListenableIndexedNode());
       expect(await completer.future, equals(1));
     });
 
-    test('On adding a list of ListenableNodes, the listeners are notified',
+    test(
+        'On adding a list of ListenableIndexedNode, the listeners are notified',
         () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
-      final nodesToAdd = [ListenableNode(), ListenableNode(), ListenableNode()];
+      final node = ListenableIndexedNode();
+      final nodesToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
       node.addListener(() {
         completer.complete(node.children.length);
       });
@@ -73,21 +84,23 @@ void main() {
   });
 
   group('test addedNodes event on adding children', () {
-    test('On adding nodes, the addedNodes event is fired', () async {
-      final node = ListenableNode();
+    test('On adding ListenableIndexedNode, the addedNodes event is fired',
+        () async {
+      final node = ListenableIndexedNode();
       node.addedNodes.listen(
           expectAsync1((event) => expect(event.items.length, isNonZero)));
 
-      node.add(ListenableNode());
+      node.add(ListenableIndexedNode());
     });
 
-    test('On adding multiple nodes, respective items in the event are emitted',
+    test(
+        'On adding multiple ListenableIndexedNode, respective items in the event are emitted',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addedNodes.listen(expectAsync1((event) {
         expect(event.items.length, nodesUnderTest.length);
@@ -98,8 +111,8 @@ void main() {
 
     test('Exception is thrown on accessing addEvent stream on a non-root node',
         () async {
-      final node = ListenableNode();
-      final nodesUnderTest = ListenableNode();
+      final node = ListenableIndexedNode();
+      final nodesUnderTest = ListenableIndexedNode();
       node.add(nodesUnderTest);
       expect(() => nodesUnderTest.addedNodes,
           throwsA(isA<ActionNotAllowedException>()));
@@ -108,21 +121,25 @@ void main() {
     test(
         'On adding a node on a non-root node, event is emitted on the root node',
         () async {
-      final rootNode = ListenableNode();
-      final nodeUnderTest = ListenableNode();
+      final rootNode = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
       rootNode.add(nodeUnderTest);
       rootNode.addedNodes.listen(
           expectAsync1((event) => expect(event.items.length, isNonZero)));
 
-      nodeUnderTest.add(ListenableNode());
+      nodeUnderTest.add(ListenableIndexedNode());
     });
 
     test(
         'On adding a node on list of nodes a non-root node, event is emitted on the root node',
         () async {
-      final nodesToAdd = [ListenableNode(), ListenableNode(), ListenableNode()];
-      final rootNode = ListenableNode();
-      final nodeUnderTest = ListenableNode();
+      final nodesToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      final rootNode = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
       rootNode.add(nodeUnderTest);
       rootNode.addedNodes.listen(expectAsync1(
           (event) => expect(event.items.length, nodesToAdd.length)));
@@ -131,12 +148,12 @@ void main() {
     });
   });
 
-  group('test removing children from the ListenableNodes', () {
+  group('test removing children from the ListenableIndexedNode', () {
     test(
-        'On removing a ListenableNode, the size of children decreases correspondingly',
+        'On removing a ListenableIndexedNode, the size of children decreases correspondingly',
         () async {
-      final node = ListenableNode();
-      final nodeUnderTest = ListenableNode();
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
       node.add(nodeUnderTest);
       expect(node.children.length, equals(1));
       node.remove(nodeUnderTest);
@@ -144,13 +161,13 @@ void main() {
     });
 
     test(
-        'On removing a list of ListenableNode, the size of children decreases correspondingly',
+        'On removing a list of ListenableIndexedNode, the size of children decreases correspondingly',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addAll(nodesUnderTest);
       expect(node.children.length, equals(nodesUnderTest.length));
@@ -158,12 +175,13 @@ void main() {
       expect(node.children.length, equals(1));
     });
 
-    test('On selfDelete, the node is removed from the parent', () async {
-      final root = ListenableNode();
+    test('On selfDelete, the ListenableIndexedNode is removed from the parent',
+        () async {
+      final root = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       root.addAll(nodesUnderTest);
       expect(root.children.length, equals(nodesUnderTest.length));
@@ -172,13 +190,14 @@ void main() {
       expect(root.children.length, 2);
     });
 
-    test('On clearing a ListenableNode, the size of the children becomes zero',
+    test(
+        'On clearing a ListenableIndexedNode, the size of the children becomes zero',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addAll(nodesUnderTest);
       expect(node.children.length, equals(nodesUnderTest.length));
@@ -189,11 +208,11 @@ void main() {
     test(
         'On removeWhere method, the correct node matching the predicate is removed',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       final nodeToRemove = nodesUnderTest.first;
       node.addAll(nodesUnderTest);
@@ -204,10 +223,11 @@ void main() {
   });
 
   group('test listeners are notified on removing children', () {
-    test('On removing a ListenableNode, the listeners are notified', () async {
+    test('On removing a ListenableIndexedNode, the listeners are notified',
+        () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
-      final nodeUnderTest = ListenableNode();
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
       node.add(nodeUnderTest);
       node.addListener(() {
         completer.complete(node.children.length);
@@ -217,14 +237,15 @@ void main() {
       expect(await completer.future, equals(0));
     });
 
-    test('On removing a list of ListenableNode, the listeners are notified',
+    test(
+        'On removing a list of ListenableIndexedNode, the listeners are notified',
         () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addAll(nodesUnderTest);
       expect(node.children.length, equals(nodesUnderTest.length));
@@ -236,13 +257,14 @@ void main() {
       expect(await completer.future, equals(1));
     });
 
-    test('On selfDelete, the node is removed from the parent', () async {
+    test('On selfDelete, the ListenableIndexedNode is removed from the parent',
+        () async {
       final completer = Completer<int>();
-      final root = ListenableNode();
+      final root = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       root.addAll(nodesUnderTest);
       expect(root.children.length, equals(nodesUnderTest.length));
@@ -254,18 +276,19 @@ void main() {
       expect(await completer.future, 2);
     });
 
-    test('On selfDelete, the node is removed from the parent', () async {
+    test('On selfDelete, the ListenableIndexedNode is removed from the parent',
+        () async {
       final completer = Completer<int>();
-      final root = ListenableNode();
+      final root = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       final childNodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       root.addAll(nodesUnderTest);
       expect(root.children.length, equals(nodesUnderTest.length));
@@ -280,13 +303,14 @@ void main() {
       expect(root.children.length, 3);
     });
 
-    test('On clearing a ListenableNode, the listeners are notified', () async {
+    test('On clearing a ListenableIndexedNode, the listeners are notified',
+        () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addAll(nodesUnderTest);
       expect(node.children.length, equals(nodesUnderTest.length));
@@ -299,11 +323,11 @@ void main() {
 
     test('On removeWhere method, the listeners are notified', () async {
       final completer = Completer<int>();
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       final nodeToRemove = nodesUnderTest.first;
       node.addAll(nodesUnderTest);
@@ -318,10 +342,10 @@ void main() {
 
   group('test removedNodes event on removing children', () {
     test(
-        'On removing a node, the removedNodes event is fired with the corresponding removed node data',
+        'On removing a ListenableIndexedNode, the removedNodes event is fired with the corresponding removed node data',
         () async {
-      final node = ListenableNode();
-      final nodeUnderTest = ListenableNode();
+      final node = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
       node.add(nodeUnderTest);
       node.removedNodes.listen(expectAsync1((event) {
         expect(event.items.length, 1);
@@ -332,13 +356,13 @@ void main() {
     });
 
     test(
-        'On clearing a node, the removedNodes event is fired containing the correct number of removed nodes',
+        'On clearing a ListenableIndexedNode, the removedNodes event is fired containing the correct number of removed nodes',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       node.addAll(nodesUnderTest);
 
@@ -352,11 +376,11 @@ void main() {
     test(
         'On removeWhere method, the removedNodes event is fired containing the correct number of removed nodes',
         () async {
-      final node = ListenableNode();
+      final node = ListenableIndexedNode();
       final nodesUnderTest = [
-        ListenableNode(),
-        ListenableNode(),
-        ListenableNode()
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
       ];
       final nodeToRemove = nodesUnderTest.first;
       node.addAll(nodesUnderTest);
@@ -371,8 +395,8 @@ void main() {
     test(
         'Exception is thrown on accessing removedNodes stream on a non-root node',
         () async {
-      final node = ListenableNode();
-      final nodesUnderTest = ListenableNode();
+      final node = ListenableIndexedNode();
+      final nodesUnderTest = ListenableIndexedNode();
       node.add(nodesUnderTest);
       expect(() => nodesUnderTest.removedNodes,
           throwsA(isA<ActionNotAllowedException>()));
@@ -381,9 +405,9 @@ void main() {
     test(
         'On removing a node on a non-root node, event is emitted on the root node',
         () async {
-      final rootNode = ListenableNode();
-      final nodeUnderTest = ListenableNode();
-      final nodeToRemove = ListenableNode();
+      final rootNode = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      final nodeToRemove = ListenableIndexedNode();
       rootNode.add(nodeUnderTest);
       rootNode.removedNodes.listen(expectAsync1((event) {
         expect(event.items.length, 1);
@@ -397,31 +421,31 @@ void main() {
 
   group('accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
-      final node = mockListenableNode1;
-      expect(node.children["0A"]!.key, equals("0A"));
+      final node = mockListenableIndexedNode1;
+      expect(node["0A"].key, equals("0A"));
     });
 
     test('Correct node is returned using elementAt method', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       expect(node.elementAt("0A").key, equals("0A"));
     });
 
     test('Correct node is returned using the [] operator', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       expect(node["0A"].key, equals("0A"));
     });
 
     test(
         'Correct nested node in hierarchy is returned using cascading of [] operator',
         () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       expect(node["0A"]["0A1A"].key, equals("0A1A"));
       expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].key, equals("0C1C2A3A"));
     });
 
     test('Correct node is returned using a path in the elementAt method',
         () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       const _s = INode.PATH_SEPARATOR;
       expect(node.elementAt("0A${_s}0A1A").key, equals("0A1A"));
       expect(node.elementAt("0C${_s}0C1C${_s}0C1C2A${_s}0C1C2A3A").key,
@@ -429,7 +453,7 @@ void main() {
     });
 
     test('Correct node is returned using a path in the [] operator', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       const _s = INode.PATH_SEPARATOR;
       expect(node["0A${_s}0A1A"].key, equals("0A1A"));
       expect(
@@ -437,18 +461,18 @@ void main() {
     });
 
     test('Correct path is returned from a nested node', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
           equals("/.0C.0C1C.0C1C2A.0C1C2A3A"));
     });
 
     test('Correct level is returned from a nested node', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       expect(node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].level, equals(4));
     });
 
     test('Correct root is returned using findRootMethod', () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       final nodeToTest = node["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"];
       expect(nodeToTest.root.key, equals(INode.ROOT_KEY));
     });
@@ -456,7 +480,7 @@ void main() {
     test(
         'Exception is thrown if an incorrect path is provided to elementAt method',
         () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       const _s = INode.PATH_SEPARATOR;
       expect(() => node.elementAt("0A${_s}0C1A"),
           throwsA(isA<NodeNotFoundException>()));
@@ -464,7 +488,7 @@ void main() {
 
     test('Exception is thrown if an incorrect path is provided to [] operator',
         () async {
-      final node = mockListenableNode1;
+      final node = mockListenableIndexedNode1;
       const _s = INode.PATH_SEPARATOR;
       expect(() => node["0A${_s}0C1A"], throwsA(isA<NodeNotFoundException>()));
     });

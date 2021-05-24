@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tree_structure_view/helpers/exceptions.dart';
@@ -24,8 +22,7 @@ class Node<T> extends INode<T> implements INodeActions<T> {
 
   Node<T> get root => super.root as Node<T>;
 
-  UnmodifiableListView<Node<T>> get childrenAsList =>
-      UnmodifiableListView(children.values.toList(growable: false));
+  List<Node<T>> get childrenAsList => children.values.toList(growable: false);
 
   void add(Node<T> value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);

@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 abstract class INode<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
@@ -12,7 +10,7 @@ abstract class INode<T> {
 
   Map<String, dynamic>? meta;
 
-  UnmodifiableListView<INode<T>> get childrenAsList;
+  List<INode<T>> get childrenAsList;
 
   INode<T> elementAt(String path);
 

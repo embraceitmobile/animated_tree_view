@@ -24,6 +24,9 @@ class ListenableNode<T> extends Node<T>
 
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 
+  List<ListenableNode<T>> get childrenAsList =>
+      List<ListenableNode<T>>.from(super.childrenAsList);
+
   final EventStreamController<NodeAddEvent<T>> _addedNodes =
       EventStreamController();
 
