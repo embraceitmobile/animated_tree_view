@@ -662,6 +662,46 @@ void main() {
     });
 
     test(
+        'On inserting a ListenableIndexedNode after a specified node, '
+        'the nodesInserted event is called once', () async {
+      final node = ListenableIndexedNode();
+      final childrenToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addAll(childrenToAdd);
+
+      const index = 1;
+      final nodeToInsert = ListenableIndexedNode();
+      node.insertedNodes.listen(expectAsync1((event) {
+        expect(nodeToInsert, equals(node.children[index + 1]));
+      }));
+
+      node.insertAfter(childrenToAdd[index], nodeToInsert);
+    });
+
+    test(
+        'On inserting a ListenableIndexedNode before a specified node, '
+        'the nodesInserted event is called once', () async {
+      final node = ListenableIndexedNode();
+      final childrenToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addAll(childrenToAdd);
+
+      const index = 1;
+      final nodeToInsert = ListenableIndexedNode();
+      node.insertedNodes.listen(expectAsync1((event) {
+        expect(nodeToInsert, equals(node.children[index]));
+      }));
+
+      node.insertBefore(childrenToAdd[index], nodeToInsert);
+    });
+
+    test(
         'Exception is thrown on accessing insertedNodes stream on a non-root node',
         () async {
       final node = ListenableIndexedNode();

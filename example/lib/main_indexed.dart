@@ -96,8 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            buildAddItemChildButton(item),
-            if (!item.isRoot) buildRemoveItemButton(item),
+            if (!item.isRoot) ...[
+              buildInsertAboveButton(item),
+              buildInsertBelowButton(item),
+              buildRemoveItemButton(item),
+            ],
+            if (item.isRoot) buildAddItemChildButton(item),
             if (item.isRoot && item.children.isNotEmpty)
               buildClearAllItemButton(item)
           ],
@@ -122,16 +126,43 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget buildInsertAboveButton(IndexedRowItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: FlatButton(
+        color: Colors.green[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        child: Text("Insert Above", style: TextStyle(color: Colors.white)),
+        onPressed: () => item.parent?.insertBefore(item, IndexedRowItem()),
+      ),
+    );
+  }
+
+  Widget buildInsertBelowButton(IndexedRowItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: FlatButton(
+        color: Colors.green[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        child: Text("Insert Below", style: TextStyle(color: Colors.white)),
+        onPressed: () => item.parent?.insertAfter(item, IndexedRowItem()),
+      ),
+    );
+  }
+
   Widget buildRemoveItemButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton.icon(
+      child: FlatButton(
           color: Colors.red[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
-          icon: Icon(Icons.delete, color: Colors.white),
-          label: Text("Delete", style: TextStyle(color: Colors.white)),
+          child: Icon(Icons.delete, color: Colors.white),
           onPressed: () => item.delete()),
     );
   }

@@ -103,15 +103,11 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
 
   int insertAfter(IndexedNode<T> after, IndexedNode<T> element) {
     final index = super.insertAfter(after, element);
-    _notifyListeners();
-    _notifyNodesInserted(NodeInsertEvent<T>(List<T>.from([element]), index));
     return index;
   }
 
   int insertBefore(IndexedNode<T> before, IndexedNode<T> element) {
     final index = super.insertBefore(before, element);
-    _notifyListeners();
-    _notifyNodesInserted(NodeInsertEvent<T>(List<T>.from([element]), index));
     return index;
   }
 

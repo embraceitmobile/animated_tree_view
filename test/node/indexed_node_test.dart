@@ -88,7 +88,7 @@ void main() {
       const index = 1;
       final nodeToInsert = IndexedNode();
       final insertedAt = node.insertBefore(childrenToAdd[index], nodeToInsert);
-      expect(nodeToInsert, equals(node.children[index]));
+      expect(nodeToInsert.key, equals(node.children[index].key));
       expect(insertedAt, equals(index));
     });
 
