@@ -8,7 +8,7 @@ import 'package:tree_structure_view/listenable_node/listenable_node.dart';
 import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
-import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_item.dart';
+import 'package:tree_structure_view/tree_list_views/expandable_node/expandable_node_item.dart';
 
 import 'constants/constants.dart';
 import 'controllers/tree_list_view_controller.dart';

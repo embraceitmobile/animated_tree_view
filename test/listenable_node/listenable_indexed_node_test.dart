@@ -457,6 +457,250 @@ void main() {
     });
   });
 
+  group('test inserting children to a node', () {
+    test(
+        'On inserting a ListenableIndexedNode, the node children size increases correspondingly',
+        () {
+      final node = ListenableIndexedNode();
+      node.insert(0, ListenableIndexedNode());
+      expect(node.children.length, equals(1));
+    });
+
+    test(
+        'On inserting a ListenableIndexedNode, the correct node is inserted at the specified index',
+        () async {
+      final node = ListenableIndexedNode();
+      const count = 3;
+      for (int i = 0; i < count; i++) {
+        node.add(ListenableIndexedNode());
+      }
+
+      const index = 2;
+      final nodeToInsert = ListenableIndexedNode();
+      node.insert(index, nodeToInsert);
+      expect(nodeToInsert, equals(node.children[index]));
+    });
+
+    test(
+        'On inserting a ListenableIndexedNode after a specified node, the correct node is inserted at the index',
+        () async {
+      final node = ListenableIndexedNode();
+      final childrenToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addAll(childrenToAdd);
+
+      const index = 1;
+      final nodeToInsert = ListenableIndexedNode();
+      final insertedAt = node.insertAfter(childrenToAdd[index], nodeToInsert);
+      expect(nodeToInsert, equals(node.children[index + 1]));
+      expect(insertedAt, equals(index + 1));
+    });
+
+    test(
+        'On inserting a ListenableIndexedNode before a specified node, the correct node is inserted at the index',
+        () async {
+      final node = ListenableIndexedNode();
+      final childrenToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addAll(childrenToAdd);
+
+      const index = 1;
+      final nodeToInsert = ListenableIndexedNode();
+      final insertedAt = node.insertBefore(childrenToAdd[index], nodeToInsert);
+      expect(nodeToInsert, equals(node.children[index]));
+      expect(insertedAt, equals(index));
+    });
+
+    test(
+        'On inserting a list of nodes, the size of children increases correspondingly',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodesToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addAll(nodesToAdd);
+
+      final childrenBeforeInsertion = node.children.length;
+
+      final index = 1;
+      final nodesToInsert = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.insertAll(index, nodesToInsert);
+      expect(node.children.length,
+          equals(childrenBeforeInsertion + nodesToInsert.length));
+    });
+
+    test(
+        'On inserting a list of ListenableIndexedNode, the nodes are inserted at the correct index position',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodesToAdd = [
+        ListenableIndexedNode(key: "A1"),
+        ListenableIndexedNode(key: "A2"),
+        ListenableIndexedNode(key: "A3")
+      ];
+      node.addAll(nodesToAdd);
+
+      final index = 1;
+      final nodesToInsert = [
+        ListenableIndexedNode(key: "I1"),
+        ListenableIndexedNode(key: "I2"),
+        ListenableIndexedNode(key: "I3")
+      ];
+      node.insertAll(index, nodesToInsert);
+      for (int i = 0; i < nodesToInsert.length; i++) {
+        expect(nodesToInsert[i].key, equals(node.children[index + i].key));
+      }
+    });
+
+    test(
+        'On inserting a node with children, all the children path across the length '
+        'and breadth are updated', () async {
+      final node = ListenableIndexedNode.root();
+      final nodesToAdd = [
+        ListenableIndexedNode(key: "C1"),
+        ListenableIndexedNode(key: "C2"),
+        ListenableIndexedNode(key: "C3")
+      ];
+      node.addAll(nodesToAdd);
+
+      final index = 1;
+      node.insert(
+          index,
+          ListenableIndexedNode(key: "C4")
+            ..add(ListenableIndexedNode(key: "C4A0")));
+
+      expect(node["C4"]["C4A0"].path, equals("/.C4.C4A0"));
+    });
+
+    test(
+        'On inserting a list of nodes node with children, '
+        'all the children path across the length and breadth are updated',
+        () async {
+      final node = ListenableIndexedNode.root();
+      node.addAll([
+        mockNoRootListenableIndexedNode1,
+        mockNoRootListenableIndexedNode2,
+        mockNoRootListenableIndexedNode3,
+      ]);
+      expect(node["M1"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("/.M1.0C.0C1C.0C1C2A.0C1C2A3A"));
+      expect(node["M2"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("/.M2.0C.0C1C.0C1C2A.0C1C2A3A"));
+      expect(node["M3"]["0C"]["0C1C"]["0C1C2A"]["0C1C2A3A"].path,
+          equals("/.M3.0C.0C1C.0C1C2A.0C1C2A3A"));
+    });
+  });
+
+  group('test listeners are notified on inserting children', () {
+    test('On inserting a ListenableIndexedNode, the listeners are notified',
+        () async {
+      final completer = Completer<int>();
+      final node = ListenableIndexedNode();
+      node.addListener(() {
+        completer.complete(node.children.length);
+      });
+
+      node.insert(0, ListenableIndexedNode());
+      expect(await completer.future, equals(1));
+    });
+
+    test(
+        'On inserting a list of ListenableIndexedNode, the listeners are notified',
+        () async {
+      final completer = Completer<int>();
+      final node = ListenableIndexedNode();
+      final nodesToInsert = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.addListener(() {
+        completer.complete(node.children.length);
+      });
+
+      node.insertAll(0, nodesToInsert);
+      expect(await completer.future, equals(nodesToInsert.length));
+    });
+  });
+
+  group('test insertedNodes event on inserted children', () {
+    test('On inserting ListenableIndexedNode, the insertedNodes event is fired',
+        () async {
+      final node = ListenableIndexedNode();
+      node.insertedNodes.listen(
+          expectAsync1((event) => expect(event.items.length, isNonZero)));
+
+      node.insert(0, ListenableIndexedNode());
+    });
+
+    test(
+        'On inserting multiple ListenableIndexedNode, respective items in the event are emitted',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodesUnderTest = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      node.insertedNodes.listen(expectAsync1((event) {
+        expect(event.items.length, nodesUnderTest.length);
+      }));
+
+      node.insertAll(0, nodesUnderTest);
+    });
+
+    test(
+        'Exception is thrown on accessing insertedNodes stream on a non-root node',
+        () async {
+      final node = ListenableIndexedNode();
+      final nodesUnderTest = ListenableIndexedNode();
+      node.add(nodesUnderTest);
+      expect(() => nodesUnderTest.insertedNodes,
+          throwsA(isA<ActionNotAllowedException>()));
+    });
+
+    test(
+        'On inserting a node on a non-root node, event is emitted on the root node',
+        () async {
+      final rootNode = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      rootNode.add(nodeUnderTest);
+      rootNode.insertedNodes.listen(
+          expectAsync1((event) => expect(event.items.length, isNonZero)));
+
+      nodeUnderTest.insert(0, ListenableIndexedNode());
+    });
+
+    test(
+        'On inserting a node on list of nodes a non-root node, event is emitted on the root node',
+        () async {
+      final nodesToAdd = [
+        ListenableIndexedNode(),
+        ListenableIndexedNode(),
+        ListenableIndexedNode()
+      ];
+      final rootNode = ListenableIndexedNode();
+      final nodeUnderTest = ListenableIndexedNode();
+      rootNode.add(nodeUnderTest);
+      rootNode.insertedNodes.listen(expectAsync1(
+          (event) => expect(event.items.length, nodesToAdd.length)));
+
+      nodeUnderTest.insertAll(0, nodesToAdd);
+    });
+  });
+
   group('accessing nodes', () {
     test('Correct node is returned using the node keys', () async {
       final node = mockListenableIndexedNode1;

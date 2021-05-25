@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tree_structure_view/tree_list_views/constants/constants.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
-import 'package:tree_structure_view/tree_list_views/models/expandable_node.dart';
-import 'package:tree_structure_view/tree_list_views/widgets/expandable_node_container.dart';
+import 'package:tree_structure_view/tree_list_views/expandable_node/expandable_node.dart';
+import 'package:tree_structure_view/tree_list_views/expandable_node/expandable_node_container.dart';
 import 'package:tree_structure_view/tree_structure_view.dart';
 
 class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {

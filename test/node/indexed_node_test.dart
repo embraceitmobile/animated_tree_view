@@ -45,7 +45,7 @@ void main() {
         'On inserting a node, the node children size increases correspondingly',
         () {
       final node = IndexedNode();
-      node.insert(0, node);
+      node.insert(0, IndexedNode());
       expect(node.children.length, equals(1));
     });
 
