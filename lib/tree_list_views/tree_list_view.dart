@@ -8,10 +8,10 @@ import 'package:tree_structure_view/listenable_node/listenable_node.dart';
 import 'package:tree_structure_view/node/node.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/animated_list_controller.dart';
 import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
-import 'package:tree_structure_view/tree_list_views/expandable_node/expandable_node_item.dart';
 
 import 'constants/constants.dart';
 import 'controllers/tree_list_view_controller.dart';
+import 'expandable_node/expandable_node.dart';
 
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
@@ -47,23 +47,21 @@ class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return _TreeListView(
-      key: key,
-      builder: builder,
-      controller: controller,
-      onItemTap: onItemTap,
-      primary: primary,
-      physics: physics,
-      shrinkWrap: shrinkWrap,
-      padding: padding,
-      showRootNode: showRootNode,
-      showExpansionIndicator: showExpansionIndicator,
-      indentPadding: indentPadding,
-      expandIcon: expandIcon,
-      collapseIcon: collapseIcon,
-    );
-  }
+  Widget build(BuildContext context) => _TreeListView(
+        key: key,
+        builder: builder,
+        controller: controller,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        shrinkWrap: shrinkWrap,
+        padding: padding,
+        showRootNode: showRootNode,
+        showExpansionIndicator: showExpansionIndicator,
+        indentPadding: indentPadding,
+        expandIcon: expandIcon,
+        collapseIcon: collapseIcon,
+      );
 }
 
 class IndexedTreeListView<T extends ListenableIndexedNode<T>>
@@ -98,23 +96,21 @@ class IndexedTreeListView<T extends ListenableIndexedNode<T>>
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return _TreeListView(
-      key: key,
-      builder: builder,
-      controller: controller,
-      onItemTap: onItemTap,
-      primary: primary,
-      physics: physics,
-      shrinkWrap: shrinkWrap,
-      padding: padding,
-      showRootNode: showRootNode,
-      showExpansionIndicator: showExpansionIndicator,
-      indentPadding: indentPadding,
-      expandIcon: expandIcon,
-      collapseIcon: collapseIcon,
-    );
-  }
+  Widget build(BuildContext context) => _TreeListView(
+        key: key,
+        builder: builder,
+        controller: controller,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        shrinkWrap: shrinkWrap,
+        padding: padding,
+        showRootNode: showRootNode,
+        showExpansionIndicator: showExpansionIndicator,
+        indentPadding: indentPadding,
+        expandIcon: expandIcon,
+        collapseIcon: collapseIcon,
+      );
 }
 
 /// The default [TreeListView] uses a [Node] internally, which is based on the
@@ -247,22 +243,20 @@ class _TreeListViewState<T extends IListenableNode<T>>
     _insertNodesSubscription?.cancel();
   }
 
-  void _handleItemAdditionEvent(NodeAddEvent event) {
+  void _handleItemAdditionEvent(NodeAddEvent<T> event) {
     Future.delayed(
       Duration(milliseconds: 300),
       () => widget.controller.scrollController.scrollToIndex(
-        widget.controller.animatedListController
-            .indexOf(event.items.first as T),
+        widget.controller.animatedListController.indexOf(event.items.first),
       ),
     );
   }
 
-  void _handleItemInsertEvent(NodeInsertEvent event) {
+  void _handleItemInsertEvent(NodeInsertEvent<T> event) {
     Future.delayed(
       Duration(milliseconds: 300),
       () => widget.controller.scrollController.scrollToIndex(
-        widget.controller.animatedListController
-            .indexOf(event.items.first as T),
+        widget.controller.animatedListController.indexOf(event.items.first),
       ),
     );
   }
