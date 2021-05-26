@@ -89,18 +89,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ListTile(
           title: Text("Item ${item.level}-${item.key}"),
           subtitle: Text('Level $level'),
+          trailing: !item.isRoot ? buildRemoveItemButton(item) : null,
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            buildAddItemChildButton(item),
             if (!item.isRoot) ...[
               buildInsertAboveButton(item),
               buildInsertBelowButton(item),
-              buildRemoveItemButton(item),
             ],
-            if (item.isRoot) buildAddItemChildButton(item),
             if (item.isRoot && item.children.isNotEmpty)
               buildClearAllItemButton(item)
           ],
@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
         icon: Icon(Icons.add_circle, color: Colors.white),
-        label: Text("Add Child", style: TextStyle(color: Colors.white)),
+        label: Text("Child", style: TextStyle(color: Colors.white)),
         onPressed: () => item.add(IndexedRowItem()),
       ),
     );
