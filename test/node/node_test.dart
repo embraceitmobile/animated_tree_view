@@ -1,6 +1,5 @@
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/helpers/exceptions.dart';
-import 'package:tree_structure_view/node/node.dart';
 
 import '../mocks/node_mocks.dart';
 

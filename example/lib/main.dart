@@ -1,7 +1,6 @@
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tree_structure_view/tree_list_views/controllers/tree_list_view_controller.dart';
-import 'package:tree_structure_view/tree_structure_view.dart';
 
 import 'mocks.dart';
 

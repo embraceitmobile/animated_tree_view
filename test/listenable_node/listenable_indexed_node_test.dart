@@ -1,9 +1,7 @@
 import 'dart:async';
 
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tree_structure_view/helpers/exceptions.dart';
-import 'package:tree_structure_view/listenable_node/listenable_indexed_node.dart';
-import 'package:tree_structure_view/node/base/i_node.dart';
 
 import '../mocks/listenable_indexed_node_mocks.dart';
 

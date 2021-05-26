@@ -134,13 +134,13 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "tree_structure_view",
+      "name": "animated_tree_view",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-05-12T12:44:45.162987Z",
+  "generated": "2021-05-26T17:03:26.198931Z",
   "generator": "pub",
   "generatorVersion": "2.12.3"
 }

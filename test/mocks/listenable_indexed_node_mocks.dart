@@ -1,4 +1,4 @@
-import 'package:tree_structure_view/listenable_node/listenable_indexed_node.dart';
+import 'package:animated_tree_view/animated_tree_view.dart';
 
 ListenableIndexedNode get mockListenableIndexedNode1 =>
     ListenableIndexedNode.root()

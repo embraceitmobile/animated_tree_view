@@ -1,6 +1,6 @@
-# Multi Level List View
+# animated_tree_view
 
-A flutter package for creating a multi-level list view
+A new Flutter package project.
 
 ## Getting Started
 

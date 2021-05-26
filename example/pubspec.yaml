@@ -1,5 +1,5 @@
 name: example
-description: A sample project for tree structure view.
+description: A sample project for animated tree view
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  tree_structure_view:
+  animated_tree_view:
     path: ../
 
 
