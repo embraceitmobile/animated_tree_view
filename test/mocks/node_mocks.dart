@@ -1,83 +1,61 @@
-import 'package:flutter/foundation.dart';
-import 'package:multi_level_list_view/multi_level_list_view.dart';
+import 'package:animated_tree_view/animated_tree_view.dart';
 
-class NodeWithGivenId with Node<NodeWithGivenId> {
-  final String key;
-  final List<NodeWithGivenId> children;
-
-  NodeWithGivenId({
-    required this.key,
-    this.children = const <NodeWithGivenId>[],
-  });
-}
-
-class TestNode with Node<TestNode> {
-  final List<TestNode> children;
-
-  TestNode({List<TestNode>? children})
-      : this.children = children ?? <TestNode>[];
-}
-
-List<NodeWithGivenId> itemsWithIds = [
-  NodeWithGivenId(
-      key: "0A", children: <NodeWithGivenId>[NodeWithGivenId(key: "1A")]),
-  NodeWithGivenId(key: "0B"),
-  NodeWithGivenId(key: "0C", children: <NodeWithGivenId>[
-    NodeWithGivenId(key: "0C1A"),
-    NodeWithGivenId(key: "0C1B"),
-    NodeWithGivenId(key: "0C1C", children: <NodeWithGivenId>[
-      NodeWithGivenId(key: "0C1C2A", children: <NodeWithGivenId>[
-        NodeWithGivenId(key: "0C1C2A3A"),
-        NodeWithGivenId(key: "0C1C2A3B"),
-        NodeWithGivenId(key: "0C1C2A3C"),
+Node get mockNode1 => Node.root()
+  ..addAll([
+    Node(key: "0A")..add(Node(key: "0A1A")),
+    Node(key: "0B"),
+    Node(key: "0C")
+      ..addAll([
+        Node(key: "0C1A"),
+        Node(key: "0C1B"),
+        Node(key: "0C1C")
+          ..addAll([
+            Node(key: "0C1C2A")
+              ..addAll([
+                Node(key: "0C1C2A3A"),
+                Node(key: "0C1C2A3B"),
+                Node(key: "0C1C2A3C"),
+              ]),
+          ]),
       ]),
-    ]),
-  ]),
-  NodeWithGivenId(key: "0D"),
-];
+  ]);
 
-List<TestNode> itemsWithoutIds = [
-  TestNode(children: <TestNode>[
-    TestNode(children: [
-      TestNode(),
-      TestNode(),
-      TestNode(),
-    ])
-  ]),
-  TestNode(),
-  TestNode(children: <TestNode>[
-    TestNode(),
-    TestNode(),
-    TestNode(children: <TestNode>[
-      TestNode(children: <TestNode>[
-        TestNode(),
-        TestNode(),
-        TestNode(),
+Node get mockNode2 => Node(key: "M2")
+  ..addAll([
+    Node(key: "0A")..add(Node(key: "0A1A")),
+    Node(key: "0B"),
+    Node(key: "0C")
+      ..addAll([
+        Node(key: "0C1A"),
+        Node(key: "0C1B"),
+        Node(key: "0C1C")
+          ..addAll([
+            Node(key: "0C1C2A")
+              ..addAll([
+                Node(key: "0C1C2A3A"),
+                Node(key: "0C1C2A3B"),
+                Node(key: "0C1C2A3C"),
+              ]),
+          ]),
       ]),
-    ]),
-  ]),
-  TestNode(),
-];
+  ]);
 
-List<TestNode> itemsWithoutIds2 = [
-  TestNode(children: <TestNode>[
-    TestNode(children: [
-      TestNode(),
-      TestNode(),
-      TestNode(),
-    ])
-  ]),
-  TestNode(),
-  TestNode(children: <TestNode>[
-    TestNode(),
-    TestNode(),
-    TestNode(children: <TestNode>[
-      TestNode(children: <TestNode>[
-        TestNode(),
-        TestNode(),
-        TestNode(),
+Node get mockNode3 => Node(key: "M3")
+  ..addAll([
+    Node(key: "0A")..add(Node(key: "0A1A")),
+    Node(key: "0B"),
+    Node(key: "0C")
+      ..addAll([
+        Node(key: "0C1A"),
+        Node(key: "0C1B"),
+        Node(key: "0C1C")
+          ..addAll([
+            Node(key: "0C1C2A")
+              ..addAll([
+                Node(key: "0C1C2A3A"),
+                Node(key: "0C1C2A3B"),
+                Node(key: "0C1C2A3C"),
+              ]),
+          ]),
       ]),
-    ]),
-  ]),
-  TestNode(),
-];
+  ]);

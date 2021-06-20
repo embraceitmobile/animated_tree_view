@@ -1,97 +1,102 @@
-import 'package:flutter/material.dart';
-import 'package:multi_level_list_view/interfaces/iterable_tree_update_provider.dart';
-import 'package:multi_level_list_view/interfaces/listenable_iterable_tree.dart';
-import 'package:multi_level_list_view/listenables/listenable_list.dart';
-import 'package:multi_level_list_view/tree_structures/node.dart';
+import 'dart:async';
 
-class AnimatedListController<T extends Node<T>> {
+import 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
+import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
+import 'package:animated_tree_view/src/listenable_node/base/node_update_notifier.dart';
+import 'package:animated_tree_view/src/node/base/i_node.dart';
+import 'package:flutter/material.dart';
+
+class AnimatedListController<T extends INode<T>> {
   static const TAG = "AnimatedListController";
 
   final GlobalKey<AnimatedListState> _listKey;
-  final ListenableIterableTree<T> _listenableIterableTree;
   final dynamic _removedItemBuilder;
-  final ListenableList<Node<T>> _items;
+  final NodeUpdateNotifier<T> _nodeUpdateNotifier;
+  final List<T> _flatList;
+  final bool showRootNode;
+
+  late StreamSubscription<NodeAddEvent<T>> _addedNodesSubscription;
+  late StreamSubscription<NodeInsertEvent<T>> _insertNodesSubscription;
+  late StreamSubscription<NodeRemoveEvent<T>> _removeNodesSubscription;
 
   AnimatedListController(
       {required GlobalKey<AnimatedListState> listKey,
       required dynamic removedItemBuilder,
-      required ListenableIterableTree<T> tree})
+      required IListenableNode<T> listenableNode,
+      this.showRootNode = true})
       : _listKey = listKey,
-        _items = ListenableList.from(tree.root.children),
+        _nodeUpdateNotifier = listenableNode,
         _removedItemBuilder = removedItemBuilder,
-        _listenableIterableTree = tree,
-        assert(listKey != null),
+        _flatList = List.from(showRootNode
+            ? [listenableNode]
+            : listenableNode.root.childrenAsList),
         assert(removedItemBuilder != null) {
-    if (tree != null) {
-      _listenableIterableTree.addedItems.listen(handleAddItemsEvent);
-      _listenableIterableTree.insertedItems.listen(handleInsertItemsEvent);
-      _listenableIterableTree.removedItems.listen(handleRemoveItemsEvent);
-    }
+    _addedNodesSubscription =
+        _nodeUpdateNotifier.addedNodes.listen(handleAddItemsEvent);
+    _removeNodesSubscription =
+        _nodeUpdateNotifier.removedNodes.listen(handleRemoveItemsEvent);
+    _insertNodesSubscription =
+        _nodeUpdateNotifier.insertedNodes.listen(handleInsertItemsEvent);
   }
 
-  ListenableList<Node<T>> get list => _items;
+  List<T> get list => _flatList;
 
-  int get length => _items.length;
+  int get length => _flatList.length;
 
   AnimatedListState? get _animatedList => _listKey.currentState;
 
-  int indexOf(T item) =>
-      _items.nodeIndexWhere((e) => e.path == item.path && e.key == item.key);
+  int indexOf(T item) => _flatList.indexWhere(
+      (e) => e.parent?.key == item.parent?.key && e.key == item.key);
 
-  void insert(int index, Node<T> item) {
-    _items.insert(index, item);
+  void insert(int index, T item) {
+    _flatList.insert(index, item);
     _animatedList!.insertItem(index);
   }
 
-  void insertAll(int index, List<Node<T>> items) {
+  void insertAll(int index, List<T> items) {
     for (int i = 0; i < items.length; i++) {
       insert(index + i, items[i]);
     }
   }
 
-  Node<T> removeAt(int index) {
-    final removedItem = _items.removeAt(index);
-    if (removedItem != null) {
-      _animatedList!.removeItem(
-        index,
-        (BuildContext context, Animation<double> animation) =>
-            _removedItemBuilder(removedItem, context, animation),
-      );
-    }
+  T removeAt(int index) {
+    if (index < 0 || index > _flatList.length)
+      throw RangeError.index(index, _flatList);
+
+    final removedItem = _flatList.removeAt(index);
+    _animatedList!.removeItem(
+      index,
+      (BuildContext context, Animation<double> animation) =>
+          _removedItemBuilder(removedItem, context, animation),
+    );
+
     return removedItem;
   }
 
-  void remove(Node<T> item) => removeAt(indexOf(item as T));
+  void remove(T item) {
+    final index = indexOf(item);
+    if (index >= 0) removeAt(indexOf(item));
+  }
 
-  void removeAll(List<Node<T>> items) {
+  void removeAll(List<T> items) {
     for (final item in items) {
-      item.isExpanded = false;
-      Future.microtask(() => removeAt(indexOf(item as T)));
+      item.setExpanded(false);
+      Future.microtask(() => remove(item));
     }
   }
 
-  List<Node<T>> childrenAt([String? path]) {
-    if (path?.isEmpty ?? true) return _items.value;
-    var children = _items.value;
-    var nodes = Node.normalizePath(path).split(Node.PATH_SEPARATOR);
-    for (final node in nodes) {
-      children = children.firstWhere((element) => node == element.key).children;
-    }
-    return children;
-  }
-
-  void collapseNode(Node<T> item) {
-    final removeItems = _items.where((element) => element.path!
-        .startsWith('${item.path}${Node.PATH_SEPARATOR}${item.key}'));
+  void collapseNode(T item) {
+    final removeItems = _flatList.where((element) =>
+        (element.path).startsWith('${item.path}${INode.PATH_SEPARATOR}'));
 
     removeAll(removeItems.toList());
-    item.isExpanded = false;
+    item.setExpanded(false);
   }
 
-  void expandNode(Node<T> item) {
-    if (item.children.isEmpty) return;
-    insertAll(indexOf(item as T) + 1, item.children);
-    item.isExpanded = true;
+  void expandNode(T item) {
+    if (item.childrenAsList.isEmpty) return;
+    insertAll(indexOf(item) + 1, List.from(item.childrenAsList));
+    item.setExpanded(true);
   }
 
   void toggleExpansion(T item) {
@@ -102,56 +107,84 @@ class AnimatedListController<T extends Node<T>> {
   }
 
   @visibleForTesting
-  void handleAddItemsEvent(NodeEvent<T> event) {
-    final parentKey = event.path!.split(Node.PATH_SEPARATOR).last;
-    final parentIndex =
-        _items.indexWhere((element) => element.key == parentKey);
-    if (parentIndex < 0) return;
+  void handleAddItemsEvent(NodeAddEvent<T> event) {
+    for (final node in event.items) {
+      if (node.isRoot || node.parent?.isRoot == true) {
+        if (!node.root.isExpanded) {
+          expandNode(node.root as T);
+        } else {
+          insertAll(_flatList.length, event.items);
+        }
+      } else {
+        final parentIndex =
+            _flatList.indexWhere((element) => element.key == node.parent?.key);
+        if (parentIndex < 0) continue;
 
-    final parentNode = _items[parentIndex];
-    for (final item in event.items) {
-      item.path = event.path;
-    }
+        final parentNode = _flatList[parentIndex];
 
-    if (!parentNode.isExpanded) {
-      expandNode(parentNode);
-    } else {
-      // if the node is expanded, add the items in the flatList and
-      // the animatedList
-      insertAll(parentIndex + parentNode.children.length, event.items);
-    }
-  }
-
-  @visibleForTesting
-  void handleInsertItemsEvent(NodeEvent<T> event) {
-    //check if the path is visible in the animatedList
-    if (_items.any((item) => item.path == event.path)) {
-      // get the last child in the path
-      final firstChild =
-          _items.firstWhere((element) => element.path == event.path);
-      // for visible path, add the items in the flatList and the animatedList
-      insertAll(indexOf(firstChild as T) + event.index!, event.items);
+        if (!parentNode.isExpanded) {
+          expandNode(parentNode);
+        } else {
+          // if the node is expanded, add the items in the flatList and
+          // the animatedList
+          insertAll(
+              parentIndex + parentNode.childrenAsList.length, event.items);
+        }
+      }
     }
   }
 
   @visibleForTesting
-  void handleRemoveItemsEvent(NodeEvent<T> event) {
-    for (final item in event.items) {
+  void handleInsertItemsEvent(NodeInsertEvent<T> event) {
+    for (final node in event.items) {
+      if (node.isRoot || node.parent?.isRoot == true) {
+        if (!node.root.isExpanded) {
+          expandNode(node.root as T);
+        } else {
+          insertAll(showRootNode ? event.index + 1 : event.index, event.items);
+        }
+      } else {
+        final parentIndex =
+            _flatList.indexWhere((element) => element.key == node.parent?.key);
+        if (parentIndex < 0) continue;
+
+        final parentNode = _flatList[parentIndex];
+
+        if (!parentNode.isExpanded) {
+          expandNode(parentNode);
+        } else {
+          // if the node is expanded, add the items in the flatList and
+          // the animatedList
+          insertAll(parentIndex + 1 + event.index, event.items);
+        }
+      }
+    }
+  }
+
+  @visibleForTesting
+  void handleRemoveItemsEvent(NodeRemoveEvent<T> event) {
+    for (final node in event.items) {
       //if item is in the root of the list, then remove the item
-      if (_items.contains(item)) {
-        remove(item);
+      if (_flatList.any((item) => item.key == node.key)) {
+        final index = indexOf(node);
+        if (index < 0) continue;
+        final removedItem = removeAt(index);
 
-        if (item.isExpanded) {
+        if (removedItem.isExpanded) {
           //if the item is expanded, also remove its children
-          removeAll(_items
-              .where((element) => element.path!.startsWith(item.childrenPath))
+          removeAll(_flatList
+              .where((element) =>
+                  !element.isRoot &&
+                  (element.path).startsWith(removedItem.path))
               .toList());
         }
       }
-      // if item is not in the root list, then remove its value from the _items
-      if (Node.normalizePath(item.path).isNotEmpty ?? false) {
-        childrenAt(item.path).remove(item);
-      }
     }
+  }
+
+  void dispose() {
+    _addedNodesSubscription.cancel();
+    _insertNodesSubscription.cancel();
+    _removeNodesSubscription.cancel();
   }
 }
