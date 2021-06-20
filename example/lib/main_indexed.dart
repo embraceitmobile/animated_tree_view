@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Indexed Tree List View Demo',
+      title: 'Animated Indexed Tree View Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(
-        title: 'Indexed Tree List View Demo',
+        title: 'Animated Indexed Tree View Demo',
       ),
     );
   }
@@ -39,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final controller = IndexedTreeListViewController<IndexedRowItem>(
       initialItems: IndexedRowItem("#00-Root-Item"));
-  final globalKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -50,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: globalKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
