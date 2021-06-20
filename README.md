@@ -9,8 +9,10 @@ The widget is based on the Flutter’s [AnimatedList](https://api.flutter.dev/fl
 ## Implementations
 There are two implementations for the `AnimatedTreeView`, the simple `TreeView` and the more comprehensive `IndexedTreeView`. 
 
+### TreeView
 The `TreeView` uses a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) data-structure to handle the Nodes and their children, using a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) makes the `TreeView` more performant with a complexity on traversing the Nodes being O(n), where n is the level of the node. However the simple `TreeView` lacks the indexed based operations like `insertAt` and `removeAt` operations.
 
+### IndexedTreeView
 The `IndexedTreeView` uses a [List](https://api.dart.dev/stable/2.10.5/dart-core/List-class.html) data-structure to handle the Nodes and their children. This allows it to perform all the list based operations that require indices, like `insertAt` or `removeAt`. The drawback of using an `IndexedTreeView` instead of `TreeView` is that the Node traversal operations on the `IndexedTreeView` are more expensive with a complexity of O(n^m), where n is the number of children in a node, and m is the node level.
 
 ## Features
