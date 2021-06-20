@@ -61,11 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             IndexedTreeListView<IndexedRowItem>(
-                controller: controller,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                showRootNode: _showRootNode,
-                builder: (context, level, item) => buildListItem(level, item)),
+              controller: controller,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              showRootNode: _showRootNode,
+              builder: (context, level, item) => buildListItem(level, item),
+            ),
             if (!_showRootNode)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -73,7 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => controller.root.add(IndexedRowItem()),
                     icon: Icon(Icons.add),
                     label: Text("Add Node")),
-              )
+              ),
+            SizedBox(height: 32),
           ],
         ),
       ),
@@ -82,31 +84,52 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildListItem(int level, IndexedRowItem item) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ListTile(
-          title: Text("Item ${item.level}-${item.key}"),
-          subtitle: Text('Level $level'),
-          trailing: !item.isRoot ? buildRemoveItemButton(item) : null,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    final color = colorMapper[level]!;
+    return Card(
+      color: color,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            buildAddItemChildButton(item),
-            if (!item.isRoot) ...[
-              buildInsertAboveButton(item),
-              buildInsertBelowButton(item),
-            ],
-            if (item.isRoot && item.children.isNotEmpty)
-              buildClearAllItemButton(item)
+            ListTile(
+              title: Text(
+                "Item ${item.level}-${item.key}",
+                style: TextStyle(color: color.byLuminance()),
+              ),
+              subtitle: Text(
+                'Level $level',
+                style: TextStyle(color: color.byLuminance().withOpacity(0.5)),
+              ),
+              trailing: !item.isRoot ? buildRemoveItemButton(item) : null,
+            ),
+            if (!item.isRoot)
+              FittedBox(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildAddItemChildButton(item),
+                    buildInsertAboveButton(item),
+                    buildInsertBelowButton(item),
+                  ],
+                ),
+              ),
+            if (item.isRoot)
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildAddItemChildButton(item),
+                  if (item.children.isNotEmpty) buildClearAllItemButton(item),
+                ],
+              ),
           ],
         ),
-        Divider(),
-      ],
+      ),
     );
   }
 
@@ -179,4 +202,23 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () => item.clear()),
     );
   }
+}
+
+final Map<int, Color> colorMapper = {
+  0: Colors.white,
+  1: Colors.blueGrey[50]!,
+  2: Colors.blueGrey[100]!,
+  3: Colors.blueGrey[200]!,
+  4: Colors.blueGrey[300]!,
+  5: Colors.blueGrey[400]!,
+  6: Colors.blueGrey[500]!,
+  7: Colors.blueGrey[600]!,
+  8: Colors.blueGrey[700]!,
+  9: Colors.blueGrey[800]!,
+  10: Colors.blueGrey[900]!,
+};
+
+extension ColorUtil on Color {
+  Color byLuminance() =>
+      this.computeLuminance() > 0.4 ? Colors.black87 : Colors.white;
 }

@@ -24,7 +24,7 @@ class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
   final ValueSetter<T>? onItemTap;
   final bool? primary;
   final ScrollPhysics? physics;
-  final bool? shrinkWrap;
+  final bool shrinkWrap;
   final EdgeInsetsGeometry? padding;
   final bool showRootNode;
 
@@ -35,8 +35,8 @@ class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
     this.onItemTap,
     this.primary,
     this.physics,
-    this.shrinkWrap,
     this.padding,
+    this.shrinkWrap = false,
     this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
@@ -74,7 +74,7 @@ class IndexedTreeListView<T extends ListenableIndexedNode<T>>
   final bool? primary;
   final ScrollPhysics? physics;
   final bool showRootNode;
-  final bool? shrinkWrap;
+  final bool shrinkWrap;
   final EdgeInsetsGeometry? padding;
 
   const IndexedTreeListView({
@@ -84,8 +84,8 @@ class IndexedTreeListView<T extends ListenableIndexedNode<T>>
     this.onItemTap,
     this.primary,
     this.physics,
-    this.shrinkWrap,
     this.padding,
+    this.shrinkWrap = false,
     this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
@@ -134,7 +134,7 @@ class _TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
   final ValueSetter<T>? onItemTap;
   final bool? primary;
   final ScrollPhysics? physics;
-  final bool? shrinkWrap;
+  final bool shrinkWrap;
   final EdgeInsetsGeometry? padding;
   final bool showRootNode;
 
@@ -145,8 +145,8 @@ class _TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
     this.onItemTap,
     this.primary,
     this.physics,
-    this.shrinkWrap,
     this.padding,
+    this.shrinkWrap = false,
     this.showRootNode = true,
     this.showExpansionIndicator = true,
     this.indentPadding = DEFAULT_INDENT_PADDING,
@@ -192,7 +192,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
       primary: widget.primary,
       physics: widget.physics,
       padding: widget.padding,
-      shrinkWrap: widget.shrinkWrap!,
+      shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
         valueListenable: list[index],
         builder: (context, value, child) => ExpandableNodeItem<T>(
