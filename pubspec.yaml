@@ -1,8 +1,8 @@
 name: animated_tree_view
 description: A flutter pacakge for creating animated tree-views
-version: 1.0.0
+version: 0.5.0
 author: jawwad-hassan89
-repository: https://github.com/embraceitmobile/multi-level-listview
+repository: https://github.com/embraceitmobile/animated_tree_view
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
