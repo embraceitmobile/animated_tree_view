@@ -2,9 +2,9 @@
 
 A flutter package that provides a heirarchial Tree like data structure that can be visualized as a linear list view.
 
-The widget is based on the Flutter’s [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) widget and can even be used as a replacement to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html). The widget data is completely customizable and provides an `IndexedWidgetBuilder`  to build the tree items.
+The widget is based on the Flutter’s [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) widget and can even be used as a replacement to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html). The widget data is completely customizable and provides an `LeveledItemWidgetBuilder`  to build the tree items.
 
-![Animated Tree View Demo](https://media.giphy.com/media/UGkyKtCTH3YoxVQ3dS/giphy.gif)
+![Animated Tree View Demo](https://media.giphy.com/media/0mxvs6HBWrsl4wElst/giphy.gif)
 
 ## Implementations
 There are two implementations for the `AnimatedTreeView`, the simple `TreeView` and the more comprehensive `IndexedTreeView`. 
@@ -40,7 +40,7 @@ Finally, initialize the `TreeView` by providing it a builder.
 TreeListView<RowItem>(
     controller: controller,
     builder: (context, level, node) {
-        // build you node item here
+        // build your node item here
         // return any widget that you need
         return ListTile(
           title: Text("Item ${node.level}-${node.key}"),
@@ -65,7 +65,7 @@ Finally initialize the widget like this:
 IndexedTreeListView<RowItem>(
     controller: controller,
     builder: (context, level, node) {
-        // build you node item here
+        // build your node item here
         // return any widget that you need
         return ListTile(
           title: Text("Item ${node.level}-${node.key}"),
@@ -109,7 +109,7 @@ This library is under development. We are trying to provide you a performant and
 
 ## Future Goals
 * [ ] Improve documentation
-* [ ] Add a `DiffUtil` to the controllers to update the whole tree data more easily
+* [ ] Add a `DiffUtil` to the controller to update the whole tree data more easily
 
 
 
