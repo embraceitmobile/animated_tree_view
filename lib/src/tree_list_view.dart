@@ -229,6 +229,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
         indentAfterLevel: widget.showRootNode ? 0 : 1,
       );
 
+  @protected
   void observeTreeUpdates() {
     _addedNodesSubscription =
         widget.controller.root.addedNodes.listen(_handleItemAdditionEvent);
@@ -236,6 +237,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
         widget.controller.root.insertedNodes.listen(_handleItemInsertEvent);
   }
 
+  @protected
   void cancelTreeUpdates() {
     _addedNodesSubscription?.cancel();
     _insertNodesSubscription?.cancel();
@@ -243,19 +245,15 @@ class _TreeListViewState<T extends IListenableNode<T>>
 
   void _handleItemAdditionEvent(NodeAddEvent<T> event) {
     Future.delayed(
-      Duration(milliseconds: 300),
-      () => widget.controller.scrollController.scrollToIndex(
-        widget.controller.animatedListController.indexOf(event.items.first),
-      ),
+      Duration(milliseconds: 1000),
+      () => widget.controller.scrollToItem(event.items.first),
     );
   }
 
   void _handleItemInsertEvent(NodeInsertEvent<T> event) {
     Future.delayed(
-      Duration(milliseconds: 300),
-      () => widget.controller.scrollController.scrollToIndex(
-        widget.controller.animatedListController.indexOf(event.items.first),
-      ),
+      Duration(milliseconds: 1000),
+      () => widget.controller.scrollToItem(event.items.first),
     );
   }
 

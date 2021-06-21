@@ -45,10 +45,13 @@ abstract class ITreeListViewController<T extends INode<T>> {
 
   INode<T> elementAt(String path) => root.elementAt(path);
 
-  void scrollToIndex(int index) => scrollController.scrollToIndex(index);
+  void scrollToIndex(int index) {
+    scrollController.scrollToIndex(index);
+  }
 
-  void scrollToItem(T item) =>
-      scrollController.scrollToIndex(animatedListController.indexOf(item));
+  void scrollToItem(T item) {
+    scrollToIndex(animatedListController.indexOf(item));
+  }
 
   void toggleNodeExpandCollapse(T item) =>
       animatedListController.toggleExpansion(item);
