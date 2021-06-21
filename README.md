@@ -4,7 +4,7 @@ A flutter package that provides a heirarchial Tree like data structure that can 
 
 The widget is based on the Flutter’s [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) widget and can even be used as a replacement to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html). The widget data is completely customizable and provides an `LeveledItemWidgetBuilder`  to build the tree items.
 
-![Animated Tree View Demo](https://media.giphy.com/media/0mxvs6HBWrsl4wElst/giphy.gif)
+![Animated Tree View Demo](https://media.giphy.com/media/HMR9U5wfx3jPX1lIg3/giphy.gif)
 
 ## Implementations
 There are two implementations for the `AnimatedTreeView`, the simple `TreeView` and the more comprehensive `IndexedTreeView`. 
