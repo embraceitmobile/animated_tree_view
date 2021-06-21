@@ -200,6 +200,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
           animatedListController: widget.controller.animatedListController,
           scrollController: widget.controller.scrollController,
           node: list[index],
+          index: index,
           animation: animation,
           indentPadding: widget.indentPadding,
           showExpansionIndicator: widget.showExpansionIndicator,
@@ -245,14 +246,14 @@ class _TreeListViewState<T extends IListenableNode<T>>
 
   void _handleItemAdditionEvent(NodeAddEvent<T> event) {
     Future.delayed(
-      Duration(milliseconds: 1000),
+      Duration(milliseconds: 300),
       () => widget.controller.scrollToItem(event.items.first),
     );
   }
 
   void _handleItemInsertEvent(NodeInsertEvent<T> event) {
     Future.delayed(
-      Duration(milliseconds: 1000),
+      Duration(milliseconds: 300),
       () => widget.controller.scrollToItem(event.items.first),
     );
   }
