@@ -13,14 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Animated Indexed Tree View Demo',
+      title: 'Simple Animated Tree Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(
-        title: 'Animated Indexed Tree View Demo',
-      ),
+      home: MyHomePage(title: 'Simple Animated Tree Demo'),
     );
   }
 }
@@ -37,8 +35,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const _showRootNode = true;
 
-  final controller = IndexedTreeListViewController<IndexedRowItem>(
-      initialItems: IndexedRowItem("#00-Root-Item"));
+  final controller =
+      TreeListViewController<RowItem>(initialItem: RowItem("#00-Root-Item"));
+  final globalKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -49,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -58,22 +58,23 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            IndexedTreeListView<IndexedRowItem>(
-              controller: controller,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              showRootNode: _showRootNode,
-              builder: (context, level, item) => buildListItem(level, item),
-            ),
+            TreeListView<RowItem>(
+                controller: controller,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                showRootNode: _showRootNode,
+                builder: (context, level, item) => item.isRoot
+                    ? buildRootItem(level, item)
+                    : buildListItem(level, item)),
             if (!_showRootNode)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: RaisedButton.icon(
-                    onPressed: () => controller.root.add(IndexedRowItem()),
+                    onPressed: () => controller.root.add(RowItem()),
                     icon: Icon(Icons.add),
                     label: Text("Add Node")),
               ),
-            SizedBox(height: 32),
+            SizedBox(height: 48),
           ],
         ),
       ),
@@ -81,57 +82,68 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildListItem(int level, IndexedRowItem item) {
-    final color = colorMapper[level.clamp(0, colorMapper.length - 1)]!;
+  Widget buildRootItem(int level, RowItem item) {
     return Card(
-      color: color,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ListTile(
-              title: Text(
-                "Item ${item.level}-${item.key}",
-                style: TextStyle(color: color.byLuminance()),
-              ),
-              subtitle: Text(
-                'Level $level',
-                style: TextStyle(color: color.byLuminance().withOpacity(0.5)),
-              ),
-              trailing: !item.isRoot ? buildRemoveItemButton(item) : null,
+              title: Text("Item ${item.level}-${item.key}"),
+              subtitle: Text('Level $level'),
             ),
-            if (!item.isRoot)
-              FittedBox(
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    buildAddItemChildButton(item),
-                    buildInsertAboveButton(item),
-                    buildInsertBelowButton(item),
-                  ],
-                ),
-              ),
-            if (item.isRoot)
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildAddItemChildButton(item),
-                  if (item.children.isNotEmpty) buildClearAllItemButton(item),
-                ],
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                buildAddItemChildButton(item),
+                if (item.children.isNotEmpty) buildClearAllItemButton(item)
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget buildAddItemChildButton(IndexedRowItem item) {
+  Widget buildListItem(int level, RowItem item) {
+    return Card(
+      color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+      child: ListTile(
+        title: Text("Item ${item.level}-${item.key}"),
+        subtitle: Text('Level $level'),
+        dense: true,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            buildRemoveItemButton(item),
+            buildAddItemButton(item),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildAddItemButton(RowItem item) {
+    return IconButton(
+      onPressed: () => item.add(RowItem()),
+      icon: Icon(Icons.add_circle, color: Colors.green),
+    );
+  }
+
+  Widget buildRemoveItemButton(RowItem item) {
+    return IconButton(
+      onPressed: () => item.delete(),
+      icon: Icon(Icons.delete, color: Colors.red),
+    );
+  }
+
+  Widget buildAddItemChildButton(RowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
@@ -140,54 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
         icon: Icon(Icons.add_circle, color: Colors.white),
-        label: Text("Child", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.add(IndexedRowItem()),
+        label: Text("Add Child", style: TextStyle(color: Colors.white)),
+        onPressed: () => item.add(RowItem()),
       ),
     );
   }
 
-  Widget buildInsertAboveButton(IndexedRowItem item) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
-        child: Text("Insert Above", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.parent?.insertBefore(item, IndexedRowItem()),
-      ),
-    );
-  }
-
-  Widget buildInsertBelowButton(IndexedRowItem item) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
-        child: Text("Insert Below", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.parent?.insertAfter(item, IndexedRowItem()),
-      ),
-    );
-  }
-
-  Widget buildRemoveItemButton(IndexedRowItem item) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-          color: Colors.red[800],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-          ),
-          child: Icon(Icons.delete, color: Colors.white),
-          onPressed: () => item.delete()),
-    );
-  }
-
-  Widget buildClearAllItemButton(IndexedRowItem item) {
+  Widget buildClearAllItemButton(RowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
