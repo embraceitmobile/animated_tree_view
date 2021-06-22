@@ -25,11 +25,11 @@ class AnimatedListController<T extends INode<T>> {
       {required GlobalKey<AnimatedListState> listKey,
       required dynamic removedItemBuilder,
       required IListenableNode<T> listenableNode,
+      required this.scrollController,
       this.showRootNode = true})
       : _listKey = listKey,
         _nodeUpdateNotifier = listenableNode,
         _removedItemBuilder = removedItemBuilder,
-        scrollController = AutoScrollController(axis: Axis.vertical),
         _flatList = List.from(showRootNode
             ? [listenableNode]
             : listenableNode.root.childrenAsList),

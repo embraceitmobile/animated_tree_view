@@ -5,11 +5,16 @@ import 'package:animated_tree_view/src/listenable_node/listenable_node.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
 import 'package:animated_tree_view/src/node/indexed_node.dart';
 import 'package:animated_tree_view/src/node/node.dart';
+import 'package:flutter/material.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class TreeListViewController<T extends Node<T>>
     extends ITreeListViewController<T> {
-  TreeListViewController({ListenableNode<T>? initialItem})
-      : super(initialItem ?? ListenableNode<T>.root());
+  TreeListViewController(
+      {ListenableNode<T>? initialItem, AutoScrollController? scrollController})
+      : super(
+            root: initialItem ?? ListenableNode<T>.root(),
+            scrollController: scrollController);
 
   ListenableNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableNode<T>;
@@ -19,8 +24,12 @@ class TreeListViewController<T extends Node<T>>
 
 class IndexedTreeListViewController<T extends IndexedNode<T>>
     extends ITreeListViewController<T> {
-  IndexedTreeListViewController({ListenableIndexedNode<T>? initialItems})
-      : super(initialItems ?? ListenableIndexedNode<T>.root());
+  IndexedTreeListViewController(
+      {ListenableIndexedNode<T>? initialItems,
+      AutoScrollController? scrollController})
+      : super(
+            root: initialItems ?? ListenableIndexedNode<T>.root(),
+            scrollController: scrollController);
 
   ListenableIndexedNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableIndexedNode<T>;
@@ -32,8 +41,12 @@ abstract class ITreeListViewController<T extends INode<T>> {
   late final AnimatedListController<T> animatedListController;
 
   final IListenableNode<T> root;
+  final AutoScrollController scrollController;
 
-  ITreeListViewController(this.root);
+  ITreeListViewController(
+      {required this.root, AutoScrollController? scrollController})
+      : this.scrollController =
+            scrollController ?? AutoScrollController(axis: Axis.vertical);
 
   void attach(AnimatedListController<T> animatedListController) {
     this.animatedListController = animatedListController;

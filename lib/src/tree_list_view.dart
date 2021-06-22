@@ -178,6 +178,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
       listenableNode: widget.controller.root,
       removedItemBuilder: buildRemovedItem,
       showRootNode: widget.showRootNode,
+      scrollController: widget.controller.scrollController,
     );
 
     widget.controller.attach(animatedListController);
