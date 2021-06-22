@@ -2,7 +2,9 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'mocks.dart';
+class IndexedRowItem extends ListenableIndexedNode<IndexedRowItem> {
+  IndexedRowItem([String? key]) : super(key: key);
+}
 
 void main() {
   runApp(MyApp());
