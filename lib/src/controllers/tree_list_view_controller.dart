@@ -5,8 +5,6 @@ import 'package:animated_tree_view/src/listenable_node/listenable_node.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
 import 'package:animated_tree_view/src/node/indexed_node.dart';
 import 'package:animated_tree_view/src/node/node.dart';
-import 'package:flutter/material.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class TreeListViewController<T extends Node<T>>
     extends ITreeListViewController<T> {
@@ -35,10 +33,7 @@ abstract class ITreeListViewController<T extends INode<T>> {
 
   final IListenableNode<T> root;
 
-  final AutoScrollController scrollController;
-
-  ITreeListViewController(this.root)
-      : this.scrollController = AutoScrollController(axis: Axis.vertical);
+  ITreeListViewController(this.root);
 
   void attach(AnimatedListController<T> animatedListController) {
     this.animatedListController = animatedListController;
@@ -46,11 +41,11 @@ abstract class ITreeListViewController<T extends INode<T>> {
 
   INode<T> elementAt(String path) => root.elementAt(path);
 
-  Future scrollToIndex(int index) async => scrollController.scrollToIndex(index,
-      preferPosition: AutoScrollPosition.begin);
+  Future scrollToIndex(int index) async =>
+      animatedListController.scrollToIndex(index);
 
   Future scrollToItem(T item) async =>
-      scrollToIndex(animatedListController.indexOf(item));
+      animatedListController.scrollToItem(item);
 
   void toggleNodeExpandCollapse(T item) =>
       animatedListController.toggleExpansion(item);

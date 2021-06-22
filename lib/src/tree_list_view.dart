@@ -1,13 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-import 'constants/constants.dart';
 import 'controllers/animated_list_controller.dart';
 import 'controllers/tree_list_view_controller.dart';
 import 'expandable_node/expandable_node.dart';
 import 'listenable_node/base/i_listenable_node.dart';
-import 'listenable_node/base/node_update_notifier.dart';
 import 'listenable_node/listenable_indexed_node.dart';
 import 'listenable_node/listenable_node.dart';
 
@@ -45,7 +42,7 @@ class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _TreeListView(
+  Widget build(BuildContext context) => _TreeListView<T>(
         key: key,
         builder: builder,
         controller: controller,
@@ -94,7 +91,7 @@ class IndexedTreeListView<T extends ListenableIndexedNode<T>>
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _TreeListView(
+  Widget build(BuildContext context) => _TreeListView<T>(
         key: key,
         builder: builder,
         controller: controller,
@@ -149,9 +146,9 @@ class _TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
     this.shrinkWrap = false,
     this.showRootNode = true,
     this.showExpansionIndicator = true,
-    this.indentPadding = DEFAULT_INDENT_PADDING,
-    this.expandIcon = DEFAULT_EXPAND_ICON,
-    this.collapseIcon = DEFAULT_COLLAPSE_ICON,
+    required this.indentPadding,
+    required this.expandIcon,
+    required this.collapseIcon,
   }) : super(key: key);
 
   @override
@@ -162,10 +159,15 @@ class _TreeListViewState<T extends IListenableNode<T>>
     extends State<_TreeListView<T>> {
   static const TAG = "TreeListView";
 
-  StreamSubscription<NodeAddEvent>? _addedNodesSubscription;
-  StreamSubscription<NodeInsertEvent>? _insertNodesSubscription;
-
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+
+  AnimatedListController<T> get _animatedListController =>
+      widget.controller.animatedListController;
+
+  AutoScrollController get _scrollController =>
+      widget.controller.animatedListController.scrollController;
+
+  List<T> get _nodeList => widget.controller.animatedListController.list;
 
   @override
   void initState() {
@@ -179,27 +181,24 @@ class _TreeListViewState<T extends IListenableNode<T>>
     );
 
     widget.controller.attach(animatedListController);
-    observeTreeUpdates();
   }
 
   Widget build(BuildContext context) {
-    final list = widget.controller.animatedListController.list;
-
     return AnimatedList(
       key: listKey,
-      initialItemCount: list.length,
-      controller: widget.controller.scrollController,
+      initialItemCount: _nodeList.length,
+      controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
-        valueListenable: list[index],
+        valueListenable: _nodeList[index],
         builder: (context, value, child) => ExpandableNodeItem<T>(
           builder: widget.builder,
-          animatedListController: widget.controller.animatedListController,
-          scrollController: widget.controller.scrollController,
-          node: list[index],
+          animatedListController: _animatedListController,
+          scrollController: _scrollController,
+          node: _nodeList[index],
           index: index,
           animation: animation,
           indentPadding: widget.indentPadding,
@@ -207,7 +206,7 @@ class _TreeListViewState<T extends IListenableNode<T>>
           expandIcon: widget.expandIcon,
           collapseIcon: widget.collapseIcon,
           onItemTap: widget.onItemTap,
-          indentAfterLevel: widget.showRootNode ? 0 : 1,
+          minLevelToIndent: widget.showRootNode ? 0 : 1,
         ),
       ),
     );
@@ -217,8 +216,8 @@ class _TreeListViewState<T extends IListenableNode<T>>
           T item, BuildContext context, Animation<double> animation) =>
       ExpandableNodeItem<T>(
         builder: widget.builder,
-        animatedListController: widget.controller.animatedListController,
-        scrollController: widget.controller.scrollController,
+        animatedListController: _animatedListController,
+        scrollController: _scrollController,
         node: item,
         remove: true,
         animation: animation,
@@ -227,40 +226,6 @@ class _TreeListViewState<T extends IListenableNode<T>>
         expandIcon: widget.expandIcon,
         collapseIcon: widget.collapseIcon,
         onItemTap: widget.onItemTap,
-        indentAfterLevel: widget.showRootNode ? 0 : 1,
+        minLevelToIndent: widget.showRootNode ? 0 : 1,
       );
-
-  @protected
-  void observeTreeUpdates() {
-    _addedNodesSubscription =
-        widget.controller.root.addedNodes.listen(_handleItemAdditionEvent);
-    _insertNodesSubscription =
-        widget.controller.root.insertedNodes.listen(_handleItemInsertEvent);
-  }
-
-  @protected
-  void cancelTreeUpdates() {
-    _addedNodesSubscription?.cancel();
-    _insertNodesSubscription?.cancel();
-  }
-
-  void _handleItemAdditionEvent(NodeAddEvent<T> event) {
-    Future.delayed(
-      Duration(milliseconds: 300),
-      () => widget.controller.scrollToItem(event.items.first),
-    );
-  }
-
-  void _handleItemInsertEvent(NodeInsertEvent<T> event) {
-    Future.delayed(
-      Duration(milliseconds: 300),
-      () => widget.controller.scrollToItem(event.items.first),
-    );
-  }
-
-  @override
-  void dispose() {
-    cancelTreeUpdates();
-    super.dispose();
-  }
 }

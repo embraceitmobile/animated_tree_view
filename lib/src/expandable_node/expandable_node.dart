@@ -1,10 +1,13 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/constants/constants.dart';
 import 'package:animated_tree_view/src/controllers/animated_list_controller.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
 import 'package:animated_tree_view/src/tree_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+
+const DEFAULT_INDENT_PADDING = 24.0;
+const DEFAULT_EXPAND_ICON = const Icon(Icons.keyboard_arrow_right);
+const DEFAULT_COLLAPSE_ICON = const Icon(Icons.keyboard_arrow_up);
 
 extension ExpandableNode on INode {
   static const _isExpandedKey = "is_expanded";
@@ -12,8 +15,7 @@ extension ExpandableNode on INode {
   bool get isExpanded => meta?[_isExpandedKey] == true;
 
   void setExpanded(bool isExpanded) {
-    if (meta == null) meta = {};
-    meta![_isExpandedKey] = isExpanded;
+    (meta ??= {})[_isExpandedKey] = isExpanded;
   }
 }
 
@@ -30,24 +32,24 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   final bool remove;
   final int? index;
   final ValueSetter<T>? onItemTap;
-  final int indentAfterLevel;
+  final int minLevelToIndent;
 
-  const ExpandableNodeItem(
-      {Key? key,
-      required this.builder,
-      required this.animatedListController,
-      required this.scrollController,
-      required this.node,
-      required this.animation,
-      this.index,
-      this.indentPadding = DEFAULT_INDENT_PADDING,
-      this.remove = false,
-      this.showExpansionIndicator = true,
-      this.expandIcon = DEFAULT_EXPAND_ICON,
-      this.collapseIcon = DEFAULT_COLLAPSE_ICON,
-      this.indentAfterLevel = 2,
-      this.onItemTap})
-      : super(key: key);
+  const ExpandableNodeItem({
+    Key? key,
+    required this.builder,
+    required this.animatedListController,
+    required this.scrollController,
+    required this.node,
+    required this.animation,
+    this.index,
+    this.remove = false,
+    this.showExpansionIndicator = true,
+    this.minLevelToIndent = 0,
+    this.expandIcon = DEFAULT_EXPAND_ICON,
+    this.collapseIcon = DEFAULT_COLLAPSE_ICON,
+    this.indentPadding = DEFAULT_INDENT_PADDING,
+    this.onItemTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
       item: node,
       child: builder(context, node.level, node),
       indentPadding: indentPadding *
-          (node.level - indentAfterLevel).clamp(0, double.maxFinite),
+          (node.level - minLevelToIndent).clamp(0, double.maxFinite),
       showExpansionIndicator:
           showExpansionIndicator && node.childrenAsList.isNotEmpty,
       expandedIndicatorIcon: node.isExpanded ? collapseIcon : expandIcon,

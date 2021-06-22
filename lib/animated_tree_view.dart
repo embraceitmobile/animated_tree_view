@@ -1,6 +1,5 @@
 library animated_tree_view;
 
-export 'package:animated_tree_view/src/constants/constants.dart';
 export 'package:animated_tree_view/src/controllers/tree_list_view_controller.dart';
 export 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
 export 'package:animated_tree_view/src/helpers/exceptions.dart';
