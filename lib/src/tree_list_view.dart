@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -10,103 +11,6 @@ import 'listenable_node/listenable_node.dart';
 
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
-
-class TreeListView<T extends ListenableNode<T>> extends StatelessWidget {
-  final TreeListViewController<T> controller;
-  final LeveledItemWidgetBuilder<T> builder;
-  final bool showExpansionIndicator;
-  final Icon expandIcon;
-  final Icon collapseIcon;
-  final double indentPadding;
-  final ValueSetter<T>? onItemTap;
-  final bool? primary;
-  final ScrollPhysics? physics;
-  final bool shrinkWrap;
-  final EdgeInsetsGeometry? padding;
-  final bool showRootNode;
-
-  const TreeListView({
-    Key? key,
-    required this.builder,
-    required this.controller,
-    this.onItemTap,
-    this.primary,
-    this.physics,
-    this.padding,
-    this.shrinkWrap = false,
-    this.showRootNode = true,
-    this.showExpansionIndicator = true,
-    this.indentPadding = DEFAULT_INDENT_PADDING,
-    this.expandIcon = DEFAULT_EXPAND_ICON,
-    this.collapseIcon = DEFAULT_COLLAPSE_ICON,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => _TreeListView<T>(
-        key: key,
-        builder: builder,
-        controller: controller,
-        onItemTap: onItemTap,
-        primary: primary,
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-        padding: padding,
-        showRootNode: showRootNode,
-        showExpansionIndicator: showExpansionIndicator,
-        indentPadding: indentPadding,
-        expandIcon: expandIcon,
-        collapseIcon: collapseIcon,
-      );
-}
-
-class IndexedTreeListView<T extends ListenableIndexedNode<T>>
-    extends StatelessWidget {
-  final IndexedTreeListViewController<T> controller;
-  final LeveledItemWidgetBuilder<T> builder;
-  final bool showExpansionIndicator;
-  final Icon expandIcon;
-  final Icon collapseIcon;
-  final double indentPadding;
-  final ValueSetter<T>? onItemTap;
-  final bool? primary;
-  final ScrollPhysics? physics;
-  final bool showRootNode;
-  final bool shrinkWrap;
-  final EdgeInsetsGeometry? padding;
-
-  const IndexedTreeListView({
-    Key? key,
-    required this.builder,
-    required this.controller,
-    this.onItemTap,
-    this.primary,
-    this.physics,
-    this.padding,
-    this.shrinkWrap = false,
-    this.showRootNode = true,
-    this.showExpansionIndicator = true,
-    this.indentPadding = DEFAULT_INDENT_PADDING,
-    this.expandIcon = DEFAULT_EXPAND_ICON,
-    this.collapseIcon = DEFAULT_COLLAPSE_ICON,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => _TreeListView<T>(
-        key: key,
-        builder: builder,
-        controller: controller,
-        onItemTap: onItemTap,
-        primary: primary,
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-        padding: padding,
-        showRootNode: showRootNode,
-        showExpansionIndicator: showExpansionIndicator,
-        indentPadding: indentPadding,
-        expandIcon: expandIcon,
-        collapseIcon: collapseIcon,
-      );
-}
 
 /// The default [TreeListView] uses a [Node] internally, which is based on the
 /// [Map] data structure for maintaining the children states.
@@ -121,67 +25,146 @@ class IndexedTreeListView<T extends ListenableIndexedNode<T>>
 /// For a [TreeListView] that allows for insertion and removal of
 /// items at index positions, use the alternate [IndexedTreeListView].
 ///
-class _TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
-  final ITreeListViewController<T> controller;
+class TreeListView<T extends IListenableNode<T>> extends StatefulWidget {
+  final ITreeListViewController<T>? controller;
   final LeveledItemWidgetBuilder<T> builder;
+  final IListenableNode<T> root;
+  final AutoScrollController? scrollController;
   final bool showExpansionIndicator;
   final Icon expandIcon;
   final Icon collapseIcon;
   final double indentPadding;
+  final bool shrinkWrap;
+  final bool showRootNode;
+  final EdgeInsetsGeometry? padding;
   final ValueSetter<T>? onItemTap;
   final bool? primary;
   final ScrollPhysics? physics;
-  final bool shrinkWrap;
-  final EdgeInsetsGeometry? padding;
-  final bool showRootNode;
 
-  const _TreeListView({
+  static TreeListView<S> simple<S extends ListenableNode<S>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<S> builder,
+    TreeListViewController<S>? controller,
+    ListenableNode<S>? initialItem,
+    AutoScrollController? scrollController,
+    bool? showExpansionIndicator,
+    Icon? expandIcon,
+    Icon? collapseIcon,
+    double? indentPadding,
+    ValueSetter<S>? onItemTap,
+    bool? primary,
+    ScrollPhysics? physics,
+    bool? shrinkWrap,
+    EdgeInsetsGeometry? padding,
+    bool? showRootNode,
+  }) =>
+      TreeListView<S>._(
+        key: key,
+        builder: builder,
+        root: initialItem ?? ListenableNode<S>.root(),
+        controller: controller,
+        scrollController: scrollController,
+        showExpansionIndicator: showExpansionIndicator,
+        expandIcon: expandIcon,
+        collapseIcon: collapseIcon,
+        indentPadding: indentPadding,
+        showRootNode: showRootNode,
+        shrinkWrap: shrinkWrap,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        padding: padding,
+      );
+
+  static TreeListView<S> indexed<S extends ListenableIndexedNode<S>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<S> builder,
+    IndexedTreeListViewController<S>? controller,
+    ListenableIndexedNode<S>? initialItem,
+    AutoScrollController? scrollController,
+    bool? showExpansionIndicator,
+    Icon? expandIcon,
+    Icon? collapseIcon,
+    double? indentPadding,
+    ValueSetter<S>? onItemTap,
+    bool? primary,
+    ScrollPhysics? physics,
+    bool? shrinkWrap,
+    EdgeInsetsGeometry? padding,
+    bool? showRootNode,
+  }) =>
+      TreeListView<S>._(
+        key: key,
+        builder: builder,
+        root: initialItem ?? ListenableIndexedNode<S>.root(),
+        controller: controller,
+        scrollController: scrollController,
+        showExpansionIndicator: showExpansionIndicator,
+        expandIcon: expandIcon,
+        collapseIcon: collapseIcon,
+        indentPadding: indentPadding,
+        showRootNode: showRootNode,
+        shrinkWrap: shrinkWrap,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        padding: padding,
+      );
+
+  const TreeListView._({
     Key? key,
     required this.builder,
-    required this.controller,
+    required this.root,
+    this.scrollController,
+    this.controller,
     this.onItemTap,
     this.primary,
     this.physics,
     this.padding,
-    this.shrinkWrap = false,
-    this.showRootNode = true,
-    this.showExpansionIndicator = true,
-    required this.indentPadding,
-    required this.expandIcon,
-    required this.collapseIcon,
-  }) : super(key: key);
+    bool? shrinkWrap,
+    bool? showRootNode,
+    bool? showExpansionIndicator,
+    double? indentPadding,
+    Icon? collapseIcon,
+    Icon? expandIcon,
+  })  : this.shrinkWrap = shrinkWrap ?? false,
+        this.showRootNode = showRootNode ?? true,
+        this.showExpansionIndicator = showExpansionIndicator ?? true,
+        this.expandIcon = expandIcon ?? DEFAULT_EXPAND_ICON,
+        this.collapseIcon = collapseIcon ?? DEFAULT_COLLAPSE_ICON,
+        this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING,
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TreeListViewState<T>();
 }
 
 class _TreeListViewState<T extends IListenableNode<T>>
-    extends State<_TreeListView<T>> {
+    extends State<TreeListView<T>> {
   static const TAG = "TreeListView";
 
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  late final AnimatedListController<T> _animatedListController;
+  late final AutoScrollController _scrollController;
 
-  AnimatedListController<T> get _animatedListController =>
-      widget.controller.animatedListController;
-
-  AutoScrollController get _scrollController =>
-      widget.controller.animatedListController.scrollController;
-
-  List<T> get _nodeList => widget.controller.animatedListController.list;
+  List<T> get _nodeList => _animatedListController.list;
 
   @override
   void initState() {
     super.initState();
 
-    final animatedListController = AnimatedListController<T>(
+    _scrollController =
+        widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
+
+    _animatedListController = AnimatedListController<T>(
       listKey: listKey,
-      listenableNode: widget.controller.root,
+      listenableNode: widget.root,
       removedItemBuilder: buildRemovedItem,
       showRootNode: widget.showRootNode,
-      scrollController: widget.controller.scrollController,
+      scrollController: _scrollController,
     );
 
-    widget.controller.attach(animatedListController);
+    widget.controller?.attach(widget.root, _animatedListController);
   }
 
   Widget build(BuildContext context) {

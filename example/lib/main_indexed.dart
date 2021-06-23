@@ -39,14 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const _showRootNode = true;
 
-  final controller = IndexedTreeListViewController<IndexedRowItem>(
-      initialItems: IndexedRowItem("#00-Root-Item"));
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  final controller = IndexedTreeListViewController<IndexedRowItem>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            IndexedTreeListView<IndexedRowItem>(
+            TreeListView.indexed<IndexedRowItem>(
+              initialItem: IndexedRowItem("#00-Root-Item"),
               controller: controller,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

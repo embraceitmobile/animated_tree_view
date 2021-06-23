@@ -35,15 +35,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller =
-      TreeListViewController<RowItem>(initialItem: RowItem("#00-Root-Item"));
+  final controller = TreeListViewController<RowItem>();
   final globalKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeListView<RowItem>(
+      body: TreeListView.simple<RowItem>(
+        initialItem: RowItem("#00-Root-Item"),
         controller: controller,
         shrinkWrap: true,
         builder: (context, level, item) => item.isRoot

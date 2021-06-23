@@ -5,16 +5,10 @@ import 'package:animated_tree_view/src/listenable_node/listenable_node.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
 import 'package:animated_tree_view/src/node/indexed_node.dart';
 import 'package:animated_tree_view/src/node/node.dart';
-import 'package:flutter/material.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class TreeListViewController<T extends Node<T>>
     extends ITreeListViewController<T> {
-  TreeListViewController(
-      {ListenableNode<T>? initialItem, AutoScrollController? scrollController})
-      : super(
-            root: initialItem ?? ListenableNode<T>.root(),
-            scrollController: scrollController);
+  TreeListViewController();
 
   ListenableNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableNode<T>;
@@ -24,12 +18,7 @@ class TreeListViewController<T extends Node<T>>
 
 class IndexedTreeListViewController<T extends IndexedNode<T>>
     extends ITreeListViewController<T> {
-  IndexedTreeListViewController(
-      {ListenableIndexedNode<T>? initialItems,
-      AutoScrollController? scrollController})
-      : super(
-            root: initialItems ?? ListenableIndexedNode<T>.root(),
-            scrollController: scrollController);
+  IndexedTreeListViewController();
 
   ListenableIndexedNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableIndexedNode<T>;
@@ -39,16 +28,13 @@ class IndexedTreeListViewController<T extends IndexedNode<T>>
 
 abstract class ITreeListViewController<T extends INode<T>> {
   late final AnimatedListController<T> animatedListController;
+  late final IListenableNode<T> root;
 
-  final IListenableNode<T> root;
-  final AutoScrollController scrollController;
+  ITreeListViewController();
 
-  ITreeListViewController(
-      {required this.root, AutoScrollController? scrollController})
-      : this.scrollController =
-            scrollController ?? AutoScrollController(axis: Axis.vertical);
-
-  void attach(AnimatedListController<T> animatedListController) {
+  void attach(IListenableNode<T> root,
+      AnimatedListController<T> animatedListController) {
+    this.root = root;
     this.animatedListController = animatedListController;
   }
 
@@ -62,8 +48,4 @@ abstract class ITreeListViewController<T extends INode<T>> {
 
   void toggleNodeExpandCollapse(T item) =>
       animatedListController.toggleExpansion(item);
-
-  void dispose() {
-    animatedListController.dispose();
-  }
 }
