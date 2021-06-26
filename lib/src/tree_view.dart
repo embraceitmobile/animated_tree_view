@@ -1,4 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:animated_tree_view/src/expandable_node/expansion_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -31,9 +32,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   final TreeListViewController<T>? controller;
   final ListenableNode<T>? initialItem;
   final AutoScrollController? scrollController;
-  final bool? showExpansionIndicator;
-  final Icon? expandIcon;
-  final Icon? collapseIcon;
+  final ExpansionIndicator? expansionIndicator;
   final double? indentPadding;
   final ValueSetter<T>? onItemTap;
   final bool? primary;
@@ -45,12 +44,10 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   const TreeView(
       {Key? key,
       required this.builder,
+      this.expansionIndicator = ExpansionIndicator.RightUpChevron,
       this.controller,
       this.initialItem,
       this.scrollController,
-      this.showExpansionIndicator,
-      this.expandIcon,
-      this.collapseIcon,
       this.indentPadding,
       this.onItemTap,
       this.primary,
@@ -66,9 +63,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
         root: initialItem ?? ListenableNode<T>.root(),
         controller: controller,
         scrollController: scrollController,
-        showExpansionIndicator: showExpansionIndicator,
-        expandIcon: expandIcon,
-        collapseIcon: collapseIcon,
+        expansionIndicator: expansionIndicator,
         indentPadding: indentPadding,
         showRootNode: showRootNode,
         shrinkWrap: shrinkWrap,
@@ -97,9 +92,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   final IndexedTreeListViewController<T>? controller;
   final ListenableIndexedNode<T>? initialItem;
   final AutoScrollController? scrollController;
-  final bool? showExpansionIndicator;
-  final Icon? expandIcon;
-  final Icon? collapseIcon;
+  final ExpansionIndicator? expansionIndicator;
   final double? indentPadding;
   final ValueSetter<T>? onItemTap;
   final bool? primary;
@@ -111,12 +104,10 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   const IndexedTreeView(
       {Key? key,
       required this.builder,
+      this.expansionIndicator = ExpansionIndicator.RightUpChevron,
       this.controller,
       this.initialItem,
       this.scrollController,
-      this.showExpansionIndicator,
-      this.expandIcon,
-      this.collapseIcon,
       this.indentPadding,
       this.onItemTap,
       this.primary,
@@ -133,9 +124,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
         root: initialItem ?? ListenableIndexedNode<T>.root(),
         controller: controller,
         scrollController: scrollController,
-        showExpansionIndicator: showExpansionIndicator,
-        expandIcon: expandIcon,
-        collapseIcon: collapseIcon,
+        expansionIndicator: expansionIndicator,
         indentPadding: indentPadding,
         showRootNode: showRootNode,
         shrinkWrap: shrinkWrap,
@@ -151,9 +140,7 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
   final LeveledItemWidgetBuilder<T> builder;
   final IListenableNode<T> root;
   final AutoScrollController? scrollController;
-  final bool showExpansionIndicator;
-  final Icon expandIcon;
-  final Icon collapseIcon;
+  final ExpansionIndicator? expansionIndicator;
   final double indentPadding;
   final bool shrinkWrap;
   final bool showRootNode;
@@ -172,17 +159,12 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
     this.primary,
     this.physics,
     this.padding,
+    this.expansionIndicator,
     bool? shrinkWrap,
     bool? showRootNode,
-    bool? showExpansionIndicator,
     double? indentPadding,
-    Icon? collapseIcon,
-    Icon? expandIcon,
   })  : this.shrinkWrap = shrinkWrap ?? false,
         this.showRootNode = showRootNode ?? true,
-        this.showExpansionIndicator = showExpansionIndicator ?? true,
-        this.expandIcon = expandIcon ?? DEFAULT_EXPAND_ICON,
-        this.collapseIcon = collapseIcon ?? DEFAULT_COLLAPSE_ICON,
         this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING,
         super(key: key);
 
@@ -236,9 +218,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
           index: index,
           animation: animation,
           indentPadding: widget.indentPadding,
-          showExpansionIndicator: widget.showExpansionIndicator,
-          expandIcon: widget.expandIcon,
-          collapseIcon: widget.collapseIcon,
+          expansionIndicator: widget.expansionIndicator,
           onItemTap: widget.onItemTap,
           minLevelToIndent: widget.showRootNode ? 0 : 1,
         ),
@@ -256,9 +236,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
         remove: true,
         animation: animation,
         indentPadding: widget.indentPadding,
-        showExpansionIndicator: widget.showExpansionIndicator,
-        expandIcon: widget.expandIcon,
-        collapseIcon: widget.collapseIcon,
+        expansionIndicator: widget.expansionIndicator,
         onItemTap: widget.onItemTap,
         minLevelToIndent: widget.showRootNode ? 0 : 1,
       );

@@ -1,13 +1,12 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/controllers/animated_list_controller.dart';
+import 'package:animated_tree_view/src/expandable_node/expansion_indicator.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
 import 'package:animated_tree_view/src/tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
-const DEFAULT_EXPAND_ICON = const Icon(Icons.keyboard_arrow_right);
-const DEFAULT_COLLAPSE_ICON = const Icon(Icons.keyboard_arrow_up);
 
 extension ExpandableNode on INode {
   static const _isExpandedKey = "is_expanded";
@@ -26,9 +25,7 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   final T node;
   final Animation<double> animation;
   final double indentPadding;
-  final bool showExpansionIndicator;
-  final Icon expandIcon;
-  final Icon collapseIcon;
+  final ExpansionIndicator? expansionIndicator;
   final bool remove;
   final int? index;
   final ValueSetter<T>? onItemTap;
@@ -43,10 +40,8 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
     required this.animation,
     this.index,
     this.remove = false,
-    this.showExpansionIndicator = true,
     this.minLevelToIndent = 0,
-    this.expandIcon = DEFAULT_EXPAND_ICON,
-    this.collapseIcon = DEFAULT_COLLAPSE_ICON,
+    this.expansionIndicator,
     this.indentPadding = DEFAULT_INDENT_PADDING,
     this.onItemTap,
   }) : super(key: key);
@@ -59,9 +54,9 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
       child: builder(context, node.level, node),
       indentPadding: indentPadding *
           (node.level - minLevelToIndent).clamp(0, double.maxFinite),
-      showExpansionIndicator:
-          showExpansionIndicator && node.childrenAsList.isNotEmpty,
-      expandedIndicatorIcon: node.isExpanded ? collapseIcon : expandIcon,
+      isExpanded: node.isExpanded,
+      expansionIndicator:
+          node.childrenAsList.isEmpty ? null : expansionIndicator,
       onTap: remove
           ? null
           : (dynamic item) {
@@ -85,10 +80,10 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<T>? onTap;
   final T item;
-  final bool showExpansionIndicator;
-  final Icon expandedIndicatorIcon;
+  final ExpansionIndicator? expansionIndicator;
   final double indentPadding;
   final Widget child;
+  final bool isExpanded;
 
   const _ExpandableNodeContainer({
     Key? key,
@@ -96,9 +91,9 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
     required this.onTap,
     required this.child,
     required this.item,
-    required this.expandedIndicatorIcon,
     required this.indentPadding,
-    required this.showExpansionIndicator,
+    required this.isExpanded,
+    this.expansionIndicator,
   }) : super(key: key);
 
   @override
@@ -115,10 +110,15 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
               padding: EdgeInsets.only(left: indentPadding),
               child: child,
             ),
-            if (showExpansionIndicator)
-              Align(
-                alignment: Alignment.topRight,
-                child: expandedIndicatorIcon,
+            if (expansionIndicator != null)
+              Padding(
+                padding: expansionIndicator!.padding,
+                child: Align(
+                  alignment: expansionIndicator!.alignment,
+                  child: isExpanded
+                      ? expansionIndicator!.collapseIcon
+                      : expansionIndicator!.expandIcon,
+                ),
               ),
           ],
         ),
