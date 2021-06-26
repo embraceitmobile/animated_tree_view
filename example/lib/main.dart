@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeListView.simple<RowItem>(
+      body: TreeView<RowItem>(
         initialItem: RowItem("#00-Root-Item"),
         controller: controller,
         shrinkWrap: true,

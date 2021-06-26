@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TreeListView.indexed<IndexedRowItem>(
+            IndexedTreeView<IndexedRowItem>(
               initialItem: IndexedRowItem("#00-Root-Item"),
               controller: controller,
               shrinkWrap: true,

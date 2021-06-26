@@ -11,4 +11,4 @@ export 'package:animated_tree_view/src/node/base/i_node.dart';
 export 'package:animated_tree_view/src/node/base/i_node_actions.dart';
 export 'package:animated_tree_view/src/node/indexed_node.dart';
 export 'package:animated_tree_view/src/node/node.dart';
-export 'package:animated_tree_view/src/tree_list_view.dart';
+export 'package:animated_tree_view/src/tree_view.dart';
