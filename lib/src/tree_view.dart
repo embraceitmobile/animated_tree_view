@@ -43,7 +43,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   final LeveledItemWidgetBuilder<T> builder;
 
   /// An optional [controller] that allows controlling the [TreeView] programmatically
-  final TreeListViewController<T>? controller;
+  final TreeViewController<T>? controller;
 
   /// An optional [initialItem] that can allows to initialize the [TreeView] with
   /// initial data
@@ -165,7 +165,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
 
   /// An optional [controller] that allows controlling the [IndexedTreeView]
   /// programmatically
-  final IndexedTreeListViewController<T>? controller;
+  final IndexedTreeViewController<T>? controller;
 
   /// An optional [initialItem] that can allows to initialize the [IndexedTreeView]
   /// with initial data
@@ -274,7 +274,7 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
   final LeveledItemWidgetBuilder<T> builder;
 
   /// An optional [controller] that allows controlling the [TreeView] programmatically
-  final ITreeListViewController<T>? controller;
+  final ITreeViewController<T>? controller;
 
   /// The [root] of the Tree
   final IListenableNode<T> root;

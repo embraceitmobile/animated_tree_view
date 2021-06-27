@@ -7,12 +7,11 @@ import 'package:animated_tree_view/src/node/indexed_node.dart';
 import 'package:animated_tree_view/src/node/node.dart';
 import 'package:flutter/material.dart';
 
-class TreeListViewController<T extends Node<T>>
-    extends ITreeListViewController<T> {
-  TreeListViewController();
+class TreeViewController<T extends Node<T>> extends ITreeViewController<T> {
+  TreeViewController();
 
   /// Get any item at [path] from the [root]
-  /// see [ITreeListViewController.elementAt] for details
+  /// see [ITreeViewController.elementAt] for details
   ListenableNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableNode<T>;
 
@@ -20,12 +19,12 @@ class TreeListViewController<T extends Node<T>>
   ListenableNode<T> get root => super.root as ListenableNode<T>;
 }
 
-class IndexedTreeListViewController<T extends IndexedNode<T>>
-    extends ITreeListViewController<T> {
-  IndexedTreeListViewController();
+class IndexedTreeViewController<T extends IndexedNode<T>>
+    extends ITreeViewController<T> {
+  IndexedTreeViewController();
 
   /// Get any item at [path] from the [root]
-  /// see [ITreeListViewController.elementAt] for details
+  /// see [ITreeViewController.elementAt] for details
   ListenableIndexedNode<T> elementAt(String path) =>
       super.elementAt(path) as ListenableIndexedNode<T>;
 
@@ -33,11 +32,14 @@ class IndexedTreeListViewController<T extends IndexedNode<T>>
   ListenableIndexedNode<T> get root => super.root as ListenableIndexedNode<T>;
 }
 
-abstract class ITreeListViewController<T extends INode<T>> {
+abstract class ITreeViewController<T extends INode<T>> {
+  @protected
   late final AnimatedListController<T> animatedListController;
+
+  /// Root node of the TreeView
   late final IListenableNode<T> root;
 
-  ITreeListViewController();
+  ITreeViewController();
 
   @protected
   void attach(IListenableNode<T> root,
