@@ -100,14 +100,15 @@ class AnimatedListController<T extends INode<T>> {
     if (item.childrenAsList.isEmpty) return;
     insertAll(indexOf(item) + 1, List.from(item.childrenAsList));
     item.setExpanded(true);
-    scrollToLastVisibleChild(item);
   }
 
   void toggleExpansion(T item) {
     if (item.isExpanded)
       collapseNode(item);
-    else
+    else {
       expandNode(item);
+      scrollToLastVisibleChild(item);
+    }
   }
 
   Future scrollToIndex(int index) async => scrollController.scrollToIndex(index,
@@ -141,8 +142,8 @@ class AnimatedListController<T extends INode<T>> {
           expandNode(node.root as T);
         } else {
           insertAll(_flatList.length, event.items);
-          scrollToLastVisibleChild(node.root as T);
         }
+        scrollToLastVisibleChild(node.root as T);
       } else {
         final parentIndex =
             _flatList.indexWhere((element) => element.key == node.parent?.key);
@@ -157,8 +158,8 @@ class AnimatedListController<T extends INode<T>> {
           // the animatedList
           insertAll(
               parentIndex + parentNode.childrenAsList.length, event.items);
-          scrollToLastVisibleChild(parentNode);
         }
+        scrollToLastVisibleChild(parentNode);
       }
     }
   }
@@ -171,8 +172,8 @@ class AnimatedListController<T extends INode<T>> {
           expandNode(node.root as T);
         } else {
           insertAll(showRootNode ? event.index + 1 : event.index, event.items);
-          scrollToLastVisibleChild(node.root as T);
         }
+        scrollToLastVisibleChild(node.root as T);
       } else {
         final parentIndex =
             _flatList.indexWhere((element) => element.key == node.parent?.key);
@@ -184,8 +185,8 @@ class AnimatedListController<T extends INode<T>> {
           expandNode(parentNode);
         } else {
           insertAll(parentIndex + 1 + event.index, event.items);
-          scrollToLastVisibleChild(parentNode);
         }
+        scrollToLastVisibleChild(parentNode);
       }
     }
   }
