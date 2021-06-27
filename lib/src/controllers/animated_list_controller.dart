@@ -117,7 +117,7 @@ class AnimatedListController<T extends INode<T>> {
         case ExpansionBehavior.scrollToLastChild:
           scrollToLastVisibleChild(item);
           break;
-        case ExpansionBehavior.snapToParent:
+        case ExpansionBehavior.snapToTop:
           scrollToParent(item);
           break;
       }

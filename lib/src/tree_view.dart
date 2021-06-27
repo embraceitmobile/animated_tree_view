@@ -11,10 +11,19 @@ import 'listenable_node/base/i_listenable_node.dart';
 import 'listenable_node/listenable_indexed_node.dart';
 import 'listenable_node/listenable_node.dart';
 
+/// The builder function that allows to build any item of type [T].
+/// The builder function also provides the [level] of the node.
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
-enum ExpansionBehavior { none, scrollToLastChild, snapToParent }
+/// The [ExpansionBehavior] provides control over the behavior of the node
+/// when it is expanded. There are three distinct behaviors:
+///  ** [ExpansionBehavior.none] : no additional action will be taken on node expansion
+///  ** [ExpansionBehavior.scrollToLastChild] : the screen will be scrolled to
+///  the last child of the node if it is not already visible on screen
+///  ** [ExpansionBehavior.snapToTop] : the expanded node will be snapped to the
+///  top of the list
+enum ExpansionBehavior { none, scrollToLastChild, snapToTop }
 
 /// The default [TreeView] uses a [Node] internally, which is based on the
 /// [Map] data structure for maintaining the children states.
@@ -30,19 +39,77 @@ enum ExpansionBehavior { none, scrollToLastChild, snapToParent }
 /// items at index positions, use the alternate [IndexedTreeListView].
 ///
 class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
+  /// The [builder] function that is provided to the item builder
   final LeveledItemWidgetBuilder<T> builder;
+
+  /// An optional [controller] that allows controlling the [TreeView] programmatically
   final TreeListViewController<T>? controller;
+
+  /// An optional [initialItem] that can allows to initialize the [TreeView] with
+  /// initial data
   final ListenableNode<T>? initialItem;
+
+  /// An optional [scrollController] that provides more granular control over
+  /// scrolling behavior
   final AutoScrollController? scrollController;
+
+  /// [expansionIndicator] can be customized to provide any expansion widget
+  /// and collapse widget. The pre-built available [expansionIndicator]s are
+  /// ** [ExpansionIndicator.RightUpChevron]
+  /// ** [ExpansionIndicator.PlusMinus]
+  /// ** [ExpansionIndicator.DownUpChevron]
+  ///
+  /// You can simply pass [null], if you do not want to show an [expansionIndicator]
   final ExpansionIndicator? expansionIndicator;
+
+  /// This is the padding is applied to the start of an item. [indentPadding]
+  /// will be multiplied by [INode.level] before being applied.
+  /// ** e.g. if the node level is 2 and [indentPadding] is 8, then the start
+  /// padding applied to an item will be 2*8 = 16
   final double? indentPadding;
+
+  /// An optional callback that can be used to handle any action when an item is
+  /// tapped or clicked
   final ValueSetter<T>? onItemTap;
-  final bool? primary;
-  final ScrollPhysics? physics;
-  final bool? shrinkWrap;
-  final EdgeInsetsGeometry? padding;
+
+  /// Flag to show the Root Node in the [TreeView]. Root Node is always the first
+  /// item in the TreeView. If it is set to [false] then the Root Node will not
+  /// be displayed, rather the first child of the RootNode will be the first item
+  /// in the TreeList
   final bool? showRootNode;
+
+  /// The [ExpansionBehavior] provides control over the behavior of the node
+  /// when it is expanded.
+  ///
+  /// For more detail see [ExpansionBehavior].
+  /// The default [expansionBehavior] is [ExpansionBehavior.scrollToLastChild]
   final ExpansionBehavior expansionBehavior;
+
+  /// The amount of space by which to inset the children.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [padding] attribute
+  /// For more information see the [AnimatedList.padding]
+  final EdgeInsetsGeometry? padding;
+
+  /// Whether this is the primary scroll view associated with the parent
+  /// [PrimaryScrollController].
+  ///
+  /// This is passed directly to the [AnimatedList]'s [primary] attribute
+  /// For more information see the [AnimatedList.primary]
+  final bool? primary;
+
+  /// An object that can be used to control the position to which this scroll
+  /// view is scrolled.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [physics] attribute
+  /// For more information see the [AnimatedList.physics]
+  final ScrollPhysics? physics;
+
+  /// Whether the extent of the scroll view in the [scrollDirection] should be
+  /// determined by the contents being viewed.
+  /// This is passed directly to the [AnimatedList]'s [shrinkWrap] attribute
+  /// For more information see the [AnimatedList.shrinkWrap]
+  final bool? shrinkWrap;
 
   const TreeView({
     Key? key,
@@ -93,19 +160,78 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
 ///
 class IndexedTreeView<T extends ListenableIndexedNode<T>>
     extends StatelessWidget {
+  /// The [builder] function that is provided to the item builder
   final LeveledItemWidgetBuilder<T> builder;
+
+  /// An optional [controller] that allows controlling the [IndexedTreeView]
+  /// programmatically
   final IndexedTreeListViewController<T>? controller;
+
+  /// An optional [initialItem] that can allows to initialize the [IndexedTreeView]
+  /// with initial data
   final ListenableIndexedNode<T>? initialItem;
+
+  /// An optional [scrollController] that provides more granular control over
+  /// scrolling behavior
   final AutoScrollController? scrollController;
+
+  /// [expansionIndicator] can be customized to provide any expansion widget
+  /// and collapse widget. The pre-built available [expansionIndicator]s are
+  /// ** [ExpansionIndicator.RightUpChevron]
+  /// ** [ExpansionIndicator.PlusMinus]
+  /// ** [ExpansionIndicator.DownUpChevron]
+  ///
+  /// You can simply pass [null], if you do not want to show an [expansionIndicator]
   final ExpansionIndicator? expansionIndicator;
+
+  /// This is the padding is applied to the start of an item. [indentPadding]
+  /// will be multiplied by [INode.level] before being applied.
+  /// ** e.g. if the node level is 2 and [indentPadding] is 8, then the start
+  /// padding applied to an item will be 2*8 = 16
   final double? indentPadding;
+
+  /// An optional callback that can be used to handle any action when an item is
+  /// tapped or clicked
   final ValueSetter<T>? onItemTap;
-  final bool? primary;
-  final ScrollPhysics? physics;
-  final bool? shrinkWrap;
-  final EdgeInsetsGeometry? padding;
+
+  /// Flag to show the Root Node in the [TreeView]. Root Node is always the first
+  /// item in the TreeView. If it is set to [false] then the Root Node will not
+  /// be displayed, rather the first child of the RootNode will be the first item
+  /// in the TreeList
   final bool? showRootNode;
+
+  /// The [ExpansionBehavior] provides control over the behavior of the node
+  /// when it is expanded.
+  ///
+  /// For more detail see [ExpansionBehavior].
+  /// The default [expansionBehavior] is [ExpansionBehavior.scrollToLastChild]
   final ExpansionBehavior expansionBehavior;
+
+  /// The amount of space by which to inset the children.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [padding] attribute
+  /// For more information see the [AnimatedList.padding]
+  final EdgeInsetsGeometry? padding;
+
+  /// Whether this is the primary scroll view associated with the parent
+  /// [PrimaryScrollController].
+  ///
+  /// This is passed directly to the [AnimatedList]'s [primary] attribute
+  /// For more information see the [AnimatedList.primary]
+  final bool? primary;
+
+  /// An object that can be used to control the position to which this scroll
+  /// view is scrolled.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [physics] attribute
+  /// For more information see the [AnimatedList.physics]
+  final ScrollPhysics? physics;
+
+  /// Whether the extent of the scroll view in the [scrollDirection] should be
+  /// determined by the contents being viewed.
+  /// This is passed directly to the [AnimatedList]'s [shrinkWrap] attribute
+  /// For more information see the [AnimatedList.shrinkWrap]
+  final bool? shrinkWrap;
 
   const IndexedTreeView({
     Key? key,
@@ -144,19 +270,76 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
 }
 
 class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
-  final ITreeListViewController<T>? controller;
+  /// The [builder] function that is provided to the item builder
   final LeveledItemWidgetBuilder<T> builder;
+
+  /// An optional [controller] that allows controlling the [TreeView] programmatically
+  final ITreeListViewController<T>? controller;
+
+  /// The [root] of the Tree
   final IListenableNode<T> root;
+
+  /// An optional [scrollController] that provides more granular control over
+  /// scrolling behavior
   final AutoScrollController? scrollController;
+
+  /// [expansionIndicator] can be customized to provide any expansion widget
+  /// and collapse widget. The pre-built available [expansionIndicator]s are
+  /// ** [ExpansionIndicator.RightUpChevron]
+  /// ** [ExpansionIndicator.PlusMinus]
+  /// ** [ExpansionIndicator.DownUpChevron]
+  ///
+  /// You can simply pass [null], if you do not want to show an [expansionIndicator]
   final ExpansionIndicator? expansionIndicator;
+
+  /// This is the padding is applied to the start of an item. [indentPadding]
+  /// will be multiplied by [INode.level] before being applied.
+  /// ** e.g. if the node level is 2 and [indentPadding] is 8, then the start
+  /// padding applied to an item will be 2*8 = 16
   final double? indentPadding;
-  final bool shrinkWrap;
-  final bool showRootNode;
-  final EdgeInsetsGeometry? padding;
+
+  /// An optional callback that can be used to handle any action when an item is
+  /// tapped or clicked
   final ValueSetter<T>? onItemTap;
-  final bool? primary;
-  final ScrollPhysics? physics;
+
+  /// Flag to show the Root Node in the [TreeView]. Root Node is always the first
+  /// item in the TreeView. If it is set to [false] then the Root Node will not
+  /// be displayed, rather the first child of the RootNode will be the first item
+  /// in the TreeList
+  final bool showRootNode;
+
+  /// The [ExpansionBehavior] provides control over the behavior of the node
+  /// when it is expanded.
+  ///
+  /// For more detail see [ExpansionBehavior].
+  /// The default [expansionBehavior] is [ExpansionBehavior.scrollToLastChild]
   final ExpansionBehavior expansionBehavior;
+
+  /// The amount of space by which to inset the children.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [padding] attribute
+  /// For more information see the [AnimatedList.padding]
+  final EdgeInsetsGeometry? padding;
+
+  /// Whether this is the primary scroll view associated with the parent
+  /// [PrimaryScrollController].
+  ///
+  /// This is passed directly to the [AnimatedList]'s [primary] attribute
+  /// For more information see the [AnimatedList.primary]
+  final bool? primary;
+
+  /// An object that can be used to control the position to which this scroll
+  /// view is scrolled.
+  ///
+  /// This is passed directly to the [AnimatedList]'s [physics] attribute
+  /// For more information see the [AnimatedList.physics]
+  final ScrollPhysics? physics;
+
+  /// Whether the extent of the scroll view in the [scrollDirection] should be
+  /// determined by the contents being viewed.
+  /// This is passed directly to the [AnimatedList]'s [shrinkWrap] attribute
+  /// For more information see the [AnimatedList.shrinkWrap]
+  final bool shrinkWrap;
 
   const _TreeView({
     Key? key,
