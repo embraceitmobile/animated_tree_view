@@ -121,10 +121,14 @@ class AnimatedListController<T extends INode<T>> {
       final lastChildIndex = indexOf(parent.childrenAsList.last as T);
 
       //scroll to the last child if it is not visible in the viewPort
-      if (!scrollController.isIndexStateInLayoutRange(
-          lastChildIndex + parent.level.clamp(1, 1000))) {
-        scrollController.scrollToIndex(lastChildIndex,
-            preferPosition: AutoScrollPosition.begin);
+      if (!scrollController.isIndexStateInLayoutRange(lastChildIndex +
+          parent.level.clamp(1, 1000) +
+          parent.childrenAsList.length)) {
+        scrollController.scrollToIndex(
+            lastChildIndex < _flatList.length - 1
+                ? lastChildIndex + 1
+                : lastChildIndex,
+            preferPosition: AutoScrollPosition.end);
       }
     });
   }

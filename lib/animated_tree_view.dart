@@ -1,5 +1,7 @@
 library animated_tree_view;
 
+export 'package:scroll_to_index/scroll_to_index.dart';
+
 export 'src/controllers/tree_list_view_controller.dart';
 export 'src/expandable_node/expandable_node.dart';
 export 'src/expandable_node/expansion_indicator.dart';
