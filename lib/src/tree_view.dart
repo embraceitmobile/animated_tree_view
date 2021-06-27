@@ -14,6 +14,8 @@ import 'listenable_node/listenable_node.dart';
 typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
+enum ExpansionBehavior { none, scrollToLastChild, snapToParent }
+
 /// The default [TreeView] uses a [Node] internally, which is based on the
 /// [Map] data structure for maintaining the children states.
 /// The [Node] does not allow insertion and removal of
@@ -40,22 +42,24 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   final bool? shrinkWrap;
   final EdgeInsetsGeometry? padding;
   final bool? showRootNode;
+  final ExpansionBehavior expansionBehavior;
 
-  const TreeView(
-      {Key? key,
-      required this.builder,
-      this.expansionIndicator = ExpansionIndicator.RightUpChevron,
-      this.controller,
-      this.initialItem,
-      this.scrollController,
-      this.indentPadding,
-      this.onItemTap,
-      this.primary,
-      this.physics,
-      this.shrinkWrap,
-      this.padding,
-      this.showRootNode})
-      : super(key: key);
+  const TreeView({
+    Key? key,
+    required this.builder,
+    this.expansionIndicator = ExpansionIndicator.RightUpChevron,
+    this.controller,
+    this.initialItem,
+    this.scrollController,
+    this.indentPadding,
+    this.onItemTap,
+    this.primary,
+    this.physics,
+    this.shrinkWrap,
+    this.padding,
+    this.showRootNode,
+    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
@@ -71,6 +75,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
         primary: primary,
         physics: physics,
         padding: padding,
+        expansionBehavior: expansionBehavior,
       );
 }
 
@@ -100,22 +105,24 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   final bool? shrinkWrap;
   final EdgeInsetsGeometry? padding;
   final bool? showRootNode;
+  final ExpansionBehavior expansionBehavior;
 
-  const IndexedTreeView(
-      {Key? key,
-      required this.builder,
-      this.expansionIndicator = ExpansionIndicator.RightUpChevron,
-      this.controller,
-      this.initialItem,
-      this.scrollController,
-      this.indentPadding,
-      this.onItemTap,
-      this.primary,
-      this.physics,
-      this.shrinkWrap,
-      this.padding,
-      this.showRootNode})
-      : super(key: key);
+  const IndexedTreeView({
+    Key? key,
+    required this.builder,
+    this.expansionIndicator = ExpansionIndicator.RightUpChevron,
+    this.controller,
+    this.initialItem,
+    this.scrollController,
+    this.indentPadding,
+    this.onItemTap,
+    this.primary,
+    this.physics,
+    this.shrinkWrap,
+    this.padding,
+    this.showRootNode,
+    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
@@ -132,6 +139,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
         primary: primary,
         physics: physics,
         padding: padding,
+        expansionBehavior: expansionBehavior,
       );
 }
 
@@ -141,18 +149,20 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
   final IListenableNode<T> root;
   final AutoScrollController? scrollController;
   final ExpansionIndicator? expansionIndicator;
-  final double indentPadding;
+  final double? indentPadding;
   final bool shrinkWrap;
   final bool showRootNode;
   final EdgeInsetsGeometry? padding;
   final ValueSetter<T>? onItemTap;
   final bool? primary;
   final ScrollPhysics? physics;
+  final ExpansionBehavior expansionBehavior;
 
   const _TreeView({
     Key? key,
     required this.builder,
     required this.root,
+    required this.expansionBehavior,
     this.scrollController,
     this.controller,
     this.onItemTap,
@@ -160,12 +170,11 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
     this.physics,
     this.padding,
     this.expansionIndicator,
+    this.indentPadding,
     bool? shrinkWrap,
     bool? showRootNode,
-    double? indentPadding,
   })  : this.shrinkWrap = shrinkWrap ?? false,
         this.showRootNode = showRootNode ?? true,
-        this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING,
         super(key: key);
 
   @override
@@ -194,6 +203,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
       removedItemBuilder: buildRemovedItem,
       showRootNode: widget.showRootNode,
       scrollController: _scrollController,
+      expansionBehavior: widget.expansionBehavior,
     );
 
     widget.controller?.attach(widget.root, _animatedListController);

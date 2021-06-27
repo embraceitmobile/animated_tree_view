@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         initialItem: RowItem("#00-Root-Item"),
         controller: controller,
         shrinkWrap: true,
+        expansionBehavior: ExpansionBehavior.snapToParent,
         builder: (context, level, item) => item.isRoot
             ? buildRootItem(level, item)
             : buildListItem(level, item),

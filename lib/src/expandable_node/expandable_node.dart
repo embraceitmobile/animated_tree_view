@@ -42,9 +42,10 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
     this.remove = false,
     this.minLevelToIndent = 0,
     this.expansionIndicator,
-    this.indentPadding = DEFAULT_INDENT_PADDING,
     this.onItemTap,
-  }) : super(key: key);
+    double? indentPadding,
+  })  : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
 import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
 import 'package:animated_tree_view/src/listenable_node/base/node_update_notifier.dart';
@@ -16,6 +17,7 @@ class AnimatedListController<T extends INode<T>> {
   final List<T> _flatList;
   final AutoScrollController scrollController;
   final bool showRootNode;
+  final ExpansionBehavior expansionBehavior;
 
   late StreamSubscription<NodeAddEvent<T>> _addedNodesSubscription;
   late StreamSubscription<NodeInsertEvent<T>> _insertNodesSubscription;
@@ -26,6 +28,7 @@ class AnimatedListController<T extends INode<T>> {
       required dynamic removedItemBuilder,
       required IListenableNode<T> listenableNode,
       required this.scrollController,
+      required this.expansionBehavior,
       this.showRootNode = true})
       : _listKey = listKey,
         _nodeUpdateNotifier = listenableNode,
@@ -107,7 +110,17 @@ class AnimatedListController<T extends INode<T>> {
       collapseNode(item);
     else {
       expandNode(item);
-      scrollToLastVisibleChild(item);
+
+      switch (expansionBehavior) {
+        case ExpansionBehavior.none:
+          break;
+        case ExpansionBehavior.scrollToLastChild:
+          scrollToLastVisibleChild(item);
+          break;
+        case ExpansionBehavior.snapToParent:
+          scrollToParent(item);
+          break;
+      }
     }
   }
 
@@ -131,6 +144,13 @@ class AnimatedListController<T extends INode<T>> {
                 : lastChildIndex,
             preferPosition: AutoScrollPosition.end);
       }
+    });
+  }
+
+  void scrollToParent(T parent) {
+    Future.delayed(Duration(milliseconds: 300), () {
+      scrollController.scrollToIndex(indexOf(parent),
+          preferPosition: AutoScrollPosition.begin);
     });
   }
 
