@@ -389,6 +389,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
       expansionBehavior: widget.expansionBehavior,
     );
 
+    // ignore: invalid_use_of_protected_member
     widget.controller?.attach(widget.root, _animatedListController);
   }
 
