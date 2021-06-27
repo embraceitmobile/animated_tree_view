@@ -6,6 +6,7 @@ export 'src/controllers/tree_list_view_controller.dart';
 export 'src/expandable_node/expandable_node.dart';
 export 'src/expandable_node/expansion_indicator.dart';
 export 'src/helpers/exceptions.dart';
+export 'src/helpers/simple_nodes.dart';
 export 'src/listenable_node/base/i_listenable_node.dart';
 export 'src/listenable_node/base/node_update_notifier.dart';
 export 'src/listenable_node/listenable_indexed_node.dart';

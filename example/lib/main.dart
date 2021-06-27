@@ -2,10 +2,6 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class RowItem extends ListenableNode<RowItem> {
-  RowItem([String? key]) : super(key: key);
-}
-
 void main() {
   runApp(MyApp());
 }
@@ -35,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = TreeListViewController<RowItem>();
+  final controller = TreeListViewController<SimpleNode>();
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -45,8 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeView<RowItem>(
-        initialItem: RowItem("#00-Root-Item"),
+      body: TreeView<SimpleNode>(
+        initialItem: SimpleNode("#00-Root-Item"),
         controller: controller,
         shrinkWrap: true,
         builder: (context, level, item) => item.isRoot
@@ -56,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildRootItem(int level, RowItem item) {
+  Widget buildRootItem(int level, SimpleNode item) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -83,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildListItem(int level, RowItem item) {
+  Widget buildListItem(int level, SimpleNode item) {
     return Card(
       color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
       child: ListTile(
@@ -103,21 +99,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildAddItemButton(RowItem item) {
+  Widget buildAddItemButton(SimpleNode item) {
     return IconButton(
-      onPressed: () => item.add(RowItem()),
+      onPressed: () => item.add(SimpleNode()),
       icon: Icon(Icons.add_circle, color: Colors.green),
     );
   }
 
-  Widget buildRemoveItemButton(RowItem item) {
+  Widget buildRemoveItemButton(SimpleNode item) {
     return IconButton(
       onPressed: () => item.delete(),
       icon: Icon(Icons.delete, color: Colors.red),
     );
   }
 
-  Widget buildAddItemChildButton(RowItem item) {
+  Widget buildAddItemChildButton(SimpleNode item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
@@ -127,12 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         icon: Icon(Icons.add_circle, color: Colors.white),
         label: Text("Add Child", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.add(RowItem()),
+        onPressed: () => item.add(SimpleNode()),
       ),
     );
   }
 
-  Widget buildClearAllItemButton(RowItem item) {
+  Widget buildClearAllItemButton(SimpleNode item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: FlatButton.icon(
