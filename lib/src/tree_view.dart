@@ -48,6 +48,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
     Key? key,
     required this.builder,
     this.expansionIndicator = ExpansionIndicator.RightUpChevron,
+    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
     this.controller,
     this.initialItem,
     this.scrollController,
@@ -58,16 +59,16 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
     this.shrinkWrap,
     this.padding,
     this.showRootNode,
-    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
         builder: builder,
-        root: initialItem ?? ListenableNode<T>.root(),
         controller: controller,
-        scrollController: scrollController,
+        root: initialItem ?? ListenableNode<T>.root(),
         expansionIndicator: expansionIndicator,
+        expansionBehavior: expansionBehavior,
+        scrollController: scrollController,
         indentPadding: indentPadding,
         showRootNode: showRootNode,
         shrinkWrap: shrinkWrap,
@@ -75,7 +76,6 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
         primary: primary,
         physics: physics,
         padding: padding,
-        expansionBehavior: expansionBehavior,
       );
 }
 
@@ -111,6 +111,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
     Key? key,
     required this.builder,
     this.expansionIndicator = ExpansionIndicator.RightUpChevron,
+    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
     this.controller,
     this.initialItem,
     this.scrollController,
@@ -121,17 +122,17 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
     this.shrinkWrap,
     this.padding,
     this.showRootNode,
-    this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
         key: key,
         builder: builder,
-        root: initialItem ?? ListenableIndexedNode<T>.root(),
         controller: controller,
-        scrollController: scrollController,
+        root: initialItem ?? ListenableIndexedNode<T>.root(),
         expansionIndicator: expansionIndicator,
+        expansionBehavior: expansionBehavior,
+        scrollController: scrollController,
         indentPadding: indentPadding,
         showRootNode: showRootNode,
         shrinkWrap: shrinkWrap,
@@ -139,7 +140,6 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
         primary: primary,
         physics: physics,
         padding: padding,
-        expansionBehavior: expansionBehavior,
       );
 }
 
