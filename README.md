@@ -20,6 +20,7 @@ The `IndexedTreeView` uses a [List](https://api.dart.dev/stable/2.10.5/dart-core
 * Animations for Node expansion and collapse.
 * Familiar API due to inspiration from AnimatedList.
 * Provides plenty of utility methods for adding, inserting and removing child nodes.
+* Easily traverse the tree laterally or vertically from the root to the leaf and back.
 * Implementation of ValueListenable makes it easy to listen to changes in the data.
 
 ## How to use
@@ -56,15 +57,15 @@ TreeListView<SimpleNode>(
 The usage of `IndexedTreeView` is exactly the same as a simple `TreeView`. You only need to replace `SimpleNode` with `SimpleIndexedNode` or extend you `CustomNode` from `ListenableIndexedNode` like this
 
 ```dart
-class CustomNode extends ListenableIndexedNode<CustomNode> {
-  CustomNode([String? key]) : super(key: key);
+class CustomIndexedNode extends ListenableIndexedNode<CustomIndexedNode> {
+  CustomIndexedNode([String? key]) : super(key: key);
 }
 ```
 
 Finally initialize the widget like this:
 
 ```dart
-IndexedTreeListView<CustomNode>(
+IndexedTreeListView<CustomIndexedNode>(
     builder: (context, level, node) {
         // build your node item here
         // return any widget that you need
@@ -98,29 +99,30 @@ shrinkWrap               | Whether the extent of the scroll view in the `scrollD
 
 ## Available APIs
 ### Node
-Method          | TreeView                | IndexedTreeView
---------------- | ------------------------| ---------------
-`isRoot`        | :white_check_mark:      | :white_check_mark:
-`isLeaf`        | :white_check_mark:      | :white_check_mark:
-`root` (getter) | :white_check_mark:      | :white_check_mark:
-`elementAt`     | :white_check_mark:      | :white_check_mark:
-`add`           | :white_check_mark:      | :white_check_mark:
-`addAll`        | :white_check_mark:      | :white_check_mark:
-`remove`        | :white_check_mark:      | :white_check_mark:
-`removeAll`     | :white_check_mark:      | :white_check_mark:
-`removeWhere`   | :white_check_mark:      | :white_check_mark:
-`delete`        | :white_check_mark:      | :white_check_mark:
-`clear`         | :white_check_mark:      | :white_check_mark:
-`first`         | :o:                     | :white_check_mark:
-`last`          | :o:                     | :white_check_mark:
-`insert`        | :o:                     | :white_check_mark:
-`insertAll`     | :o:                     | :white_check_mark:
-`insertAfter`   | :o:                     | :white_check_mark:
-`insertBefore`  | :o:                     | :white_check_mark:
-`removeAt`      | :o:                     | :white_check_mark:
-`firstWhere`    | :o:                     | :white_check_mark:
-`lastWhere`     | :o:                     | :white_check_mark:
-`indexWhere`    | :o:                     | :white_check_mark:
+Method          | TreeView                | IndexedTreeView   | Description 
+--------------- | ------------------------| ------------------| ------------
+`isRoot`        | :white_check_mark:      | :white_check_mark:|Getter to check if the node is a root
+`isLeaf`        | :white_check_mark:      | :white_check_mark:|Getter to check if the node is a Leaf
+`root` (getter) | :white_check_mark:      | :white_check_mark:|Getter to get the root node. If the current node is not a root, then the getter will traverse up the path to get the root.
+`level`         | :white_check_mark:      | :white_check_mark:| Getter to get the level i.e. how many iterations it will take to get to the root.
+`elementAt`     | :white_check_mark:      | :white_check_mark:| Utility method to get a child any child node at the path. The path contains the keys of the node separated by period `.` e.g. #grandparent_key.#parent_key.#node
+`add`           | :white_check_mark:      | :white_check_mark:| Add a child to the node
+`addAll`        | :white_check_mark:      | :white_check_mark:| Add a collection of nodes to the node
+`remove`        | :white_check_mark:      | :white_check_mark:| Remove a child from the node
+`removeAll`     | :white_check_mark:      | :white_check_mark:| Remove a collection of nodes from the node
+`removeWhere`   | :white_check_mark:      | :white_check_mark:| Remove children from the node that meet the criterion in the provided test
+`delete`        | :white_check_mark:      | :white_check_mark:| Delete the current node
+`clear`         | :white_check_mark:      | :white_check_mark:| Remove all the child nodes: after this operation the children are empty
+`first`         | :o:                     | :white_check_mark:| Get/Set first child in the node
+`last`          | :o:                     | :white_check_mark:| Get/Set last child in the node
+`insert`        | :o:                     | :white_check_mark:| Insert a child at an index in the node
+`insertAll`     | :o:                     | :white_check_mark:| Insert a list of children at an index in the node
+`insertAfter`   | :o:                     | :white_check_mark:| Insert a child after the node
+`insertBefore`  | :o:                     | :white_check_mark:| Insert a child before the node
+`removeAt`      | :o:                     | :white_check_mark:| Remove a child at the index
+`firstWhere`    | :o:                     | :white_check_mark:| Get the first child node that matches the criterion in the test.
+`lastWhere`     | :o:                     | :white_check_mark:| Get the last child node that matches the criterion in the test.
+`indexWhere`    | :o:                     | :white_check_mark:| Get the index of the first child node that matches the criterion in the test.
 
 ### TreeViewController
 The `TreeViewController` provides utility methods that allow controlling the [TreeView] programmatically. 
