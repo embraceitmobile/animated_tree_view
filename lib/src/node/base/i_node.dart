@@ -1,3 +1,4 @@
+/// Base class for Node that defines the required interfaces
 abstract class INode<T> {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
@@ -53,9 +54,10 @@ abstract class INode<T> {
   /// In order to access the Node with key "0C1C", the path would be
   ///   0C.0C1C
   ///
+  /// Note: The root node [ROOT_KEY] does not need to be in the path
   INode<T> elementAt(String path);
 
-  ///Overloaded operator for [elementAt]
+  /// Overloaded operator for [elementAt]
   INode<T> operator [](String path);
 
   /// Getter to check if the node is a root.

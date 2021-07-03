@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ExpansionIndicator {
+  /// An expansion indicator to show that the Node is currently in expanded state.
+  /// It is typically an [Icon] widget.
   final Widget expandIcon;
+
+  /// A collapse indicator to show that the Node is currently in collapsed state.
+  /// It is typically an [Icon] widget.
   final Widget collapseIcon;
+
+  /// Alignment of the [ExpansionIndicator] on the [ListTile].
+  /// By default the [alignment] is [Alignment.topRight]
   final Alignment alignment;
+
+  /// The [padding] around the [expandIcon] and [collapseIcon]
   final EdgeInsets padding;
 
   const ExpansionIndicator({

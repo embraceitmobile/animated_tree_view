@@ -78,6 +78,7 @@ abstract class ITreeViewController<T extends INode<T>> {
   /// In order to access the Node with key "0C1C", the path would be
   ///   0C.0C1C
   ///
+  /// Note: The root node [ROOT_KEY] does not need to be in the path
   INode<T> elementAt(String path) => root.elementAt(path);
 
   /// Allows to scroll to any item with [index] in the list.

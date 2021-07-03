@@ -25,19 +25,6 @@ typedef LeveledItemWidgetBuilder<T> = Widget Function(
 ///  top of the list
 enum ExpansionBehavior { none, scrollToLastChild, snapToTop }
 
-/// The default [TreeView] uses a [Node] internally, which is based on the
-/// [Map] data structure for maintaining the children states.
-/// The [Node] does not allow insertion and removal of
-/// items at index positions. This allows for more efficient insertion and
-/// retrieval of items at child nodes, as child items can be readily accessed
-/// using the map keys.
-///
-/// The complexity for accessing child nodes in [TreeView] is simply O(node_level).
-/// e.g. for path './.level1/level2', complexity is simply O(2).
-///
-/// For a [TreeView] that allows for insertion and removal of
-/// items at index positions, use the alternate [IndexedTreeListView].
-///
 class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   /// The [builder] function that is provided to the item builder
   final LeveledItemWidgetBuilder<T> builder;
@@ -111,6 +98,19 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   /// For more information see the [AnimatedList.shrinkWrap]
   final bool? shrinkWrap;
 
+  /// The default [TreeView] uses a [Node] internally, which is based on the
+  /// [Map] data structure for maintaining the children states.
+  /// The [Node] does not allow insertion and removal of
+  /// items at index positions. This allows for more efficient insertion and
+  /// retrieval of items at child nodes, as child items can be readily accessed
+  /// using the map keys.
+  ///
+  /// The complexity for accessing child nodes in [TreeView] is simply O(node_level).
+  /// e.g. for path './.level1/level2', complexity is simply O(2).
+  ///
+  /// For a [TreeView] that allows for insertion and removal of
+  /// items at index positions, use the alternate [IndexedTreeListView].
+  ///
   const TreeView({
     Key? key,
     required this.builder,
@@ -146,18 +146,6 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
       );
 }
 
-/// The alternate implementation of [_TreeView] as [IndexedTreeView] uses an
-/// [IndexedNode] internally, which is based on the [List] data structure for
-/// maintaining the children states.
-/// The [IndexedNode] allows indexed based operations like insertion and removal of
-/// items at index positions. This allows for movement, addition and removal of
-/// child nodes based on indices.
-///
-/// The complexity for accessing child nodes in [TreeView] is simply O(node_level ^ children).
-///
-/// If you do not require index based operations, the more performant and efficient
-/// [TreeView] instead.
-///
 class IndexedTreeView<T extends ListenableIndexedNode<T>>
     extends StatelessWidget {
   /// The [builder] function that is provided to the item builder
@@ -233,6 +221,18 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   /// For more information see the [AnimatedList.shrinkWrap]
   final bool? shrinkWrap;
 
+  /// The alternate implementation of [_TreeView] as [IndexedTreeView] uses an
+  /// [IndexedNode] internally, which is based on the [List] data structure for
+  /// maintaining the children states.
+  /// The [IndexedNode] allows indexed based operations like insertion and removal of
+  /// items at index positions. This allows for movement, addition and removal of
+  /// child nodes based on indices.
+  ///
+  /// The complexity for accessing child nodes in [TreeView] is simply O(node_level ^ children).
+  ///
+  /// If you do not require index based operations, the more performant and efficient
+  /// [TreeView] instead.
+  ///
   const IndexedTreeView({
     Key? key,
     required this.builder,

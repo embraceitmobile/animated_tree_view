@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
 import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
-import 'package:animated_tree_view/src/listenable_node/base/node_update_notifier.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
+import 'package:animated_tree_view/src/tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 

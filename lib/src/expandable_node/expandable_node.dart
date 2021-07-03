@@ -104,7 +104,7 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () => onTap!(item),
+        onTap: onTap == null ? null : () => onTap!(item),
         child: Stack(
           children: <Widget>[
             Padding(
