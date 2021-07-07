@@ -17,13 +17,25 @@ typedef LeveledItemWidgetBuilder<T> = Widget Function(
     BuildContext context, int level, T item);
 
 /// The [ExpansionBehavior] provides control over the behavior of the node
-/// when it is expanded. There are three distinct behaviors:
-///  ** [ExpansionBehavior.none] : no additional action will be taken on node expansion
-///  ** [ExpansionBehavior.scrollToLastChild] : the screen will be scrolled to
-///  the last child of the node if it is not already visible on screen
-///  ** [ExpansionBehavior.snapToTop] : the expanded node will be snapped to the
-///  top of the list
-enum ExpansionBehavior { none, scrollToLastChild, snapToTop }
+/// when it is expanded.
+enum ExpansionBehavior {
+  ///no additional action will be taken on node expansion
+  none,
+
+  /// the screen will be scrolled to the last child of the node if it is not
+  /// already visible on screen
+  scrollToLastChild,
+
+  /// the expanded node will be snapped to the top of the list
+  snapToTop,
+
+  /// collapse all other nodes, only the current node will remain expanded
+  collapseOthers,
+
+  /// collapse all other nodes, only the current node will remain expanded,
+  /// also snap the node to the top of the list
+  collapseOthersAndSnapToTop,
+}
 
 class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   /// The [builder] function that is provided to the item builder

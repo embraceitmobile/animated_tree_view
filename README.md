@@ -79,22 +79,22 @@ IndexedTreeListView<CustomIndexedNode>(
 
 *Please see this [example](https://github.com/embraceitmobile/animated_tree_view/blob/main/example/lib/main.dart) for a more comprehsive code sample.*
 
-## Configuration and Behvaior
+## Configuration and Behavior
 Attributes              | Description
 ------------------------|-------------
 builder                 | The builder function that is provided to the item builder. Called, as needed, to build list item widgets. The built widget is passed to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html)'s itemBuilder.
 controller              | Allows controlling the [TreeView] programmatically using utility methods. Use `TreeViewController` for the `TreeView`, and `IndexedTreeViewController` for the `IndexedTreeView`.
-initialItems             | Node that is used to populate the `TreeView` initially. If no `initialItems` are provided, then the Tree will only contain the RootNode.
-scrollController         | Provide a scrollController for more granular control over scrolling behavior.
-expansionIndicator       | Provide an `ExpansionIndicator` to set the expand widget and collapse widget. Typically these are [Icon](https://api.flutter.dev/flutter/widgets/Icon-class.html) widgets. You can pass in `null` if you do not want to show any expansion indicator.
-indentPadding            | This is the padding is applied to the start of an item. `IndentPadding` will be multiplied by Node-Level before being applied. 
-onItemTap                | callback that can be used to handle any action when an item is tapped or clicked.
-showRootNode             | Flag to show the Root Node in the TreeView.
-expansionBehavior        | The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
-padding                  | The amount of space by which to inset the children.
-primary                  | Whether this is the primary scroll view associated with the parent PrimaryScrollController.
-physics                  | An object that can be used to control the position to which this scroll view is scrolled.
-shrinkWrap               | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.
+initialItems            | Node that is used to populate the `TreeView` initially. If no `initialItems` are provided, then the Tree will only contain the RootNode.
+scrollController        | Provide a scrollController for more granular control over scrolling behavior.
+expansionIndicator      | Provide an `ExpansionIndicator` to set the expand widget and collapse widget. Typically these are [Icon](https://api.flutter.dev/flutter/widgets/Icon-class.html) widgets. You can pass in `null` if you do not want to show any expansion indicator.
+indentPadding           | This is the padding is applied to the start of an item. `IndentPadding` will be multiplied by Node-Level before being applied. 
+onItemTap               | callback that can be used to handle any action when an item is tapped or clicked.
+showRootNode            | Flag to show the Root Node in the TreeView.
+expansionBehavior       | The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
+padding                 | The amount of space by which to inset the children.
+primary                 | Whether this is the primary scroll view associated with the parent PrimaryScrollController.
+physics                 | An object that can be used to control the position to which this scroll view is scrolled.
+shrinkWrap              | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.
 
 
 ## Available APIs

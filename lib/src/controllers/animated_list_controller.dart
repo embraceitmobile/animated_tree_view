@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
 import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
 import 'package:animated_tree_view/src/node/base/i_node.dart';
@@ -19,7 +20,7 @@ class AnimatedListController<T extends INode<T>> {
   final ExpansionBehavior expansionBehavior;
 
   late StreamSubscription<NodeAddEvent<T>> _addedNodesSubscription;
-  late StreamSubscription<NodeInsertEvent<T>> _insertNodesSubscription;
+  late StreamSubscription<NodeInsertEvent<T>>? _insertNodesSubscription;
   late StreamSubscription<NodeRemoveEvent<T>> _removeNodesSubscription;
 
   AnimatedListController(
@@ -40,8 +41,9 @@ class AnimatedListController<T extends INode<T>> {
         _nodeUpdateNotifier.addedNodes.listen(handleAddItemsEvent);
     _removeNodesSubscription =
         _nodeUpdateNotifier.removedNodes.listen(handleRemoveItemsEvent);
-    _insertNodesSubscription =
-        _nodeUpdateNotifier.insertedNodes.listen(handleInsertItemsEvent);
+    if (T is ListenableIndexedNode)
+      _insertNodesSubscription =
+          _nodeUpdateNotifier.insertedNodes.listen(handleInsertItemsEvent);
   }
 
   List<T> get list => _flatList;
@@ -90,6 +92,11 @@ class AnimatedListController<T extends INode<T>> {
     }
   }
 
+  Future scrollToIndex(int index) async => scrollController.scrollToIndex(index,
+      preferPosition: AutoScrollPosition.begin);
+
+  Future scrollToItem(T item) async => scrollToIndex(indexOf(item));
+
   void collapseNode(T item) {
     final removeItems = _flatList.where((element) =>
         (element.path).startsWith('${item.path}${INode.PATH_SEPARATOR}'));
@@ -109,24 +116,29 @@ class AnimatedListController<T extends INode<T>> {
       collapseNode(item);
     else {
       expandNode(item);
-
-      switch (expansionBehavior) {
-        case ExpansionBehavior.none:
-          break;
-        case ExpansionBehavior.scrollToLastChild:
-          scrollToLastVisibleChild(item);
-          break;
-        case ExpansionBehavior.snapToTop:
-          scrollToParent(item);
-          break;
-      }
+      applyExpansionBehavior(item);
     }
   }
 
-  Future scrollToIndex(int index) async => scrollController.scrollToIndex(index,
-      preferPosition: AutoScrollPosition.begin);
-
-  Future scrollToItem(T item) async => scrollToIndex(indexOf(item));
+  void applyExpansionBehavior(T item) {
+    switch (expansionBehavior) {
+      case ExpansionBehavior.none:
+        break;
+      case ExpansionBehavior.scrollToLastChild:
+        scrollToLastVisibleChild(item);
+        break;
+      case ExpansionBehavior.snapToTop:
+        snapToTop(item);
+        break;
+      case ExpansionBehavior.collapseOthers:
+        collapseAllOtherSiblingNodes(item);
+        break;
+      case ExpansionBehavior.collapseOthersAndSnapToTop:
+        collapseAllOtherSiblingNodes(item);
+        snapToTop(item);
+        break;
+    }
+  }
 
   void scrollToLastVisibleChild(T parent) {
     Future.delayed(Duration(milliseconds: 300), () {
@@ -146,11 +158,19 @@ class AnimatedListController<T extends INode<T>> {
     });
   }
 
-  void scrollToParent(T parent) {
+  void snapToTop(T item) {
     Future.delayed(Duration(milliseconds: 300), () {
-      scrollController.scrollToIndex(indexOf(parent),
+      scrollController.scrollToIndex(indexOf(item),
           preferPosition: AutoScrollPosition.begin);
     });
+  }
+
+  void collapseAllOtherSiblingNodes(T node) {
+    for (final siblingNode in node.parent?.childrenAsList ?? []) {
+      if (siblingNode.key != node.key) {
+        collapseNode(siblingNode as T);
+      }
+    }
   }
 
   @visibleForTesting
@@ -233,7 +253,7 @@ class AnimatedListController<T extends INode<T>> {
 
   void dispose() {
     _addedNodesSubscription.cancel();
-    _insertNodesSubscription.cancel();
+    _insertNodesSubscription?.cancel();
     _removeNodesSubscription.cancel();
   }
 }

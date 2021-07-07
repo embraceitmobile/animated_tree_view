@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: TreeView<SimpleNode>(
         initialItem: SimpleNode("#00-Root-Item"),
         controller: controller,
+        expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
         builder: (context, level, item) => item.isRoot
             ? buildRootItem(level, item)

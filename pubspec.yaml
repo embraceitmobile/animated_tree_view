@@ -1,6 +1,6 @@
 name: animated_tree_view
 description: A flutter package based on AnimatedList for creating animated tree-views. Fully customizable tree-views can be created using the provided builder. An infinite number of children with infinite levels can be added to the hierarchy.
-version: 0.1.0+1
+version: 0.1.1
 repository: https://github.com/embraceitmobile/animated_tree_view
 
 environment:
