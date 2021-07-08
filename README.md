@@ -90,11 +90,41 @@ expansionIndicator      | Provide an `ExpansionIndicator` to set the expand widg
 indentPadding           | This is the padding is applied to the start of an item. `IndentPadding` will be multiplied by Node-Level before being applied. 
 onItemTap               | callback that can be used to handle any action when an item is tapped or clicked.
 showRootNode            | Flag to show the Root Node in the TreeView.
-expansionBehavior       | The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
+expansionBehavior       | The `ExpansionBehavior` provides control over the behavior of the node when it is expanded. See [ExpansionBehavior](#expansionBehavior) for available behaviors.
 padding                 | The amount of space by which to inset the children.
 primary                 | Whether this is the primary scroll view associated with the parent PrimaryScrollController.
 physics                 | An object that can be used to control the position to which this scroll view is scrolled.
 shrinkWrap              | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.
+
+## ExpansionBehavior <a name="expansionBehavior"></a>
+The 'ExpansionBehavior' provides control over the behavior of the node when it is expanded.
+There are five available ExpansionBehaviors to choose from.
+
+### `ExpansionBehavior.none` 
+No additional action will be taken on node expansion.
+
+![ExpansionBehavior.none](https://media.giphy.com/media/GA0MIRgxg2checWuVT/giphy.gif)
+
+### `ExpansionBehavior.scrollToLastChild`
+The list will be scrolled to the last child of the node if it is not already visible on screen. This ensures that the last child is always visible. 
+
+![ExpansionBehavior.scrollToLastChild](https://media.giphy.com/media/hV0Bvgl7UvJyfl7j6I/giphy.gif)
+
+
+### `ExpansionBehavior.snapToTop`
+The expanded node will be snapped to the top of the list. This ensures that the expanded node is always visible with maximum number of children.
+
+![ExpansionBehavior.snapToTop](https://media.giphy.com/media/eRRmOAErM9ZJhe5IuG/giphy.gif)
+
+### `ExpansionBehavior.collapseOthers`
+Collapse all other nodes, only the current node will remain expanded. This ensures that only one node is expanded at one time.
+
+![ExpansionBehavior.collapseOthers](https://media.giphy.com/media/zW1e4X81bZOloyB1JI/giphy.gif)
+
+### `ExpansionBehavior.collapseOthersAndSnapToTop`
+Collapse all other nodes, only the current node will remain expanded, also snap the node to the top of the list. This ensures that only one node is expanded at one time.
+
+![ExpansionBehavior.collapseOthersAndSnapToTop](https://media.giphy.com/media/YDOKCA8EmaRxuOFDTQ/giphy.gif)
 
 
 ## Available APIs
@@ -135,11 +165,12 @@ elementAt                 | Get any item at path from the root. The keys  of the
 root                      | Root node of the TreeView
 scrollToIndex             | Allows to scroll to any item with index in the list. If you do not have the index of the item, then use the alternate scrollToItem method item instead.
 scrollToItem              | Utility method to scroll to any visible item in the tree.
-toggleNodeExpandCollapse  |  Utility method to expand or collapse an item.
+toggleNodeExpandCollapse  | Utility method to expand or collapse an item.
 
 
 ## Future Goals
-* [ ] Improve documentation
+* [x] Improve documentation
+* [x] Add more ExpansionBehaviors
 * [ ] Add more examples
 * [ ] Add more utility functions for Node
 * [ ] Add a `DiffUtil` to the controller to update the whole tree data more easily

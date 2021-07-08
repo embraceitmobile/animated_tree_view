@@ -19,21 +19,23 @@ typedef LeveledItemWidgetBuilder<T> = Widget Function(
 /// The [ExpansionBehavior] provides control over the behavior of the node
 /// when it is expanded.
 enum ExpansionBehavior {
-  ///no additional action will be taken on node expansion
+  /// No additional action will be taken on node expansion.
   none,
 
-  /// the screen will be scrolled to the last child of the node if it is not
-  /// already visible on screen
+  /// The list will be scrolled to the last child of the node if it is not
+  /// already visible on screen. This ensures that the last child is always visible. 
   scrollToLastChild,
 
-  /// the expanded node will be snapped to the top of the list
+  /// The expanded node will be snapped to the top of the list.This ensures that the 
+  /// expanded node is always visible with maximum number of children.
   snapToTop,
 
-  /// collapse all other nodes, only the current node will remain expanded
+  /// Collapse all other nodes, only the current node will remain expanded. This ensures 
+  /// that only one node is expanded at one time.
   collapseOthers,
 
-  /// collapse all other nodes, only the current node will remain expanded,
-  /// also snap the node to the top of the list
+  /// Collapse all other nodes, only the current node will remain expanded,
+  /// also snap the node to the top of the list. This ensures that only one node is expanded at one time.
   collapseOthersAndSnapToTop,
 }
 

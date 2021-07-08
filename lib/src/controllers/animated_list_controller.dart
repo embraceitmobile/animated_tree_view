@@ -135,7 +135,7 @@ class AnimatedListController<T extends INode<T>> {
         break;
       case ExpansionBehavior.collapseOthersAndSnapToTop:
         collapseAllOtherSiblingNodes(item);
-        snapToTop(item);
+        snapToTop(item, delay: Duration(milliseconds: 400));
         break;
     }
   }
@@ -158,8 +158,8 @@ class AnimatedListController<T extends INode<T>> {
     });
   }
 
-  void snapToTop(T item) {
-    Future.delayed(Duration(milliseconds: 300), () {
+  void snapToTop(T item, {Duration delay = const Duration(milliseconds: 300)}) {
+    Future.delayed(delay, () {
       scrollController.scrollToIndex(indexOf(item),
           preferPosition: AutoScrollPosition.begin);
     });
