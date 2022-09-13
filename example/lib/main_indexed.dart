@@ -1,5 +1,4 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class IndexedRowItem extends ListenableIndexedNode<IndexedRowItem> {
@@ -64,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (!_showRootNode)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: RaisedButton.icon(
+                child: ElevatedButton.icon(
                     onPressed: () => controller.root.add(IndexedRowItem()),
                     icon: Icon(Icons.add),
                     label: Text("Add Node")),
@@ -130,13 +129,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildAddItemChildButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton.icon(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton.icon(
+        style: TextButton.styleFrom(
+          primary: Colors.green[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
         ),
-        icon: Icon(Icons.add_circle, color: Colors.white),
-        label: Text("Child", style: TextStyle(color: Colors.white)),
+        icon: Icon(Icons.add_circle, color: Colors.green),
+        label: Text("Child", style: TextStyle(color: Colors.green)),
         onPressed: () => item.add(IndexedRowItem()),
       ),
     );
@@ -145,13 +146,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildInsertAboveButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          primary: Colors.green[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
         ),
-        child: Text("Insert Above", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.parent?.insertBefore(item, IndexedRowItem()),
+        child: Text("Insert Above", style: TextStyle(color: Colors.green)),
+        onPressed: () {
+          item.parent?.insertBefore(item, IndexedRowItem());
+        },
       ),
     );
   }
@@ -159,13 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildInsertBelowButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          primary: Colors.green[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
         ),
-        child: Text("Insert Below", style: TextStyle(color: Colors.white)),
-        onPressed: () => item.parent?.insertAfter(item, IndexedRowItem()),
+        child: Text("Insert Below", style: TextStyle(color: Colors.green)),
+        onPressed: () {
+          item.parent?.insertAfter(item, IndexedRowItem());
+        },
       ),
     );
   }
@@ -173,12 +182,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildRemoveItemButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton(
-          color: Colors.red[800],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.red[800],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
           ),
-          child: Icon(Icons.delete, color: Colors.white),
+          child: Icon(Icons.delete, color: Colors.red),
           onPressed: () => item.delete()),
     );
   }
@@ -186,13 +197,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildClearAllItemButton(IndexedRowItem item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton.icon(
-          color: Colors.red[800],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton.icon(
+          style: TextButton.styleFrom(
+            primary: Colors.red[800],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
           ),
-          icon: Icon(Icons.delete, color: Colors.white),
-          label: Text("Clear All", style: TextStyle(color: Colors.white)),
+          icon: Icon(Icons.delete, color: Colors.red),
+          label: Text("Clear All", style: TextStyle(color: Colors.red)),
           onPressed: () => item.clear()),
     );
   }

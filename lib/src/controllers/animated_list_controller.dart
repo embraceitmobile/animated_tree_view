@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/expandable_node/expandable_node.dart';
 import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
-import 'package:animated_tree_view/src/node/base/i_node.dart';
-import 'package:animated_tree_view/src/tree_view.dart';
 import 'package:flutter/material.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class AnimatedListController<T extends INode<T>> {
   static const TAG = "AnimatedListController";
@@ -39,11 +36,14 @@ class AnimatedListController<T extends INode<T>> {
         assert(removedItemBuilder != null) {
     _addedNodesSubscription =
         _nodeUpdateNotifier.addedNodes.listen(handleAddItemsEvent);
+
     _removeNodesSubscription =
         _nodeUpdateNotifier.removedNodes.listen(handleRemoveItemsEvent);
-    if (T is ListenableIndexedNode)
+
+    try {
       _insertNodesSubscription =
           _nodeUpdateNotifier.insertedNodes.listen(handleInsertItemsEvent);
+    } on ActionNotAllowedException catch (_) {}
   }
 
   List<T> get list => _flatList;
@@ -167,7 +167,7 @@ class AnimatedListController<T extends INode<T>> {
 
   void collapseAllOtherSiblingNodes(T node) {
     for (final siblingNode in node.parent?.childrenAsList ?? []) {
-      if (siblingNode.key != node.key) {
+      if (siblingNode.key != node.key && (siblingNode as Node).isExpanded) {
         collapseNode(siblingNode as T);
       }
     }

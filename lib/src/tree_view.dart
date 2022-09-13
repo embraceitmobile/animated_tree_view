@@ -1,15 +1,10 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/expandable_node/expansion_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'controllers/animated_list_controller.dart';
-import 'controllers/tree_list_view_controller.dart';
 import 'expandable_node/expandable_node.dart';
 import 'listenable_node/base/i_listenable_node.dart';
-import 'listenable_node/listenable_indexed_node.dart';
-import 'listenable_node/listenable_node.dart';
 
 /// The builder function that allows to build any item of type [T].
 /// The builder function also provides the [level] of the node.
@@ -23,14 +18,14 @@ enum ExpansionBehavior {
   none,
 
   /// The list will be scrolled to the last child of the node if it is not
-  /// already visible on screen. This ensures that the last child is always visible. 
+  /// already visible on screen. This ensures that the last child is always visible.
   scrollToLastChild,
 
-  /// The expanded node will be snapped to the top of the list.This ensures that the 
+  /// The expanded node will be snapped to the top of the list.This ensures that the
   /// expanded node is always visible with maximum number of children.
   snapToTop,
 
-  /// Collapse all other nodes, only the current node will remain expanded. This ensures 
+  /// Collapse all other nodes, only the current node will remain expanded. This ensures
   /// that only one node is expanded at one time.
   collapseOthers,
 
@@ -379,8 +374,6 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
 }
 
 class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
-  static const TAG = "TreeView";
-
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   late final AnimatedListController<T> _animatedListController;
   late final AutoScrollController _scrollController;
@@ -418,18 +411,20 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
       shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
         valueListenable: _nodeList[index],
-        builder: (context, value, child) => ExpandableNodeItem<T>(
-          builder: widget.builder,
-          animatedListController: _animatedListController,
-          scrollController: _scrollController,
-          node: _nodeList[index],
-          index: index,
-          animation: animation,
-          indentPadding: widget.indentPadding,
-          expansionIndicator: widget.expansionIndicator,
-          onItemTap: widget.onItemTap,
-          minLevelToIndent: widget.showRootNode ? 0 : 1,
-        ),
+        builder: (context, value, child) {
+          return ExpandableNodeItem<T>(
+            builder: widget.builder,
+            animatedListController: _animatedListController,
+            scrollController: _scrollController,
+            node: _nodeList[index],
+            index: index,
+            animation: animation,
+            indentPadding: widget.indentPadding,
+            expansionIndicator: widget.expansionIndicator,
+            onItemTap: widget.onItemTap,
+            minLevelToIndent: widget.showRootNode ? 0 : 1,
+          );
+        },
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -117,13 +116,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildAddItemChildButton(SimpleNode item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton.icon(
-        color: Colors.green[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton.icon(
+        style: TextButton.styleFrom(
+          primary: Colors.green[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
         ),
-        icon: Icon(Icons.add_circle, color: Colors.white),
-        label: Text("Add Child", style: TextStyle(color: Colors.white)),
+        icon: Icon(Icons.add_circle, color: Colors.green),
+        label: Text("Add Child", style: TextStyle(color: Colors.green)),
         onPressed: () => item.add(SimpleNode()),
       ),
     );
@@ -132,13 +133,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildClearAllItemButton(SimpleNode item) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: FlatButton.icon(
-          color: Colors.red[800],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+      child: TextButton.icon(
+          style: TextButton.styleFrom(
+            primary: Colors.red[800],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
           ),
-          icon: Icon(Icons.delete, color: Colors.white),
-          label: Text("Clear All", style: TextStyle(color: Colors.white)),
+          icon: Icon(Icons.delete, color: Colors.red),
+          label: Text("Clear All", style: TextStyle(color: Colors.red)),
           onPressed: () => item.clear()),
     );
   }
