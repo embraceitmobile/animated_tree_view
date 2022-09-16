@@ -15,6 +15,14 @@ void main() {
       expect(node.children, isNotNull);
       expect(node.children.isEmpty, isTrue);
     });
+
+    test(
+        'On passing a key that includes ${INode.PATH_SEPARATOR}, assertionError is thrown',
+        () async {
+      expect(() {
+        Node(key: "${INode.PATH_SEPARATOR}_key");
+      }, throwsAssertionError);
+    });
   });
 
   group('test adding children to a node', () {

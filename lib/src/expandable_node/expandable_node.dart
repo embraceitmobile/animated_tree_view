@@ -28,7 +28,7 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   final int minLevelToIndent;
 
   const ExpandableNodeItem({
-    Key? key,
+    super.key,
     required this.builder,
     required this.animatedListController,
     required this.scrollController,
@@ -40,8 +40,7 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
     this.expansionIndicator,
     this.onItemTap,
     double? indentPadding,
-  })  : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING,
-        super(key: key);
+  }) : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +82,7 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
   final bool isExpanded;
 
   const _ExpandableNodeContainer({
-    Key? key,
+    super.key,
     required this.animation,
     required this.onTap,
     required this.child,
@@ -91,7 +90,7 @@ class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
     required this.indentPadding,
     required this.isExpanded,
     this.expansionIndicator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

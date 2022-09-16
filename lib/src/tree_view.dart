@@ -121,21 +121,21 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   /// items at index positions, use the alternate [IndexedTreeListView].
   ///
   const TreeView({
-    Key? key,
+    super.key,
     required this.builder,
     this.expansionIndicator = ExpansionIndicator.RightUpChevron,
     this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    this.controller,
-    this.initialItem,
     this.scrollController,
     this.indentPadding,
+    this.showRootNode,
+    this.initialItem,
+    this.controller,
+    this.shrinkWrap,
     this.onItemTap,
     this.primary,
     this.physics,
-    this.shrinkWrap,
     this.padding,
-    this.showRootNode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
@@ -243,21 +243,21 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   /// [TreeView] instead.
   ///
   const IndexedTreeView({
-    Key? key,
+    super.key,
     required this.builder,
     this.expansionIndicator = ExpansionIndicator.RightUpChevron,
     this.expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    this.controller,
-    this.initialItem,
     this.scrollController,
     this.indentPadding,
+    this.showRootNode,
+    this.initialItem,
+    this.controller,
+    this.shrinkWrap,
     this.onItemTap,
     this.primary,
     this.physics,
-    this.shrinkWrap,
     this.padding,
-    this.showRootNode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => _TreeView<T>(
@@ -351,23 +351,22 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
   final bool shrinkWrap;
 
   const _TreeView({
-    Key? key,
+    super.key,
+    required this.expansionBehavior,
     required this.builder,
     required this.root,
-    required this.expansionBehavior,
+    this.indentPadding,
     this.scrollController,
+    this.expansionIndicator,
     this.controller,
     this.onItemTap,
     this.primary,
     this.physics,
     this.padding,
-    this.expansionIndicator,
-    this.indentPadding,
     bool? shrinkWrap,
     bool? showRootNode,
   })  : this.shrinkWrap = shrinkWrap ?? false,
-        this.showRootNode = showRootNode ?? true,
-        super(key: key);
+        this.showRootNode = showRootNode ?? true;
 
   @override
   State<StatefulWidget> createState() => _TreeViewState<T>();
@@ -411,20 +410,18 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
       shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
         valueListenable: _nodeList[index],
-        builder: (context, value, child) {
-          return ExpandableNodeItem<T>(
-            builder: widget.builder,
-            animatedListController: _animatedListController,
-            scrollController: _scrollController,
-            node: _nodeList[index],
-            index: index,
-            animation: animation,
-            indentPadding: widget.indentPadding,
-            expansionIndicator: widget.expansionIndicator,
-            onItemTap: widget.onItemTap,
-            minLevelToIndent: widget.showRootNode ? 0 : 1,
-          );
-        },
+        builder: (context, value, child) => ExpandableNodeItem<T>(
+          builder: widget.builder,
+          animatedListController: _animatedListController,
+          scrollController: _scrollController,
+          node: _nodeList[index],
+          index: index,
+          animation: animation,
+          indentPadding: widget.indentPadding,
+          expansionIndicator: widget.expansionIndicator,
+          onItemTap: widget.onItemTap,
+          minLevelToIndent: widget.showRootNode ? 0 : 1,
+        ),
       ),
     );
   }

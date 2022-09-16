@@ -26,7 +26,9 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   /// assigned to the [Node].
   @mustCallSuper
   Node({String? key, this.parent})
-      : this.children = <String, Node<T>>{},
+      : assert(key == null || !key.contains(INode.PATH_SEPARATOR),
+            "Key should not contain the PATH_SEPARATOR '${INode.PATH_SEPARATOR}'"),
+        this.children = <String, Node<T>>{},
         this.key = key ?? UniqueKey().toString();
 
   /// Alternate factory constructor that should be used for the [root] nodes.

@@ -29,7 +29,9 @@ class IndexedNode<T> extends INode<T> implements IIndexedNodeActions<T> {
   /// assigned to the [Node].
   @mustCallSuper
   IndexedNode({String? key, this.parent})
-      : this.children = <IndexedNode<T>>[],
+      : assert(key == null || !key.contains(INode.PATH_SEPARATOR),
+            "Key should not contain the PATH_SEPARATOR '${INode.PATH_SEPARATOR}'"),
+        this.children = <IndexedNode<T>>[],
         this.key = key ?? UniqueKey().toString();
 
   /// Alternate factory constructor that should be used for the [root] nodes.
