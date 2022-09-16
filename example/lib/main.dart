@@ -1,6 +1,8 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
+import 'utils/utils.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -41,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: TreeView<SimpleNode>(
-        initialItem: SimpleNode("#00-Root-Item"),
+        tree: SimpleNode("#00-Root-Item"),
         controller: controller,
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
@@ -145,23 +147,4 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () => item.clear()),
     );
   }
-}
-
-final Map<int, Color> colorMapper = {
-  0: Colors.white,
-  1: Colors.blueGrey[50]!,
-  2: Colors.blueGrey[100]!,
-  3: Colors.blueGrey[200]!,
-  4: Colors.blueGrey[300]!,
-  5: Colors.blueGrey[400]!,
-  6: Colors.blueGrey[500]!,
-  7: Colors.blueGrey[600]!,
-  8: Colors.blueGrey[700]!,
-  9: Colors.blueGrey[800]!,
-  10: Colors.blueGrey[900]!,
-};
-
-extension ColorUtil on Color {
-  Color byLuminance() =>
-      this.computeLuminance() > 0.4 ? Colors.black87 : Colors.white;
 }

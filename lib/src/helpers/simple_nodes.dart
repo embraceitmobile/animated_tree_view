@@ -11,6 +11,8 @@ class SimpleNode extends ListenableNode<SimpleNode> {
   ///   }
   /// ```
   SimpleNode([String? key]) : super(key: key);
+
+  factory SimpleNode.root() => SimpleNode(INode.ROOT_KEY);
 }
 
 class SimpleIndexedNode extends ListenableIndexedNode<SimpleIndexedNode> {
@@ -24,4 +26,6 @@ class SimpleIndexedNode extends ListenableIndexedNode<SimpleIndexedNode> {
   ///   }
   /// ```
   SimpleIndexedNode([String? key]) : super(key: key);
+
+  factory SimpleIndexedNode.root() => SimpleIndexedNode(INode.ROOT_KEY);
 }

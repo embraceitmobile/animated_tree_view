@@ -41,9 +41,9 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   /// An optional [controller] that allows controlling the [TreeView] programmatically
   final TreeViewController<T>? controller;
 
-  /// An optional [initialItem] that can allows to initialize the [TreeView] with
+  /// An optional [tree] that can allows to initialize the [TreeView] with
   /// initial data
-  final ListenableNode<T>? initialItem;
+  final ListenableNode<T>? tree;
 
   /// An optional [scrollController] that provides more granular control over
   /// scrolling behavior
@@ -128,7 +128,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
     this.scrollController,
     this.indentPadding,
     this.showRootNode,
-    this.initialItem,
+    this.tree,
     this.controller,
     this.shrinkWrap,
     this.onItemTap,
@@ -141,7 +141,7 @@ class TreeView<T extends ListenableNode<T>> extends StatelessWidget {
   Widget build(BuildContext context) => _TreeView<T>(
         builder: builder,
         controller: controller,
-        root: initialItem ?? ListenableNode<T>.root(),
+        tree: tree ?? ListenableNode<T>.root(),
         expansionIndicator: expansionIndicator,
         expansionBehavior: expansionBehavior,
         scrollController: scrollController,
@@ -164,9 +164,9 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
   /// programmatically
   final IndexedTreeViewController<T>? controller;
 
-  /// An optional [initialItem] that can allows to initialize the [IndexedTreeView]
+  /// An optional [tree] that can allows to initialize the [IndexedTreeView]
   /// with initial data
-  final ListenableIndexedNode<T>? initialItem;
+  final ListenableIndexedNode<T>? tree;
 
   /// An optional [scrollController] that provides more granular control over
   /// scrolling behavior
@@ -250,7 +250,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
     this.scrollController,
     this.indentPadding,
     this.showRootNode,
-    this.initialItem,
+    this.tree,
     this.controller,
     this.shrinkWrap,
     this.onItemTap,
@@ -264,7 +264,7 @@ class IndexedTreeView<T extends ListenableIndexedNode<T>>
         key: key,
         builder: builder,
         controller: controller,
-        root: initialItem ?? ListenableIndexedNode<T>.root(),
+        tree: tree ?? ListenableIndexedNode<T>.root(),
         expansionIndicator: expansionIndicator,
         expansionBehavior: expansionBehavior,
         scrollController: scrollController,
@@ -285,8 +285,8 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
   /// An optional [controller] that allows controlling the [TreeView] programmatically
   final ITreeViewController<T>? controller;
 
-  /// The [root] of the Tree
-  final IListenableNode<T> root;
+  /// The rootNode of the [tree]
+  final IListenableNode<T> tree;
 
   /// An optional [scrollController] that provides more granular control over
   /// scrolling behavior
@@ -354,7 +354,7 @@ class _TreeView<T extends IListenableNode<T>> extends StatefulWidget {
     super.key,
     required this.expansionBehavior,
     required this.builder,
-    required this.root,
+    required this.tree,
     this.indentPadding,
     this.scrollController,
     this.expansionIndicator,
@@ -388,7 +388,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
 
     _animatedListController = AnimatedListController<T>(
       listKey: listKey,
-      listenableNode: widget.root,
+      listenableNode: widget.tree,
       removedItemBuilder: buildRemovedItem,
       showRootNode: widget.showRootNode,
       scrollController: _scrollController,
@@ -396,7 +396,15 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
     );
 
     // ignore: invalid_use_of_protected_member
-    widget.controller?.attach(widget.root, _animatedListController);
+    widget.controller?.attach(widget.tree, _animatedListController);
+  }
+
+  @override
+  void didUpdateWidget(_TreeView<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.expansionBehavior != oldWidget.expansionBehavior)
+      _animatedListController.expansionBehavior = widget.expansionBehavior;
   }
 
   Widget build(BuildContext context) {

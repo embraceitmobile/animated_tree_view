@@ -14,7 +14,7 @@ class AnimatedListController<T extends INode<T>> {
   final List<T> _flatList;
   final AutoScrollController scrollController;
   final bool showRootNode;
-  final ExpansionBehavior expansionBehavior;
+  ExpansionBehavior expansionBehavior;
 
   late StreamSubscription<NodeAddEvent<T>> _addedNodesSubscription;
   late StreamSubscription<NodeInsertEvent<T>>? _insertNodesSubscription;
