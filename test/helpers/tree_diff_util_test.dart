@@ -69,4 +69,133 @@ void main() {
     expect(result.first, isA<DataInsert>());
     expect(((result.first as DataInsert).data as SimpleNode).path, "/.c.c1");
   });
+
+  test(
+      "Correct position and data is notified on removing a node at double level",
+      () {
+    final tree1 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")..addAll([SimpleNode("c1")])
+      ]);
+
+    final tree2 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c"),
+      ]);
+
+    final result = calculateTreeDiff(tree1, tree2);
+    expect(result.length, 1);
+    expect(result.first, isA<DataRemove>());
+    expect(((result.first as DataRemove).data as SimpleNode).path, "/.c.c1");
+  });
+
+  test(
+      "Correct position and data is notified on inserting and removing a node at double level",
+      () {
+    final tree1 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")..addAll([SimpleNode("c1")]),
+      ]);
+
+    final tree2 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a")..addAll([SimpleNode("a1")]),
+        SimpleNode("b"),
+        SimpleNode("c"),
+      ]);
+
+    final result = calculateTreeDiff(tree1, tree2);
+    expect(result.length, 2);
+    expect(result.first, isA<DataInsert>());
+    expect(((result.first as DataInsert).data as SimpleNode).path, "/.a.a1");
+    expect(result.last, isA<DataRemove>());
+    expect(((result.last as DataRemove).data as SimpleNode).path, "/.c.c1");
+  });
+
+  test(
+      "Correct position and data is notified on inserting a nodes at double level",
+      () {
+    final tree1 = SimpleNode.root()
+      ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
+
+    final tree2 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b")
+          ..addAll([
+            SimpleNode("b1")
+              ..addAll([
+                SimpleNode("b1-1")..addAll([SimpleNode("b1-1-1")])
+              ])
+          ]),
+        SimpleNode("c")..addAll([SimpleNode("c1")]),
+      ]);
+
+    final result = calculateTreeDiff(tree1, tree2);
+    expect(result.length, 2);
+    expect(result.first, isA<DataInsert>());
+    expect(((result.first as DataInsert).data as SimpleNode).path, "/.b.b1");
+    expect(result.last, isA<DataInsert>());
+    expect(((result.last as DataInsert).data as SimpleNode).path, "/.c.c1");
+  });
+
+  test(
+      "Correct position and data is notified on inserting a new node at third level",
+      () {
+    final tree1 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")..addAll([SimpleNode("c1")]),
+      ]);
+
+    final tree2 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")
+          ..addAll([
+            SimpleNode("c1")..addAll([SimpleNode("c1-1")]),
+          ]),
+      ]);
+
+    final result = calculateTreeDiff(tree1, tree2);
+    expect(result.length, 1);
+    expect(result.first, isA<DataInsert>());
+    expect(
+        ((result.first as DataInsert).data as SimpleNode).path, "/.c.c1.c1-1");
+  });
+
+  test(
+      "Correct position and data is notified on removing a node at third level",
+      () {
+    final tree1 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")
+          ..addAll([
+            SimpleNode("c1")..addAll([SimpleNode("c1-1")]),
+          ]),
+      ]);
+
+    final tree2 = SimpleNode.root()
+      ..addAll([
+        SimpleNode("a"),
+        SimpleNode("b"),
+        SimpleNode("c")..addAll([SimpleNode("c1")]),
+      ]);
+
+    final result = calculateTreeDiff(tree1, tree2);
+    expect(result.length, 1);
+    expect(result.first, isA<DataRemove>());
+    expect(
+        ((result.first as DataRemove).data as SimpleNode).path, "/.c.c1.c1-1");
+  });
 }
