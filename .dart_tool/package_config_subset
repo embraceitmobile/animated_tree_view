@@ -22,6 +22,10 @@ collection
 2.12
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/lib/
+diffutil_dart
+2.12
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/diffutil_dart-3.0.0/
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/diffutil_dart-3.0.0/lib/
 fake_async
 2.12
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/
@@ -42,6 +46,10 @@ path
 2.12
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib/
+quiver
+2.12
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/lib/
 scroll_to_index
 2.12
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/scroll_to_index-3.0.1/
@@ -70,6 +78,10 @@ test_api
 2.12
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib/
+tuple
+2.12
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/tuple-2.0.0/
+file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/tuple-2.0.0/lib/
 vector_math
 2.14
 file:///Users/jawwadhassan/Dev-tools/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/
