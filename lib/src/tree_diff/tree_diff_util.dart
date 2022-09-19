@@ -3,11 +3,12 @@ import 'dart:math';
 
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/helpers/collection_utils.dart';
+import 'package:animated_tree_view/src/tree_diff/tree_diff_update.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
-List<DataDiffUpdate<INode>> calculateTreeDiff(INode oldTree, INode newTree) {
+List<TreeDiffUpdate> calculateTreeDiff(INode oldTree, INode newTree) {
   if (oldTree is Node && newTree is Node)
     return calculateMapTreeDiff(oldTree, newTree);
 
@@ -18,8 +19,8 @@ List<DataDiffUpdate<INode>> calculateTreeDiff(INode oldTree, INode newTree) {
 }
 
 @visibleForTesting
-List<DataDiffUpdate<INode>> calculateMapTreeDiff(Node oldTree, Node newTree) {
-  final updates = <DataDiffUpdate<INode>>[];
+List<TreeDiffUpdate> calculateMapTreeDiff(Node oldTree, Node newTree) {
+  final updates = <TreeDiffUpdate>[];
 
   final queue = ListQueue<Tuple2<Node, Node>>();
   queue.add(Tuple2(oldTree, newTree));
@@ -43,9 +44,9 @@ List<DataDiffUpdate<INode>> calculateMapTreeDiff(Node oldTree, Node newTree) {
 }
 
 @visibleForTesting
-List<DataDiffUpdate<INode>> calculateIndexedTreeDiff(
+List<TreeDiffUpdate> calculateIndexedTreeDiff(
     IndexedNode oldTree, IndexedNode newTree) {
-  final updates = <DataDiffUpdate<INode>>[];
+  final updates = <TreeDiffUpdate>[];
 
   final queue = ListQueue<Tuple2<List<INode>, List<INode>>>();
   queue.add(Tuple2(oldTree.childrenAsList, newTree.childrenAsList));
@@ -60,21 +61,27 @@ List<DataDiffUpdate<INode>> calculateIndexedTreeDiff(
       equalityChecker: (n1, n2) => n1.key == n2.key,
     ).getUpdatesWithData();
 
-    updates.addAll(localUpdates);
+    final changedNodeIndices = <int>{};
 
-    final changedNodeKeys = localUpdates
-        .map<int?>((update) => update.when(
-              insert: (pos, _) => pos,
-              remove: (pos, _) => pos,
-              change: (_, __, ___) => double.maxFinite.toInt(),
-              move: (_, __, ___) => double.maxFinite.toInt(),
-            ))
-        .toSet();
+    for (final update in localUpdates) {
+      update.when(
+        insert: (pos, data) {
+          updates.add(NodeInsert(position: pos, data: data));
+          changedNodeIndices.add(pos);
+        },
+        remove: (pos, data) {
+          updates.add(NodeRemove(data, position: pos));
+          changedNodeIndices.add(pos);
+        },
+        change: (_, __, ___) {},
+        move: (_, __, ___) {},
+      );
+    }
 
     for (int i = 0;
         i < min(listsToCompare.item1.length, listsToCompare.item2.length);
         i++) {
-      if (!changedNodeKeys.contains(i)) {
+      if (!changedNodeIndices.contains(i)) {
         queue.add(
           Tuple2(
             listsToCompare.item1[i].childrenAsList,
@@ -114,12 +121,10 @@ class TreeDiff {
         Tuple2(oldTree.children[nodeKey]!, newTree.children[nodeKey]!));
   }
 
-  Iterable<DataDiffUpdate<INode>> asUpdates() {
-    final updates = <DataDiffUpdate<INode>>[];
-    updates
-        .addAll(nodesAdded.map((node) => DataInsert(position: 0, data: node)));
-    updates.addAll(
-        nodesRemoved.map((node) => DataRemove(position: 0, data: node)));
+  Iterable<TreeDiffUpdate> asUpdates() {
+    final updates = <TreeDiffUpdate>[];
+    updates.addAll(nodesAdded.map((node) => NodeAdd(node)));
+    updates.addAll(nodesRemoved.map((node) => NodeRemove(node)));
 
     return updates;
   }
