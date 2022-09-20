@@ -25,7 +25,7 @@ List<TreeDiffUpdate> calculateTreeDiff<T extends INode>(T oldTree, T newTree) {
       newTree: nodesToCompare.item2,
     );
 
-    updates.addAll(localUpdates.asUpdates());
+    updates.addAll(localUpdates.allUpdates);
     queue.addAll(List<Tuple2<T, T>>.from(localUpdates.nodesUnchanged));
   }
 
@@ -40,6 +40,12 @@ class TreeDiff {
 
   final INode oldTree;
   final INode newTree;
+
+  Iterable<TreeDiffUpdate> get allUpdates => [
+        ...nodesAdded,
+        ...nodesInserted,
+        ...nodesRemoved,
+      ];
 
   const TreeDiff._({
     required this.oldTree,
@@ -137,10 +143,4 @@ class TreeDiff {
       nodesUnchanged: nodesUnchanged,
     );
   }
-
-  Iterable<TreeDiffUpdate> asUpdates() => [
-        ...nodesAdded,
-        ...nodesInserted,
-        ...nodesRemoved,
-      ];
 }

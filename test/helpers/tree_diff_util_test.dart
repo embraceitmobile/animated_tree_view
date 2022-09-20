@@ -3,6 +3,9 @@ import 'package:animated_tree_view/src/tree_diff/tree_diff_update.dart';
 import 'package:animated_tree_view/src/tree_diff/tree_diff_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../mocks/mock_indexed_trees.dart';
+import '../mocks/mock_trees.dart';
+
 void main() {
   group("Test Node diff returns correct updates", () {
     test(
@@ -437,6 +440,108 @@ void main() {
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleIndexedNode).path,
           "/.c.c1.c1-1");
+    });
+  });
+
+  group("Test multiple tree modifications", () {
+    test("Test correct result is returned on adding nodes", () {
+      final result = calculateTreeDiff<Node>(defaultTree, nodesAddedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeAdd>());
+      expect(result.last, isA<NodeAdd>());
+      expect((result.first as NodeAdd).data.key, "0D");
+      expect((result.last as NodeAdd).data.key, "0E");
+    });
+
+    test("Test correct result is returned on removing nodes", () {
+      final result = calculateTreeDiff<Node>(nodesAddedTree, nodesRemovedTree);
+      expect(result.length, 3);
+      expect(result.first, isA<NodeRemove>());
+      expect(result.last, isA<NodeRemove>());
+      expect((result.first as NodeRemove).data.key, "0B");
+      expect((result.last as NodeRemove).data.key, "0E");
+    });
+
+    test("Test correct result is returned on removing nodes on level 1", () {
+      final result = calculateTreeDiff<Node>(
+          nodesRemovedTree, nodesLevelOneChildRemovedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeRemove>());
+      expect(result.last, isA<NodeRemove>());
+      expect((result.first as NodeRemove).data.key, "0C1A");
+      expect((result.first as NodeRemove).data.path, "/.0C.0C1A");
+      expect((result.last as NodeRemove).data.key, "0C1B");
+      expect((result.last as NodeRemove).data.path, "/.0C.0C1B");
+    });
+
+    test("Test correct result is returned on removing nodes on level 2", () {
+      final result = calculateTreeDiff<Node>(
+          nodesLevelOneChildRemovedTree, nodesLevelTwoChildRemovedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeRemove>());
+      expect(result.last, isA<NodeRemove>());
+      expect((result.first as NodeRemove).data.key, "0C1C2A3B");
+      expect(
+          (result.first as NodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3B");
+      expect((result.last as NodeRemove).data.key, "0C1C2A3C");
+      expect(
+          (result.last as NodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3C");
+    });
+  });
+
+  group("Test multiple indexed tree modifications", () {
+    test("Test correct result is returned on adding indexed nodes", () {
+      final result = calculateTreeDiff<IndexedNode>(
+          defaultIndexedTree, nodesAddedIndexedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeInsert>());
+      expect(result.last, isA<NodeInsert>());
+      expect((result.first as NodeInsert).data.key, "0E");
+      expect((result.last as NodeInsert).data.key, "0D");
+    });
+
+    test("Test correct result is returned on removing indexed nodes", () {
+      final result = calculateTreeDiff<IndexedNode>(
+          nodesAddedIndexedTree, nodesRemovedIndexedTree);
+      expect(result.length, 3);
+      expect(result.first, isA<NodeRemove>());
+      expect(result.last, isA<NodeRemove>());
+      expect((result.first as NodeRemove).data.key, "0E");
+      expect((result.last as NodeRemove).data.key, "0B");
+    });
+
+    test("Test correct result is returned on removing indexed nodes on level 1",
+        () {
+      final result = calculateTreeDiff<IndexedNode>(
+          nodesRemovedIndexedTree, nodesLevelOneChildRemovedIndexedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeRemove>());
+      expect(result.last, isA<NodeRemove>());
+      expect((result.first as NodeRemove).data.key, "0C1B");
+      expect((result.first as NodeRemove).data.path, "/.0C.0C1B");
+      expect((result.last as NodeRemove).data.key, "0C1A");
+      expect((result.last as NodeRemove).data.path, "/.0C.0C1A");
+    });
+
+    test("Test correct result is returned on removing indexed nodes on level 2",
+        () {
+      final result = calculateTreeDiff<IndexedNode>(
+          nodesLevelOneChildRemovedIndexedTree,
+          nodesLevelTwoChildRemovedIndexedTree);
+      expect(result.length, 2);
+      expect(result.first, isA<NodeRemove>());
+
+      expect((result.first as NodeRemove).data.key, "0C1C2A3C");
+      expect(
+        (result.first as NodeRemove).data.path,
+        "/.0C.0C1C.0C1C2A.0C1C2A3C",
+      );
+      expect(result.last, isA<NodeRemove>());
+      expect((result.last as NodeRemove).data.key, "0C1C2A3B");
+      expect(
+        (result.last as NodeRemove).data.path,
+        "/.0C.0C1C.0C1C2A.0C1C2A3B",
+      );
     });
   });
 }
