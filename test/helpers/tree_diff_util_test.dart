@@ -24,9 +24,7 @@ void main() {
       expect(((result.first as NodeAdd).data as SimpleNode).key, 'd');
     });
 
-    test(
-        "Correct position and data is notified on removing a new node at single level",
-        () {
+    test("Correct data is notified on removing a new node at single level", () {
       final tree1 = SimpleNode.root()
         ..addAll([
           SimpleNode("a"),
@@ -44,7 +42,7 @@ void main() {
     });
 
     test(
-        "Correct position and data is notified on simultaneous inserting and removing a new node at single level",
+        "Correct data is notified on simultaneous inserting and removing a new node at single level",
         () {
       final tree1 = SimpleNode.root()
         ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
@@ -60,8 +58,7 @@ void main() {
       expect(((result.last as NodeRemove).data as SimpleNode).key, 'a');
     });
 
-    test(
-        "Correct position and data is notified on inserting a new node at double level",
+    test("Correct data is notified on inserting a new node at double level",
         () {
       final tree1 = SimpleNode.root()
         ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
@@ -79,9 +76,7 @@ void main() {
       expect(((result.first as NodeAdd).data as SimpleNode).path, "/.c.c1");
     });
 
-    test(
-        "Correct position and data is notified on removing a node at double level",
-        () {
+    test("Correct data is notified on removing a node at double level", () {
       final tree1 = SimpleNode.root()
         ..addAll([
           SimpleNode("a"),
@@ -103,7 +98,7 @@ void main() {
     });
 
     test(
-        "Correct position and data is notified on inserting and removing a node at double level",
+        "Correct data is notified on inserting and removing a node at double level",
         () {
       final tree1 = SimpleNode.root()
         ..addAll([

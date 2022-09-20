@@ -48,48 +48,48 @@ List<TreeDiffUpdate> calculateIndexedTreeDiff(
     IndexedNode oldTree, IndexedNode newTree) {
   final updates = <TreeDiffUpdate>[];
 
-  final queue = ListQueue<Tuple2<List<INode>, List<INode>>>();
-  queue.add(Tuple2(oldTree.childrenAsList, newTree.childrenAsList));
+  final queue = ListQueue<Tuple2<IndexedNode, IndexedNode>>();
+  queue.add(Tuple2(oldTree, newTree));
 
   while (queue.isNotEmpty) {
-    final listsToCompare = queue.removeFirst();
-    if (listsToCompare.item1.isEmpty && listsToCompare.item2.isEmpty) continue;
+    final nodesToCompare = queue.removeFirst();
+
+    if (nodesToCompare.item1.children.isEmpty &&
+        nodesToCompare.item2.children.isEmpty) continue;
 
     final localUpdates = calculateListDiff<INode>(
-      listsToCompare.item1,
-      listsToCompare.item2,
+      nodesToCompare.item1.children,
+      nodesToCompare.item2.children,
       equalityChecker: (n1, n2) => n1.key == n2.key,
     ).getUpdatesWithData();
-
-    final changedNodeIndices = <int>{};
 
     for (final update in localUpdates) {
       update.when(
         insert: (pos, data) {
           updates.add(NodeInsert(position: pos, data: data));
-          changedNodeIndices.add(pos);
         },
         remove: (pos, data) {
           updates.add(NodeRemove(data, position: pos));
-          changedNodeIndices.add(pos);
         },
         change: (_, __, ___) {},
         move: (_, __, ___) {},
       );
     }
 
-    for (int i = 0;
-        i < min(listsToCompare.item1.length, listsToCompare.item2.length);
-        i++) {
-      if (!changedNodeIndices.contains(i)) {
-        queue.add(
-          Tuple2(
-            listsToCompare.item1[i].childrenAsList,
-            listsToCompare.item2[i].childrenAsList,
-          ),
-        );
-      }
-    }
+    final oldTreeMap = <String, IndexedNode>{
+      for (final node in nodesToCompare.item1.children) node.key: node
+    };
+
+    final newTreeMap = <String, IndexedNode>{
+      for (final node in nodesToCompare.item2.children) node.key: node
+    };
+
+    final nodesUnchanged = oldTreeMap.keys
+        .toSet()
+        .intersection(newTreeMap.keys.toSet())
+        .map((nodeKey) => Tuple2(oldTreeMap[nodeKey]!, newTreeMap[nodeKey]!));
+
+    queue.addAll(nodesUnchanged);
   }
 
   return updates;
