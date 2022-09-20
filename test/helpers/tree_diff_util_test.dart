@@ -18,7 +18,7 @@ void main() {
           SimpleNode("d")
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
       expect(((result.first as NodeAdd).data as SimpleNode).key, 'd');
@@ -35,7 +35,7 @@ void main() {
       final tree2 = SimpleNode.root()
         ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleNode).key, 'd');
@@ -49,7 +49,7 @@ void main() {
       final tree2 = SimpleNode.root()
         ..addAll([SimpleNode("b"), SimpleNode("c"), SimpleNode("d")]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 2);
 
       expect(result.first, isA<NodeAdd>());
@@ -70,7 +70,7 @@ void main() {
           SimpleNode("c")..addAll([SimpleNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
       expect(((result.first as NodeAdd).data as SimpleNode).path, "/.c.c1");
@@ -91,7 +91,7 @@ void main() {
           SimpleNode("c"),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleNode).path, "/.c.c1");
@@ -114,7 +114,7 @@ void main() {
           SimpleNode("c"),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeAdd>());
       expect(((result.first as NodeAdd).data as SimpleNode).path, "/.a.a1");
@@ -141,7 +141,7 @@ void main() {
           SimpleNode("c")..addAll([SimpleNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeAdd>());
       expect(((result.first as NodeAdd).data as SimpleNode).path, "/.b.b1");
@@ -169,7 +169,7 @@ void main() {
             ]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
       expect(
@@ -196,7 +196,7 @@ void main() {
           SimpleNode("c")..addAll([SimpleNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<Node>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleNode).path,
@@ -222,7 +222,7 @@ void main() {
           SimpleIndexedNode("d")
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
       expect((result.first as NodeInsert).position, 3);
@@ -245,7 +245,7 @@ void main() {
           SimpleIndexedNode("c")
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect((result.first as NodeRemove).position, 3);
@@ -267,7 +267,7 @@ void main() {
           SimpleIndexedNode("d")
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 2);
 
       expect(result.first, isA<NodeInsert>());
@@ -293,7 +293,7 @@ void main() {
           SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
       expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
@@ -317,7 +317,7 @@ void main() {
           SimpleIndexedNode("c"),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleIndexedNode).path,
@@ -341,7 +341,7 @@ void main() {
           SimpleIndexedNode("c"),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeInsert>());
       expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
@@ -375,7 +375,7 @@ void main() {
           SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeInsert>());
       expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
@@ -405,7 +405,7 @@ void main() {
             ]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
       expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
@@ -432,7 +432,7 @@ void main() {
           SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
         ]);
 
-      final result = calculateTreeDiff(tree1, tree2);
+      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect(((result.first as NodeRemove).data as SimpleIndexedNode).path,

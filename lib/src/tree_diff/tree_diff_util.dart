@@ -8,21 +8,10 @@ import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
-List<TreeDiffUpdate> calculateTreeDiff(INode oldTree, INode newTree) {
-  if (oldTree is Node && newTree is Node)
-    return calculateMapTreeDiff(oldTree, newTree);
-
-  if (oldTree is IndexedNode && newTree is IndexedNode)
-    return calculateIndexedTreeDiff(oldTree, newTree);
-
-  return [];
-}
-
-@visibleForTesting
-List<TreeDiffUpdate> calculateMapTreeDiff(Node oldTree, Node newTree) {
+List<TreeDiffUpdate> calculateTreeDiff<T extends INode>(T oldTree, T newTree) {
   final updates = <TreeDiffUpdate>[];
 
-  final queue = ListQueue<Tuple2<Node, Node>>();
+  final queue = ListQueue<Tuple2<T, T>>();
   queue.add(Tuple2(oldTree, newTree));
 
   while (queue.isNotEmpty) {
@@ -37,34 +26,7 @@ List<TreeDiffUpdate> calculateMapTreeDiff(Node oldTree, Node newTree) {
     );
 
     updates.addAll(localUpdates.asUpdates());
-    queue.addAll(List<Tuple2<Node, Node>>.from(localUpdates.nodesUnchanged));
-  }
-
-  return updates;
-}
-
-@visibleForTesting
-List<TreeDiffUpdate> calculateIndexedTreeDiff(
-    IndexedNode oldTree, IndexedNode newTree) {
-  final updates = <TreeDiffUpdate>[];
-
-  final queue = ListQueue<Tuple2<IndexedNode, IndexedNode>>();
-  queue.add(Tuple2(oldTree, newTree));
-
-  while (queue.isNotEmpty) {
-    final nodesToCompare = queue.removeFirst();
-
-    if (nodesToCompare.item1.children.isEmpty &&
-        nodesToCompare.item2.children.isEmpty) continue;
-
-    final localUpdates = TreeDiff(
-      oldTree: nodesToCompare.item1,
-      newTree: nodesToCompare.item2,
-    );
-
-    updates.addAll(localUpdates.asUpdates());
-    queue.addAll(List<Tuple2<IndexedNode, IndexedNode>>.from(
-        localUpdates.nodesUnchanged));
+    queue.addAll(List<Tuple2<T, T>>.from(localUpdates.nodesUnchanged));
   }
 
   return updates;
