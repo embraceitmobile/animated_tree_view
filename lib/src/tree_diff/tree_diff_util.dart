@@ -11,7 +11,7 @@ import 'package:tuple/tuple.dart';
 List<TreeDiffUpdate> calculateTreeDiff<T extends INode>(T oldTree, T newTree) {
   final updates = <TreeDiffUpdate>[];
 
-  final queue = ListQueue<Tuple2<T, T>>();
+  final queue = ListQueue<Tuple2<INode, INode>>();
   queue.add(Tuple2(oldTree, newTree));
 
   while (queue.isNotEmpty) {
@@ -26,7 +26,7 @@ List<TreeDiffUpdate> calculateTreeDiff<T extends INode>(T oldTree, T newTree) {
     );
 
     updates.addAll(localUpdates.allUpdates);
-    queue.addAll(List<Tuple2<T, T>>.from(localUpdates.nodesUnchanged));
+    queue.addAll(localUpdates.nodesUnchanged);
   }
 
   return updates;
@@ -78,7 +78,7 @@ class TreeDiff {
 
     final nodesRemoved = oldKeys.difference(newKeys).map((nodeKey) {
       final node = oldTree.children[nodeKey];
-      return node == null ? null : NodeRemove(node);
+      return node == null ? null : NodeRemove(data: node);
     }).filterNotNull();
 
     final nodesUnchanged = oldKeys.intersection(newKeys).map(
@@ -104,6 +104,7 @@ class TreeDiff {
       oldTree.children,
       newTree.children,
       equalityChecker: (n1, n2) => n1.key == n2.key,
+      detectMoves: false,
     ).getUpdatesWithData();
 
     final nodesInserted = <NodeInsert>[];
@@ -115,7 +116,7 @@ class TreeDiff {
           nodesInserted.add(NodeInsert(position: pos, data: data));
         },
         remove: (pos, data) {
-          nodesRemoved.add(NodeRemove(data, position: pos));
+          nodesRemoved.add(NodeRemove(data: data, position: pos));
         },
         change: (_, __, ___) {},
         move: (_, __, ___) {},

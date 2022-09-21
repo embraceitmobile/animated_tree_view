@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'controllers/animated_list_controller.dart';
 import 'expandable_node/expandable_node.dart';
 import 'listenable_node/base/i_listenable_node.dart';
+import 'tree_diff/tree_diff_util.dart';
 
 /// The builder function that allows to build any item of type [T].
 /// The builder function also provides the [level] of the node.
@@ -388,7 +389,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
 
     _animatedListController = AnimatedListController<T>(
       listKey: listKey,
-      listenableNode: widget.tree,
+      tree: widget.tree,
       removedItemBuilder: buildRemovedItem,
       showRootNode: widget.showRootNode,
       scrollController: _scrollController,
@@ -405,6 +406,37 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
 
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
       _animatedListController.expansionBehavior = widget.expansionBehavior;
+
+    didUpdateTree(oldWidget.tree);
+  }
+
+  void didUpdateTree(IListenableNode<T> oldTree) {
+    final treeDiff = calculateTreeDiff(oldTree, widget.tree);
+    if (treeDiff.isEmpty) return;
+
+    for (final update in treeDiff) {
+      update.when(
+        add: (node) {
+          node as T;
+          final parentNode = (oldTree.elementAt(node.path).parent ??
+              oldTree.root) as INodeActions;
+          parentNode.add(node);
+        },
+        insert: (node, pos) {
+          node as T;
+          final parentNode = (oldTree.elementAt(node.path).parent ??
+              oldTree.root) as IIndexedNodeActions;
+          parentNode.insert(pos, node as IndexedNode);
+        },
+        remove: (node, pos) {
+          node as T;
+          final parentNode = (oldTree.elementAt(node.path).parent ??
+              oldTree.root) as INodeActions;
+
+          parentNode.remove(node);
+        },
+      );
+    }
   }
 
   Widget build(BuildContext context) {

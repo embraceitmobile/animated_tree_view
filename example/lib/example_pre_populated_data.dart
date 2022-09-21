@@ -34,17 +34,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller = TreeViewController<SimpleNode>();
-  int currentTree = 0;
+  int stateCount = 0;
+  ExpansionIndicator _expansionIndicator = ExpansionIndicator.PlusMinus;
+  List<ExpansionIndicator> _expansionIndicators = [
+    ExpansionIndicator.DownUpChevron,
+    ExpansionIndicator.PlusMinus,
+    ExpansionIndicator.RightUpChevron,
+  ];
 
   void _nextTree() {
     setState(() {
-      if (currentTree < testTrees.length - 1)
-        currentTree++;
+      if (stateCount < testTrees.length - 1)
+        stateCount++;
       else {
-        currentTree = 0;
+        stateCount = 0;
       }
+
+      // _expansionIndicator = _expansionIndicators[stateCount];
     });
-    print("Current tree: $currentTree");
+    print("Current tree: $stateCount");
   }
 
   @override
@@ -58,11 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _nextTree,
       ),
       body: TreeView<SimpleNode>(
-        tree: testTrees[currentTree],
-        expansionIndicator: ExpansionIndicator.PlusMinus,
+        tree: testTrees[stateCount],
+        expansionIndicator: _expansionIndicator,
         controller: controller,
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
+        showRootNode: true,
         builder: (context, level, item) => Card(
           color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(

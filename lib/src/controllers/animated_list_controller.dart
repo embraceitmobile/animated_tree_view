@@ -23,16 +23,14 @@ class AnimatedListController<T extends INode<T>> {
   AnimatedListController(
       {required GlobalKey<AnimatedListState> listKey,
       required dynamic removedItemBuilder,
-      required IListenableNode<T> listenableNode,
+      required IListenableNode<T> tree,
       required this.scrollController,
       required this.expansionBehavior,
       this.showRootNode = true})
       : _listKey = listKey,
-        _nodeUpdateNotifier = listenableNode,
+        _nodeUpdateNotifier = tree,
         _removedItemBuilder = removedItemBuilder,
-        _flatList = List.from(showRootNode
-            ? [listenableNode]
-            : listenableNode.root.childrenAsList),
+        _flatList = List.from(showRootNode ? [tree] : tree.root.childrenAsList),
         assert(removedItemBuilder != null) {
     _addedNodesSubscription =
         _nodeUpdateNotifier.addedNodes.listen(handleAddItemsEvent);

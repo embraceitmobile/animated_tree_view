@@ -46,12 +46,13 @@ class NodeAddEvent<T> with NodeEvent<T> {
 
 class NodeRemoveEvent<T> with NodeEvent<T> {
   final List<T> items;
+  final int? index;
 
-  const NodeRemoveEvent(this.items);
+  const NodeRemoveEvent(this.items, {this.index});
 
   @override
   String toString() {
-    return 'NodeRemoveEvent{keys: $items}';
+    return 'NodeRemoveEvent{keys: $items, index: $index}';
   }
 }
 
