@@ -144,7 +144,6 @@ class IndexedNode extends INode implements IIndexedNodeActions {
       root.clear();
     else
       parent?.remove(this);
-    this.parent = null;
   }
 
   /// Remove a child [value] node from the [children]
@@ -157,7 +156,6 @@ class IndexedNode extends INode implements IIndexedNodeActions {
   /// Remove the child node at the [index]
   IndexedNode removeAt(int index) {
     final node = children.removeAt(index);
-    node.parent = null;
     return node;
   }
 
@@ -177,9 +175,6 @@ class IndexedNode extends INode implements IIndexedNodeActions {
   /// Clear all the child nodes from [children]. The [children] will be empty
   /// after this operation.
   void clear() {
-    for (final node in children) {
-      node.parent = null;
-    }
     children.clear();
   }
 

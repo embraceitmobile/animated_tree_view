@@ -61,13 +61,11 @@ class Node extends INode implements INodeActions {
   /// Clear all the child nodes from [children]. The [children] will be empty
   /// after this operation.
   void clear() {
-    children.forEach((key, node) => node.parent = null);
     children.clear();
   }
 
   /// Remove a child [value] node from the [children]
   void remove(Node value) {
-    // value.parent = null;
     children.remove(value.key);
   }
 
@@ -75,13 +73,11 @@ class Node extends INode implements INodeActions {
   void delete() {
     if (isRoot) throw ActionNotAllowedException.deleteRoot(this);
     (parent as Node).remove(this);
-    // this.parent = null;
   }
 
   /// Remove all the [Iterable] nodes from the [children]
   void removeAll(Iterable<Node> iterable) {
     for (final node in iterable) {
-      // node.parent = null;
       children.remove(node.key);
     }
   }
