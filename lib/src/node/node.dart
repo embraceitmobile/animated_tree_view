@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'base/i_node.dart';
 import 'base/i_node_actions.dart';
 
-class Node<T> extends INode<T> implements INodeActions<T> {
+class Node extends INode implements INodeActions {
   /// These are the children of the node.
-  final Map<String, Node<T>> children;
+  final Map<String, Node> children;
 
   /// This is the uniqueKey of the [Node]
   final String key;
 
   /// This is the parent [Node]. Only the root node has a null [parent]
-  Node<T>? parent;
+  Node? parent;
 
   /// Any related data that needs to be accessible from the node can be added to
   /// [meta] without needing to extend or implement the [INode]
@@ -28,7 +28,7 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   Node({String? key, this.parent})
       : assert(key == null || !key.contains(INode.PATH_SEPARATOR),
             "Key should not contain the PATH_SEPARATOR '${INode.PATH_SEPARATOR}'"),
-        this.children = <String, Node<T>>{},
+        this.children = <String, Node>{},
         this.key = key ?? UniqueKey().toString();
 
   /// Alternate factory constructor that should be used for the [root] nodes.
@@ -37,20 +37,20 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   /// Getter to get the [root] node.
   /// If the current node is not a [root], then the getter will traverse up the
   /// path to get the [root].
-  Node<T> get root => super.root as Node<T>;
+  Node get root => super.root as Node;
 
   /// This returns the [children] as an iterable list.
-  List<Node<T>> get childrenAsList => children.values.toList(growable: false);
+  List<Node> get childrenAsList => children.values.toList(growable: false);
 
   /// Add a [value] node to the [children]
-  void add(Node<T> value) {
+  void add(Node value) {
     if (children.containsKey(value.key)) throw DuplicateKeyException(value.key);
     value.parent = this;
     children[value.key] = value;
   }
 
   /// Add a collection of [Iterable] nodes to [children]
-  void addAll(Iterable<Node<T>> iterable) {
+  void addAll(Iterable<Node> iterable) {
     for (final node in iterable) {
       if (children.containsKey(node.key)) throw DuplicateKeyException(node.key);
       node.parent = this;
@@ -66,7 +66,7 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   }
 
   /// Remove a child [value] node from the [children]
-  void remove(Node<T> value) {
+  void remove(Node value) {
     // value.parent = null;
     children.remove(value.key);
   }
@@ -74,12 +74,12 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   /// Delete [this] node
   void delete() {
     if (isRoot) throw ActionNotAllowedException.deleteRoot(this);
-    (parent as Node<T>).remove(this);
+    (parent as Node).remove(this);
     // this.parent = null;
   }
 
   /// Remove all the [Iterable] nodes from the [children]
-  void removeAll(Iterable<Node<T>> iterable) {
+  void removeAll(Iterable<Node> iterable) {
     for (final node in iterable) {
       // node.parent = null;
       children.remove(node.key);
@@ -88,12 +88,12 @@ class Node<T> extends INode<T> implements INodeActions<T> {
 
   /// Remove all the child nodes from the [children] that match the criterion in
   /// the provided [test]
-  void removeWhere(bool Function(Node<T> element) test) {
+  void removeWhere(bool Function(Node element) test) {
     children.removeWhere((key, value) => test(value));
   }
 
   /// Overloaded operator for [elementAt]
-  Node<T> operator [](String path) => elementAt(path);
+  Node operator [](String path) => elementAt(path);
 
   /// * Utility method to get a child node at the [path].
   /// Get any item at [path] from the [root]
@@ -127,8 +127,8 @@ class Node<T> extends INode<T> implements INodeActions<T> {
   ///   0C.0C1C
   ///
   /// Note: The root node [ROOT_KEY] does not need to be in the path
-  Node<T> elementAt(String path) {
-    Node<T> currentNode = this;
+  Node elementAt(String path) {
+    Node currentNode = this;
     for (final nodeKey in path.splitToNodes) {
       if (nodeKey == currentNode.key) {
         continue;

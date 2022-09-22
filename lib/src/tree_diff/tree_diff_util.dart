@@ -4,11 +4,13 @@ import 'dart:math';
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/helpers/collection_utils.dart';
 import 'package:animated_tree_view/src/tree_diff/tree_diff_update.dart';
+import 'package:animated_tree_view/src/tree_node/tree_node.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
-List<TreeDiffUpdate> calculateTreeDiff<T extends INode>(T oldTree, T newTree) {
+List<TreeDiffUpdate> calculateTreeDiff<T extends ITreeNode>(
+    T oldTree, T newTree) {
   final updates = <TreeDiffUpdate>[];
 
   final queue = ListQueue<Tuple2<INode, INode>>();
@@ -57,10 +59,10 @@ class TreeDiff {
   });
 
   factory TreeDiff({required INode oldTree, required INode newTree}) {
-    if (oldTree is Node && newTree is Node)
+    if (oldTree is TreeNode && newTree is TreeNode)
       return forTree(oldTree: oldTree, newTree: newTree);
 
-    if (oldTree is IndexedNode && newTree is IndexedNode)
+    if (oldTree is IndexedTreeNode && newTree is IndexedTreeNode)
       return forIndexedTree(oldTree: oldTree, newTree: newTree);
 
     return TreeDiff._(oldTree: oldTree, newTree: newTree);

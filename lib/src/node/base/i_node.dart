@@ -1,5 +1,5 @@
 /// Base class for Node that defines the required interfaces
-abstract class INode<T> {
+abstract class INode {
   static const PATH_SEPARATOR = ".";
   static const ROOT_KEY = "/";
 
@@ -7,7 +7,7 @@ abstract class INode<T> {
   String get key;
 
   /// This is the parent [INode]. Only the root node has a null [parent]
-  covariant INode<T>? parent;
+  covariant INode? parent;
 
   /// These are the children of the node. It is a collection that can be
   /// any appropriate data-structure like [List] or [Map]
@@ -17,7 +17,7 @@ abstract class INode<T> {
   /// Since [children] can be implemented using any suitable data-structure,
   /// therefore by having an iterable list as children ensures that the children
   /// can always be iterated when required.
-  List<INode<T>> get childrenAsList;
+  List<INode> get childrenAsList;
 
   /// Any related data that needs to be accessible from the node can be added to
   /// [meta] without needing to extend or implement the [INode]
@@ -55,10 +55,10 @@ abstract class INode<T> {
   ///   0C.0C1C
   ///
   /// Note: The root node [ROOT_KEY] does not need to be in the path
-  INode<T> elementAt(String path);
+  INode elementAt(String path);
 
   /// Overloaded operator for [elementAt]
-  INode<T> operator [](String path);
+  INode operator [](String path);
 
   /// Getter to check if the node is a root.
   /// Root is always the first node in a Tree. A Root-Node never has a parent.
@@ -75,7 +75,7 @@ abstract class INode<T> {
   /// Getter to get the [root] node.
   /// If the current node is not a [root], then the getter will traverse up the
   /// path to get the [root].
-  INode<T> get root => isRoot ? this : this.parent!.root;
+  INode get root => isRoot ? this : this.parent!.root;
 
   /// Getter to get the level i.e. how many iterations it will take to get to the
   /// [root].
@@ -96,7 +96,7 @@ abstract class INode<T> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is INode<T> && other.key == key;
+      identical(this, other) || other is INode && other.key == key;
 
   @override
   int get hashCode => 0;

@@ -1,132 +1,132 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 
-ListenableIndexedNode get mockListenableIndexedNode1 =>
-    ListenableIndexedNode.root()
+IndexedListenableNode get mockListenableIndexedNode1 =>
+    IndexedListenableNode.root()
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),
       ]);
 
-ListenableIndexedNode get mockListenableIndexedNode2 =>
-    ListenableIndexedNode(key: "M2")
+IndexedListenableNode get mockListenableIndexedNode2 =>
+    IndexedListenableNode(key: "M2")
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),
       ]);
 
-ListenableIndexedNode get mockListenableIndexedNode3 =>
-    ListenableIndexedNode(key: "M3")
+IndexedListenableNode get mockListenableIndexedNode3 =>
+    IndexedListenableNode(key: "M3")
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),
       ]);
 
-ListenableIndexedNode get mockNoRootListenableIndexedNode1 =>
-    ListenableIndexedNode(key: "M1")
+IndexedListenableNode get mockNoRootListenableIndexedNode1 =>
+    IndexedListenableNode(key: "M1")
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),
       ]);
 
-ListenableIndexedNode get mockNoRootListenableIndexedNode2 =>
-    ListenableIndexedNode(key: "M2")
+IndexedListenableNode get mockNoRootListenableIndexedNode2 =>
+    IndexedListenableNode(key: "M2")
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),
       ]);
 
-ListenableIndexedNode get mockNoRootListenableIndexedNode3 =>
-    ListenableIndexedNode(key: "M3")
+IndexedListenableNode get mockNoRootListenableIndexedNode3 =>
+    IndexedListenableNode(key: "M3")
       ..addAll([
-        ListenableIndexedNode(key: "0A")
-          ..add(ListenableIndexedNode(key: "0A1A")),
-        ListenableIndexedNode(key: "0B"),
-        ListenableIndexedNode(key: "0C")
+        IndexedListenableNode(key: "0A")
+          ..add(IndexedListenableNode(key: "0A1A")),
+        IndexedListenableNode(key: "0B"),
+        IndexedListenableNode(key: "0C")
           ..addAll([
-            ListenableIndexedNode(key: "0C1A"),
-            ListenableIndexedNode(key: "0C1B"),
-            ListenableIndexedNode(key: "0C1C")
+            IndexedListenableNode(key: "0C1A"),
+            IndexedListenableNode(key: "0C1B"),
+            IndexedListenableNode(key: "0C1C")
               ..addAll([
-                ListenableIndexedNode(key: "0C1C2A")
+                IndexedListenableNode(key: "0C1C2A")
                   ..addAll([
-                    ListenableIndexedNode(key: "0C1C2A3A"),
-                    ListenableIndexedNode(key: "0C1C2A3B"),
-                    ListenableIndexedNode(key: "0C1C2A3C"),
+                    IndexedListenableNode(key: "0C1C2A3A"),
+                    IndexedListenableNode(key: "0C1C2A3B"),
+                    IndexedListenableNode(key: "0C1C2A3C"),
                   ]),
               ]),
           ]),

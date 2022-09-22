@@ -8,25 +8,25 @@ import 'package:flutter/foundation.dart';
 /// The [IListenableNode] also implements the [ValueListenable], so it can be
 /// used with a [ValueListenableBuilder] for updating the UI whenever the node
 /// is mutated.
-abstract class IListenableNode<T> extends INode<T>
-    implements NodeUpdateNotifier<T>, ValueListenable<T> {}
+abstract class IListenableNode<T extends INode> extends INode
+    implements NodeUpdateNotifier, ValueListenable<T> {}
 
 /// This class provides more granular over which updates to listen to.
-abstract class NodeUpdateNotifier<T> {
+abstract class NodeUpdateNotifier {
   /// Listen to this [Stream] to get updates on when a Node or a collection of
   /// Nodes is added to the current node.
   /// It returns a stream of [NodeAddEvent]
-  Stream<NodeAddEvent<T>> get addedNodes;
+  Stream<NodeAddEvent<INode>> get addedNodes;
 
   /// Listen to this [Stream] to get updates on when a Node or a collection of
   /// Nodes is inserted in the current node.
   /// It returns a stream of [insertedNodes]
-  Stream<NodeInsertEvent<T>> get insertedNodes;
+  Stream<NodeInsertEvent<INode>> get insertedNodes;
 
   /// Listen to this [Stream] to get updates on when a Node or a collection of
   /// Nodes is removed from the current node.
   /// It returns a stream of [NodeRemoveEvent]
-  Stream<NodeRemoveEvent<T>> get removedNodes;
+  Stream<NodeRemoveEvent<INode>> get removedNodes;
 
   void dispose();
 }

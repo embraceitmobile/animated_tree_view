@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
-extension ExpandableNode on INode {
-  static const _isExpandedKey = "is_expanded";
+// extension ExpandableNode on INode {
+//   static const _isExpandedKey = "is_expanded";
+//
+//   bool get isExpanded => meta?[_isExpandedKey] == true;
+//
+//   void setExpanded(bool isExpanded) {
+//     (meta ??= {})[_isExpandedKey] = isExpanded;
+//   }
+// }
 
-  bool get isExpanded => meta?[_isExpandedKey] == true;
-
-  void setExpanded(bool isExpanded) {
-    (meta ??= {})[_isExpandedKey] = isExpanded;
-  }
-}
-
-class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
-  final LeveledItemWidgetBuilder<T> builder;
+class ExpandableNodeItem<T> extends StatelessWidget {
+  final LeveledItemWidgetBuilder<ITreeNode<T>> builder;
   final AnimatedListController<T> animatedListController;
   final AutoScrollController scrollController;
-  final T node;
+  final ITreeNode<T> node;
   final Animation<double> animation;
   final double indentPadding;
   final ExpansionIndicator? expansionIndicator;
@@ -72,10 +72,10 @@ class ExpandableNodeItem<T extends INode<T>> extends StatelessWidget {
   }
 }
 
-class _ExpandableNodeContainer<T extends INode<T>> extends StatelessWidget {
+class _ExpandableNodeContainer<T> extends StatelessWidget {
   final Animation<double> animation;
-  final ValueSetter<T>? onTap;
-  final T item;
+  final ValueSetter<ITreeNode<T>>? onTap;
+  final ITreeNode<T> item;
   final ExpansionIndicator? expansionIndicator;
   final double indentPadding;
   final Widget child;

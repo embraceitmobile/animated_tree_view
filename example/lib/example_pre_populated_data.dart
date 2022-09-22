@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = TreeViewController<SimpleNode>();
+  // final controller = TreeViewController<SimpleNode>();
   int stateCount = 0;
 
   void _nextTree() {
@@ -57,10 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.fast_forward),
         onPressed: _nextTree,
       ),
-      body: TreeView<SimpleNode>(
+      body: TreeView(
         tree: testTrees[stateCount],
         expansionIndicator: ExpansionIndicator.DownUpChevron,
-        controller: controller,
+        // controller: controller,
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
         showRootNode: true,

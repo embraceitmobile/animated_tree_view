@@ -8,57 +8,57 @@ import 'package:flutter/foundation.dart';
 
 import 'base/i_listenable_node.dart';
 
-class ListenableIndexedNode<T> extends IndexedNode<T>
+class IndexedListenableNode extends IndexedNode
     with ChangeNotifier
-    implements IListenableNode<T> {
+    implements IListenableNode {
   /// A listenable implementation the [Node].
   /// The mutations to the [Node] can be listened to using the [ValueListenable]
   /// interface or the [addedNodes] and [removedNodes] streams.
   ///
-  /// The [ListenableIndexedNode] can also be used with a [ValueListenableBuilder]
+  /// The [IndexedListenableNode] can also be used with a [ValueListenableBuilder]
   /// for updating the UI whenever the [Node] is mutated.
   ///
   /// Default constructor that takes an optional [key] and a parent.
   /// Make sure that the provided [key] is unique to among the siblings of the node.
   /// If a [key] is not provided, then a [UniqueKey] will automatically be
   /// assigned to the [Node].
-  ListenableIndexedNode({String? key, IndexedNode<T>? parent})
+  IndexedListenableNode({String? key, IndexedNode? parent})
       : super(key: key, parent: parent);
 
-  /// Alternate factory constructor for [ListenableIndexedNode] that should be used for
+  /// Alternate factory constructor for [IndexedListenableNode] that should be used for
   /// the [root] nodes.
-  factory ListenableIndexedNode.root() =>
-      ListenableIndexedNode(key: INode.ROOT_KEY);
+  factory IndexedListenableNode.root() =>
+      IndexedListenableNode(key: INode.ROOT_KEY);
 
   /// This is the parent [ListenableNode]. Only the root node has a null [parent]
-  ListenableIndexedNode<T>? parent;
+  IndexedListenableNode? parent;
 
   /// Getter to get the [value] of the [ValueListenable]. It returns the [root]
-  T get value => root as T;
+  IndexedListenableNode get value => root;
 
   /// This returns the [children] as an iterable list.
-  List<ListenableIndexedNode<T>> get childrenAsList =>
-      List<ListenableIndexedNode<T>>.from(super.childrenAsList);
+  List<IndexedListenableNode> get childrenAsList =>
+      List<IndexedListenableNode>.from(super.childrenAsList);
 
   /// Getter to get the [root] node.
   /// If the current node is not a [root], then the getter will traverse up the
   /// path to get the [root].
-  ListenableIndexedNode<T> get root => super.root as ListenableIndexedNode<T>;
+  IndexedListenableNode get root => super.root as IndexedListenableNode;
 
   /// Get the [first] child in the list
-  ListenableIndexedNode<T> get first => super.first as ListenableIndexedNode<T>;
+  IndexedListenableNode get first => super.first as IndexedListenableNode;
 
   /// Set the [last] child in the list to [value]
-  ListenableIndexedNode<T> get last => super.last as ListenableIndexedNode<T>;
+  IndexedListenableNode get last => super.last as IndexedListenableNode;
 
   /// Set the [first] child in the list to [value]
-  set first(IndexedNode<T> value) {
+  set first(IndexedNode value) {
     this.first = value;
     _notifyListeners();
   }
 
   /// Set the [last] child in the list to [value]
-  set last(IndexedNode<T> value) {
+  set last(IndexedNode value) {
     this.last = value;
     _notifyListeners();
   }
@@ -66,35 +66,34 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   /// Get the first child node that matches the criterion in the [test].
   /// An optional [orElse] function can be provided to handle the [test] is not
   /// able to find any node that matches the provided criterion.
-  ListenableIndexedNode<T> firstWhere(
-      bool Function(IndexedNode<T> element) test,
-      {IndexedNode<T> orElse()?}) {
-    return super.firstWhere(test, orElse: orElse) as ListenableIndexedNode<T>;
+  IndexedListenableNode firstWhere(bool Function(IndexedNode element) test,
+      {IndexedNode orElse()?}) {
+    return super.firstWhere(test, orElse: orElse) as IndexedListenableNode;
   }
 
   /// Get the index of the first child node that matches the criterion in the
   /// [test].
   /// An optional [start] index can be provided to ignore any nodes before the
   /// index [start]
-  int indexWhere(bool Function(IndexedNode<T> element) test, [int start = 0]) {
+  int indexWhere(bool Function(IndexedNode element) test, [int start = 0]) {
     return super.indexWhere(test, start);
   }
 
   /// Get the last child node that matches the criterion in the [test].
   /// An optional [orElse] function can be provided to handle the [test] is not
   /// able to find any node that matches the provided criterion.
-  ListenableIndexedNode<T> lastWhere(bool Function(IndexedNode<T> element) test,
-      {IndexedNode<T> orElse()?}) {
-    return super.lastWhere(test, orElse: orElse) as ListenableIndexedNode<T>;
+  IndexedListenableNode lastWhere(bool Function(IndexedNode element) test,
+      {IndexedNode orElse()?}) {
+    return super.lastWhere(test, orElse: orElse) as IndexedListenableNode;
   }
 
-  final EventStreamController<NodeAddEvent<T>> _addedNodes =
+  final EventStreamController<NodeAddEvent<INode>> _addedNodes =
       EventStreamController();
 
-  final EventStreamController<NodeInsertEvent<T>> _insertedNodes =
+  final EventStreamController<NodeInsertEvent<INode>> _insertedNodes =
       EventStreamController();
 
-  final EventStreamController<NodeRemoveEvent<T>> _removedNodes =
+  final EventStreamController<NodeRemoveEvent<INode>> _removedNodes =
       EventStreamController();
 
   /// Listen to this [Stream] to get updates on when a Node or a collection of
@@ -102,7 +101,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The stream should only be listened to on the [root] node.
   /// [ActionNotAllowedException] if a non-root tries to listen the [addedNodes]
-  Stream<NodeAddEvent<T>> get addedNodes {
+  Stream<NodeAddEvent<INode>> get addedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _addedNodes.stream;
   }
@@ -112,7 +111,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The stream should only be listened to on the [root] node.
   /// [ActionNotAllowedException] if a non-root tries to listen the [removedNodes]
-  Stream<NodeRemoveEvent<T>> get removedNodes {
+  Stream<NodeRemoveEvent<INode>> get removedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _removedNodes.stream;
   }
@@ -122,7 +121,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The stream should only be listened to on the [root] node.
   /// [ActionNotAllowedException] if a non-root tries to listen the [insertedNodes]
-  Stream<NodeInsertEvent<T>> get insertedNodes {
+  Stream<NodeInsertEvent<INode>> get insertedNodes {
     if (!isRoot) throw ActionNotAllowedException.listener(this);
     return _insertedNodes.stream;
   }
@@ -132,10 +131,10 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The [ValueListenable] and [addedNodes] listeners will also be notified
   /// on this operation
-  void add(IndexedNode<T> value) {
+  void add(IndexedNode value) {
     super.add(value);
     _notifyListeners();
-    _notifyNodesAdded(NodeAddEvent(List<T>.from([value])));
+    _notifyNodesAdded(NodeAddEvent(List.from([value])));
   }
 
   /// Add a collection of [Iterable] nodes to [children]. The [iterable] will be
@@ -143,27 +142,27 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The [ValueListenable] and [addedNodes] listeners will also be notified
   /// on this operation
-  void addAll(Iterable<IndexedNode<T>> iterable) {
+  void addAll(Iterable<IndexedNode> iterable) {
     super.addAll(iterable);
     _notifyListeners();
-    _notifyNodesAdded(NodeAddEvent(List<T>.from(iterable)));
+    _notifyNodesAdded(NodeAddEvent(List.from(iterable)));
   }
 
   /// Insert an [element] in the children list at [index]
   ///
   /// The [ValueListenable] and [insertedNodes] listeners will also be notified
   /// on this operation
-  void insert(int index, IndexedNode<T> element) {
+  void insert(int index, IndexedNode element) {
     super.insert(index, element);
     _notifyListeners();
-    _notifyNodesInserted(NodeInsertEvent<T>(List<T>.from([element]), index));
+    _notifyNodesInserted(NodeInsertEvent(List.from([element]), index));
   }
 
   /// Insert an [element] in the children list after the node [after]
   ///
   /// The [ValueListenable] and [insertedNodes] listeners will also be notified
   /// on this operation
-  int insertAfter(IndexedNode<T> after, IndexedNode<T> element) {
+  int insertAfter(IndexedNode after, IndexedNode element) {
     final index = super.insertAfter(after, element);
     return index;
   }
@@ -172,7 +171,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The [ValueListenable] and [insertedNodes] listeners will also be notified
   /// on this operation
-  int insertBefore(IndexedNode<T> before, IndexedNode<T> element) {
+  int insertBefore(IndexedNode before, IndexedNode element) {
     final index = super.insertBefore(before, element);
     return index;
   }
@@ -181,10 +180,10 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The [ValueListenable] and [insertedNodes] listeners will also be notified
   /// on this operation
-  void insertAll(int index, Iterable<IndexedNode<T>> iterable) {
+  void insertAll(int index, Iterable<IndexedNode> iterable) {
     super.insertAll(index, iterable);
     _notifyListeners();
-    _notifyNodesInserted(NodeInsertEvent<T>(List<T>.from(iterable), index));
+    _notifyNodesInserted(NodeInsertEvent(List.from(iterable), index));
   }
 
   /// Delete [this] node
@@ -195,35 +194,35 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     final nodeToRemove = this;
     super.delete();
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([nodeToRemove])));
+    _notifyNodesRemoved(NodeRemoveEvent(List.from([nodeToRemove])));
   }
 
   /// Remove a child [value] node from the [children]
   ///
   /// The [ValueListenable] and [removedNodes] listeners will also be notified
   /// on this operation
-  void remove(IndexedNode<T> value) {
+  void remove(IndexedNode value) {
     super.remove(value);
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([value])));
+    _notifyNodesRemoved(NodeRemoveEvent(List.from([value])));
   }
 
   /// Remove the child node at the [index]
   ///
   /// The [ValueListenable] and [removedNodes] listeners will also be notified
   /// on this operation
-  ListenableIndexedNode<T> removeAt(int index) {
+  IndexedListenableNode removeAt(int index) {
     final removedNode = super.removeAt(index);
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from([removedNode])));
-    return removedNode as ListenableIndexedNode<T>;
+    _notifyNodesRemoved(NodeRemoveEvent(List.from([removedNode])));
+    return removedNode as IndexedListenableNode;
   }
 
   /// Remove all the [Iterable] nodes from the [children]
   ///
   /// The [ValueListenable] and [removedNodes] listeners will also be notified
   /// on this operation
-  void removeAll(Iterable<IndexedNode<T>> iterable) {
+  void removeAll(Iterable<IndexedNode> iterable) {
     for (final value in iterable) {
       final index = children.indexWhere((node) => node.key == value.key);
       if (index < 0) throw NodeNotFoundException(key: key);
@@ -231,7 +230,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     }
 
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(iterable)));
+    _notifyNodesRemoved(NodeRemoveEvent(List.from(iterable)));
   }
 
   /// Remove all the child nodes from the [children] that match the criterion
@@ -239,7 +238,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///
   /// The [ValueListenable] and [removedNodes] listeners will also be notified
   /// on this operation
-  void removeWhere(bool test(IndexedNode<T> element)) {
+  void removeWhere(bool test(IndexedNode element)) {
     final allChildren = childrenAsList.toSet();
     super.removeWhere(test);
     _notifyListeners();
@@ -247,7 +246,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     allChildren.removeAll(remainingChildren);
 
     if (allChildren.isNotEmpty)
-      _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(allChildren)));
+      _notifyNodesRemoved(NodeRemoveEvent(List.from(allChildren)));
   }
 
   /// Clear all the child nodes from [children]. The [children] will be empty
@@ -259,7 +258,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     final clearedNodes = childrenAsList;
     super.clear();
     _notifyListeners();
-    _notifyNodesRemoved(NodeRemoveEvent(List<T>.from(clearedNodes)));
+    _notifyNodesRemoved(NodeRemoveEvent(List.from(clearedNodes)));
   }
 
   /// * Utility method to get a child node at the [path].
@@ -294,13 +293,13 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
   ///   0C.0C1C
   ///
   /// Note: The root node [ROOT_KEY] does not need to be in the path
-  ListenableIndexedNode<T> elementAt(String path) =>
-      super.elementAt(path) as ListenableIndexedNode<T>;
+  IndexedListenableNode elementAt(String path) =>
+      super.elementAt(path) as IndexedListenableNode;
 
-  ListenableIndexedNode<T> at(int index) =>
-      super.at(index) as ListenableIndexedNode<T>;
+  IndexedListenableNode at(int index) =>
+      super.at(index) as IndexedListenableNode;
 
-  ListenableIndexedNode<T> operator [](String path) => elementAt(path);
+  IndexedListenableNode operator [](String path) => elementAt(path);
 
   void dispose() {
     _addedNodes.close();
@@ -314,7 +313,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     if (!isRoot) parent!._notifyListeners();
   }
 
-  void _notifyNodesAdded(NodeAddEvent<T> event) {
+  void _notifyNodesAdded(NodeAddEvent<INode> event) {
     if (isRoot) {
       _addedNodes.emit(event);
     } else {
@@ -322,7 +321,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     }
   }
 
-  void _notifyNodesInserted(NodeInsertEvent<T> event) {
+  void _notifyNodesInserted(NodeInsertEvent<INode> event) {
     if (isRoot) {
       _insertedNodes.emit(event);
     } else {
@@ -330,7 +329,7 @@ class ListenableIndexedNode<T> extends IndexedNode<T>
     }
   }
 
-  void _notifyNodesRemoved(NodeRemoveEvent<T> event) {
+  void _notifyNodesRemoved(NodeRemoveEvent<INode> event) {
     if (isRoot) {
       _removedNodes.emit(event);
     } else {
