@@ -380,6 +380,8 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
 
   List<T> get _nodeList => _animatedListController.list;
 
+  IListenableNode<T> get _tree => _animatedListController.tree;
+
   @override
   void initState() {
     super.initState();
@@ -397,7 +399,7 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
     );
 
     // ignore: invalid_use_of_protected_member
-    widget.controller?.attach(widget.tree, _animatedListController);
+    widget.controller?.attach(_tree, _animatedListController);
   }
 
   @override
@@ -407,31 +409,32 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
       _animatedListController.expansionBehavior = widget.expansionBehavior;
 
-    didUpdateTree(oldWidget.tree);
+    didUpdateTree();
   }
 
-  void didUpdateTree(IListenableNode<T> oldTree) {
-    final treeDiff = calculateTreeDiff(oldTree, widget.tree);
+  void didUpdateTree() {
+    final treeDiff = calculateTreeDiff(_tree, widget.tree);
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
       update.when(
         add: (node) {
           node as T;
-          final parentNode = (oldTree.elementAt(node.path).parent ??
-              oldTree.root) as INodeActions;
+          final parentNode = _tree
+              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
           parentNode.add(node);
         },
         insert: (node, pos) {
           node as T;
-          final parentNode = (oldTree.elementAt(node.path).parent ??
-              oldTree.root) as IIndexedNodeActions;
+          final parentNode =
+              _tree.elementAt(node.parent?.path ?? node.root.path)
+                  as IIndexedNodeActions;
           parentNode.insert(pos, node as IndexedNode);
         },
         remove: (node, pos) {
           node as T;
-          final parentNode = (oldTree.elementAt(node.path).parent ??
-              oldTree.root) as INodeActions;
+          final parentNode = _tree
+              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
 
           parentNode.remove(node);
         },

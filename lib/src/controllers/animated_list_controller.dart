@@ -10,7 +10,7 @@ class AnimatedListController<T extends INode<T>> {
 
   final GlobalKey<AnimatedListState> _listKey;
   final dynamic _removedItemBuilder;
-  final NodeUpdateNotifier<T> _nodeUpdateNotifier;
+  final IListenableNode<T> tree;
   final List<T> _flatList;
   final AutoScrollController scrollController;
   final bool showRootNode;
@@ -23,24 +23,21 @@ class AnimatedListController<T extends INode<T>> {
   AnimatedListController(
       {required GlobalKey<AnimatedListState> listKey,
       required dynamic removedItemBuilder,
-      required IListenableNode<T> tree,
+      required this.tree,
       required this.scrollController,
       required this.expansionBehavior,
       this.showRootNode = true})
       : _listKey = listKey,
-        _nodeUpdateNotifier = tree,
         _removedItemBuilder = removedItemBuilder,
         _flatList = List.from(showRootNode ? [tree] : tree.root.childrenAsList),
         assert(removedItemBuilder != null) {
-    _addedNodesSubscription =
-        _nodeUpdateNotifier.addedNodes.listen(handleAddItemsEvent);
+    _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
 
-    _removeNodesSubscription =
-        _nodeUpdateNotifier.removedNodes.listen(handleRemoveItemsEvent);
+    _removeNodesSubscription = tree.removedNodes.listen(handleRemoveItemsEvent);
 
     try {
       _insertNodesSubscription =
-          _nodeUpdateNotifier.insertedNodes.listen(handleInsertItemsEvent);
+          tree.insertedNodes.listen(handleInsertItemsEvent);
     } on ActionNotAllowedException catch (_) {}
   }
 
