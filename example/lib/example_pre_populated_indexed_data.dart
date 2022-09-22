@@ -1,7 +1,7 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:example/mocks/mock_trees.dart';
 import 'package:flutter/material.dart';
 
+import 'mocks/mock_indexed_trees.dart';
 import 'utils/utils.dart';
 
 void main() {
@@ -13,12 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Animated Tree Demo',
+      title: 'Example Animated Indexed Tree Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Simple Animated Tree Demo'),
+      home: MyHomePage(title: 'Example Animated Indexed Tree Demo'),
     );
   }
 }
@@ -33,18 +33,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = TreeViewController<SimpleNode>();
   int stateCount = 0;
 
   void _nextTree() {
     setState(() {
-      if (stateCount < testTrees.length - 1)
+      if (stateCount < testIndexedTrees.length - 1)
         stateCount++;
       else {
         stateCount = 0;
       }
     });
-    print("Current tree: $stateCount");
+    print("Current indexed tree: $stateCount");
   }
 
   @override
@@ -57,10 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.fast_forward),
         onPressed: _nextTree,
       ),
-      body: TreeView<SimpleNode>(
-        tree: testTrees[stateCount],
+      body: IndexedTreeView<SimpleIndexedNode>(
+        tree: testIndexedTrees[stateCount],
         expansionIndicator: ExpansionIndicator.DownUpChevron,
-        controller: controller,
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
         showRootNode: true,
