@@ -442,35 +442,37 @@ class _TreeViewState<T extends IListenableNode<T>> extends State<_TreeView<T>> {
     }
   }
 
-  Widget build(BuildContext context) {
-    return AnimatedList(
-      key: listKey,
-      initialItemCount: _nodeList.length,
-      controller: _scrollController,
-      primary: widget.primary,
-      physics: widget.physics,
-      padding: widget.padding,
-      shrinkWrap: widget.shrinkWrap,
-      itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
-        valueListenable: _nodeList[index],
-        builder: (context, value, child) => ExpandableNodeItem<T>(
-          builder: widget.builder,
-          animatedListController: _animatedListController,
-          scrollController: _scrollController,
-          node: _nodeList[index],
-          index: index,
-          animation: animation,
-          indentPadding: widget.indentPadding,
-          expansionIndicator: widget.expansionIndicator,
-          onItemTap: widget.onItemTap,
-          minLevelToIndent: widget.showRootNode ? 0 : 1,
+  @override
+  Widget build(BuildContext context) => AnimatedList(
+        key: listKey,
+        initialItemCount: _nodeList.length,
+        controller: _scrollController,
+        primary: widget.primary,
+        physics: widget.physics,
+        padding: widget.padding,
+        shrinkWrap: widget.shrinkWrap,
+        itemBuilder: (context, index, animation) => ValueListenableBuilder<T>(
+          valueListenable: _nodeList[index],
+          builder: (context, value, child) => ExpandableNodeItem<T>(
+            builder: widget.builder,
+            animatedListController: _animatedListController,
+            scrollController: _scrollController,
+            node: _nodeList[index],
+            index: index,
+            animation: animation,
+            indentPadding: widget.indentPadding,
+            expansionIndicator: widget.expansionIndicator,
+            onItemTap: widget.onItemTap,
+            minLevelToIndent: widget.showRootNode ? 0 : 1,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget buildRemovedItem(
-          T item, BuildContext context, Animation<double> animation) =>
+    T item,
+    BuildContext context,
+    Animation<double> animation,
+  ) =>
       ExpandableNodeItem<T>(
         builder: widget.builder,
         animatedListController: _animatedListController,

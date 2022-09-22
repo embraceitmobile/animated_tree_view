@@ -11,28 +11,30 @@ class AnimatedListController<T extends INode<T>> {
   final GlobalKey<AnimatedListState> _listKey;
   final dynamic _removedItemBuilder;
   final IListenableNode<T> tree;
-  final List<T> _flatList;
   final AutoScrollController scrollController;
   final bool showRootNode;
   ExpansionBehavior expansionBehavior;
 
+  late List<T> _flatList;
+  late Map<String, T> _itemsMap;
   late StreamSubscription<NodeAddEvent<T>> _addedNodesSubscription;
-  late StreamSubscription<NodeInsertEvent<T>>? _insertNodesSubscription;
   late StreamSubscription<NodeRemoveEvent<T>> _removeNodesSubscription;
+  StreamSubscription<NodeInsertEvent<T>>? _insertNodesSubscription;
 
-  AnimatedListController(
-      {required GlobalKey<AnimatedListState> listKey,
-      required dynamic removedItemBuilder,
-      required this.tree,
-      required this.scrollController,
-      required this.expansionBehavior,
-      this.showRootNode = true})
-      : _listKey = listKey,
+  AnimatedListController({
+    required GlobalKey<AnimatedListState> listKey,
+    required dynamic removedItemBuilder,
+    required this.tree,
+    required this.scrollController,
+    required this.expansionBehavior,
+    this.showRootNode = true,
+  })  : _listKey = listKey,
         _removedItemBuilder = removedItemBuilder,
-        _flatList = List.from(showRootNode ? [tree] : tree.root.childrenAsList),
         assert(removedItemBuilder != null) {
-    _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
+    _flatList = List.from(showRootNode ? [tree] : tree.root.childrenAsList);
+    _itemsMap = <String, T>{for (final node in _flatList) node.path: node};
 
+    _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
     _removeNodesSubscription = tree.removedNodes.listen(handleRemoveItemsEvent);
 
     try {
@@ -52,6 +54,7 @@ class AnimatedListController<T extends INode<T>> {
 
   void insert(int index, T item) {
     _flatList.insert(index, item);
+    _itemsMap[item.path] = item;
     _animatedList.insertItem(index);
   }
 
@@ -65,6 +68,7 @@ class AnimatedListController<T extends INode<T>> {
     if (index < 0 || index > _flatList.length)
       throw RangeError.index(index, _flatList);
 
+    _itemsMap.remove(_flatList[index].path);
     final removedItem = _flatList.removeAt(index);
     _animatedList.removeItem(
       index,
@@ -171,6 +175,8 @@ class AnimatedListController<T extends INode<T>> {
   @visibleForTesting
   void handleAddItemsEvent(NodeAddEvent<T> event) {
     for (final node in event.items) {
+      if (_itemsMap.containsKey(node.path)) continue;
+
       if (node.isRoot || node.parent?.isRoot == true) {
         if (!node.root.isExpanded) {
           expandNode(node.root as T);
@@ -201,6 +207,8 @@ class AnimatedListController<T extends INode<T>> {
   @visibleForTesting
   void handleInsertItemsEvent(NodeInsertEvent<T> event) {
     for (final node in event.items) {
+      if (_itemsMap.containsKey(node.path)) continue;
+
       if (node.isRoot || node.parent?.isRoot == true) {
         if (!node.root.isExpanded) {
           expandNode(node.root as T);
@@ -228,6 +236,8 @@ class AnimatedListController<T extends INode<T>> {
   @visibleForTesting
   void handleRemoveItemsEvent(NodeRemoveEvent<T> event) {
     for (final node in event.items) {
+      if (!_itemsMap.containsKey(node.path)) continue;
+
       //if item is in the root of the list, then remove the item
       if (_flatList.any((item) => item.key == node.key)) {
         final index = indexOf(node);
