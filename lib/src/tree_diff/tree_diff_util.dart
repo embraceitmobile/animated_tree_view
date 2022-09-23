@@ -1,10 +1,8 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/src/helpers/collection_utils.dart';
 import 'package:animated_tree_view/src/tree_diff/tree_diff_update.dart';
-import 'package:animated_tree_view/src/tree_node/tree_node.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';

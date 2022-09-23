@@ -53,8 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               showRootNode: _showRootNode,
-              builder: (context, level, item) =>
-                  buildListItem(level, item as IndexedTreeNode),
+              builder: (context, level, item) => buildListItem(level, item),
             ),
             if (!_showRootNode)
               Padding(

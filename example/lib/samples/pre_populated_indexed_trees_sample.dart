@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Example Animated Indexed Tree Demo'),
+      home: MyHomePage(title: 'Pre populated Indexed TreeView sample'),
     );
   }
 }
@@ -41,7 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
         stateCount = 0;
       }
     });
-    print("Current indexed tree: $stateCount");
+
+    Future.microtask(
+      () => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(testIndexedTrees[stateCount].key),
+          duration: const Duration(seconds: 2),
+        ),
+      ),
+    );
   }
 
   @override
@@ -55,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _nextTree,
       ),
       body: TreeView.indexed(
-        tree: testIndexedTrees[stateCount],
+        tree: testIndexedTrees[stateCount].value,
         expansionIndicator: ExpansionIndicator.DownUpChevron,
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
@@ -72,14 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-late final testIndexedTrees = [
-  defaultIndexedTree,
-  nodesAddedTree,
-  levelOneNodesAdded,
-  levelTwoNodesAdded,
-  nodesRemoved,
-  levelOneNodesRemoved,
-  levelTwoNodesRemoved,
+late final testIndexedTrees = <MapEntry<String, IndexedTreeNode>>[
+  MapEntry("Default tree", defaultIndexedTree),
+  MapEntry("Add two nodes in root (L0)", nodesAddedTree),
+  MapEntry("Add nodes in 0C (L1)", levelOneNodesAdded),
+  MapEntry("Add nodes in 0C1C (L2)", levelTwoNodesAdded),
+  MapEntry("Add nodes in 0C1C2A (L3)", levelThreeNodesAdded),
+  MapEntry("Removes nodes from root (L0)", nodesRemoved),
+  MapEntry("Remove nodes from 0C (L1)", levelOneNodesRemoved),
+  MapEntry("Remove nodes from 0C1C2A(L3) ", levelTwoNodesRemoved),
+  MapEntry("Remove nodes from 0C1C(L2) ", levelThreeNodesRemoved),
 ];
 
 final defaultIndexedTree = IndexedTreeNode.root()
@@ -105,13 +115,26 @@ final levelOneNodesAdded = IndexedTreeNode.root()
       ..addAll([
         IndexedTreeNode(key: "0C1A"),
         IndexedTreeNode(key: "0C1B"),
-        IndexedTreeNode(key: "0C1C")..addAll([IndexedTreeNode(key: "0C1C2A")]),
+        IndexedTreeNode(key: "0C1C"),
       ]),
     IndexedTreeNode(key: "0D"),
     IndexedTreeNode(key: "0E"),
   ]);
 
 final levelTwoNodesAdded = IndexedTreeNode.root()
+  ..addAll([
+    IndexedTreeNode(key: "0A")..add(IndexedTreeNode(key: "0A1A")),
+    IndexedTreeNode(key: "0C")
+      ..addAll([
+        IndexedTreeNode(key: "0C1A"),
+        IndexedTreeNode(key: "0C1B"),
+        IndexedTreeNode(key: "0C1C")..addAll([IndexedTreeNode(key: "0C1C2A")]),
+      ]),
+    IndexedTreeNode(key: "0D"),
+    IndexedTreeNode(key: "0E"),
+  ]);
+
+final levelThreeNodesAdded = IndexedTreeNode.root()
   ..addAll([
     IndexedTreeNode(key: "0A")..add(IndexedTreeNode(key: "0A1A")),
     IndexedTreeNode(key: "0C")
@@ -178,4 +201,9 @@ final levelTwoNodesRemoved = IndexedTreeNode.root()
               ]),
           ]),
       ]),
+  ]);
+
+final levelThreeNodesRemoved = IndexedTreeNode.root()
+  ..addAll([
+    IndexedTreeNode(key: "0C")..addAll([IndexedTreeNode(key: "0C1C")]),
   ]);

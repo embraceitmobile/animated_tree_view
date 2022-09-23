@@ -40,14 +40,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeView(
+      body: TreeView.simple(
         tree: TreeNode.root(),
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
         expansionIndicator: ExpansionIndicator.DownUpChevron,
         builder: (context, level, item) => item.isRoot
-            ? buildRootItem(level, item as TreeNode)
-            : buildListItem(level, item as TreeNode),
+            ? buildRootItem(level, item)
+            : buildListItem(level, item),
       ),
     );
   }

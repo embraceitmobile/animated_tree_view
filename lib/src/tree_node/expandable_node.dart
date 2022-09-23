@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
-class ExpandableNodeItem<T> extends StatelessWidget {
-  final LeveledItemWidgetBuilder<T> builder;
-  final AnimatedListController<T> animatedListController;
+class ExpandableNodeItem<D, T extends ITreeNode<D>> extends StatelessWidget {
+  final LeveledItemWidgetBuilder<D, T> builder;
+  final AnimatedListController<D> animatedListController;
   final AutoScrollController scrollController;
-  final ITreeNode<T> node;
+  final T node;
   final Animation<double> animation;
   final double indentPadding;
   final ExpansionIndicator? expansionIndicator;
   final bool remove;
   final int? index;
-  final ValueSetter<T>? onItemTap;
+  final ValueSetter<D>? onItemTap;
   final int minLevelToIndent;
 
   const ExpandableNodeItem({

@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeView(
+      body: TreeView.simple(
         tree: sampleTree,
         expansionIndicator: ExpansionIndicator.RightUpChevron,
         builder: (context, level, item) => Card(

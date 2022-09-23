@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Simple Animated Tree Demo'),
+      home: MyHomePage(title: 'Pre populated TreeView sample'),
     );
   }
 }
@@ -42,7 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
         stateCount = 0;
       }
     });
-    print("Current tree: $stateCount");
+    Future.microtask(
+      () => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(testTrees[stateCount].key),
+          duration: const Duration(seconds: 2),
+        ),
+      ),
+    );
   }
 
   @override
@@ -55,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.fast_forward),
         onPressed: _nextTree,
       ),
-      body: TreeView(
-        tree: testTrees[stateCount],
+      body: TreeView.simple(
+        tree: testTrees[stateCount].value,
         expansionIndicator: ExpansionIndicator.DownUpChevron,
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
@@ -73,14 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-late final testTrees = <TreeNode>[
-  defaultTree,
-  nodesAddedTree,
-  levelOneNodesAdded,
-  levelTwoNodesAdded,
-  nodesRemoved,
-  levelOneNodesRemoved,
-  levelTwoNodesRemoved,
+late final testTrees = <MapEntry<String, TreeNode>>[
+  MapEntry("Default tree", defaultTree),
+  MapEntry("Add two nodes in root (L0)", nodesAddedTree),
+  MapEntry("Add nodes in 0C (L1)", levelOneNodesAdded),
+  MapEntry("Add nodes in 0C1C (L2)", levelTwoNodesAdded),
+  MapEntry("Add nodes in 0C1C2A (L3)", levelThreeNodesAdded),
+  MapEntry("Removes nodes from root (L0)", nodesRemoved),
+  MapEntry("Remove nodes from 0C (L1)", levelOneNodesRemoved),
+  MapEntry("Remove nodes from 0C1C2A(L3) ", levelTwoNodesRemoved),
+  MapEntry("Remove nodes from 0C1C(L2) ", levelThreeNodesRemoved),
 ];
 
 final defaultTree = TreeNode.root()
@@ -106,13 +115,26 @@ final levelOneNodesAdded = TreeNode.root()
       ..addAll([
         TreeNode(key: "0C1A"),
         TreeNode(key: "0C1B"),
-        TreeNode(key: "0C1C")..addAll([TreeNode(key: "0C1C2A")]),
+        TreeNode(key: "0C1C"),
       ]),
     TreeNode(key: "0D"),
     TreeNode(key: "0E"),
   ]);
 
 final levelTwoNodesAdded = TreeNode.root()
+  ..addAll([
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0C")
+      ..addAll([
+        TreeNode(key: "0C1A"),
+        TreeNode(key: "0C1B"),
+        TreeNode(key: "0C1C")..addAll([TreeNode(key: "0C1C2A")]),
+      ]),
+    TreeNode(key: "0D"),
+    TreeNode(key: "0E"),
+  ]);
+
+final levelThreeNodesAdded = TreeNode.root()
   ..addAll([
     TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
     TreeNode(key: "0C")
@@ -179,4 +201,9 @@ final levelTwoNodesRemoved = TreeNode.root()
               ]),
           ]),
       ]),
+  ]);
+
+final levelThreeNodesRemoved = TreeNode.root()
+  ..addAll([
+    TreeNode(key: "0C")..addAll([TreeNode(key: "0C1C")]),
   ]);

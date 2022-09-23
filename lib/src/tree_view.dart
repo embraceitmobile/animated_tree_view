@@ -8,8 +8,8 @@ import 'tree_diff/tree_diff_util.dart';
 
 /// The builder function that allows to build any item of type [T].
 /// The builder function also provides the [level] of the node.
-typedef LeveledItemWidgetBuilder<T> = Widget Function(
-    BuildContext context, int level, ITreeNode<T> item);
+typedef LeveledItemWidgetBuilder<D, T> = Widget Function(
+    BuildContext context, int level, T item);
 
 /// The [ExpansionBehavior] provides control over the behavior of the node
 /// when it is expanded.
@@ -34,12 +34,12 @@ enum ExpansionBehavior {
   collapseOthersAndSnapToTop,
 }
 
-class TreeView<T> extends StatefulWidget {
+class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
-  final LeveledItemWidgetBuilder<T> builder;
+  final LeveledItemWidgetBuilder<D, T> builder;
 
   /// The rootNode of the [tree]
-  final ITreeNode<T> tree;
+  final ITreeNode<D> tree;
 
   /// An optional [scrollController] that provides more granular control over
   /// scrolling behavior
@@ -62,7 +62,7 @@ class TreeView<T> extends StatefulWidget {
 
   /// An optional callback that can be used to handle any action when an item is
   /// tapped or clicked
-  final ValueSetter<T>? onItemTap;
+  final ValueSetter<D>? onItemTap;
 
   /// Flag to show the Root Node in the [TreeView]. Root Node is always the first
   /// item in the TreeView. If it is set to [false] then the Root Node will not
@@ -120,14 +120,14 @@ class TreeView<T> extends StatefulWidget {
   })  : this.shrinkWrap = shrinkWrap ?? false,
         this.showRootNode = showRootNode ?? true;
 
-  factory TreeView({
-    required LeveledItemWidgetBuilder<T> builder,
-    required final TreeNode<T> tree,
+  static TreeView<D, TreeNode<D>> simple<D>({
+    required LeveledItemWidgetBuilder<D, TreeNode<D>> builder,
+    required final TreeNode<D> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<T>? onItemTap,
+    ValueSetter<D>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -149,14 +149,14 @@ class TreeView<T> extends StatefulWidget {
         showRootNode: showRootNode,
       );
 
-  factory TreeView.indexed({
-    required LeveledItemWidgetBuilder<T> builder,
-    required final IndexedTreeNode<T> tree,
+  static TreeView<D, IndexedTreeNode<D>> indexed<D>({
+    required LeveledItemWidgetBuilder<D, IndexedTreeNode<D>> builder,
+    required final IndexedTreeNode<D> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<T>? onItemTap,
+    ValueSetter<D>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -179,17 +179,15 @@ class TreeView<T> extends StatefulWidget {
       );
 
   @override
-  State<StatefulWidget> createState() => _TreeViewState<T>();
+  State<StatefulWidget> createState() => _TreeViewState<D, T>();
 }
 
-class _TreeViewState<T> extends State<TreeView<T>> {
+class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  late final AnimatedListController<T> _animatedListController;
+  late final AnimatedListController<D> _animatedListController;
   late final AutoScrollController _scrollController;
 
-  List<ITreeNode<T>> get _nodeList => _animatedListController.list;
-
-  ITreeNode<T> get _tree => _animatedListController.tree;
+  ITreeNode<D> get _tree => _animatedListController.tree;
 
   @override
   void initState() {
@@ -198,7 +196,7 @@ class _TreeViewState<T> extends State<TreeView<T>> {
     _scrollController =
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
-    _animatedListController = AnimatedListController<T>(
+    _animatedListController = AnimatedListController<D>(
       listKey: listKey,
       tree: widget.tree,
       removedItemBuilder: buildRemovedItem,
@@ -209,7 +207,7 @@ class _TreeViewState<T> extends State<TreeView<T>> {
   }
 
   @override
-  void didUpdateWidget(TreeView<T> oldWidget) {
+  void didUpdateWidget(TreeView<D, T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
@@ -219,26 +217,26 @@ class _TreeViewState<T> extends State<TreeView<T>> {
   }
 
   void didUpdateTree() {
-    final treeDiff = calculateTreeDiff<ITreeNode<T>>(_tree, widget.tree);
+    final treeDiff = calculateTreeDiff<ITreeNode<D>>(_tree, widget.tree);
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
       update.when(
         add: (node) {
-          node as T;
+          node as D;
           final parentNode = _tree
               .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
           parentNode.add(node);
         },
         insert: (node, pos) {
-          node as T;
+          node as D;
           final parentNode =
               _tree.elementAt(node.parent?.path ?? node.root.path)
                   as IIndexedNodeActions;
           parentNode.insert(pos, node as IndexedNode);
         },
         remove: (node, pos) {
-          node as T;
+          node as D;
           final parentNode = _tree
               .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
 
@@ -252,19 +250,20 @@ class _TreeViewState<T> extends State<TreeView<T>> {
   Widget build(BuildContext context) {
     return AnimatedList(
       key: listKey,
-      initialItemCount: _nodeList.length,
+      initialItemCount: _animatedListController.list.length,
       controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<INode>(
-        valueListenable: _nodeList[index],
-        builder: (context, value, child) => ExpandableNodeItem<T>(
-          builder: widget.builder,
+        valueListenable: _animatedListController.list[index],
+        builder: (context, value, child) => ExpandableNodeItem<D, T>(
+          builder: (context, level, node) =>
+              widget.builder(context, level, node),
           animatedListController: _animatedListController,
           scrollController: _scrollController,
-          node: _nodeList[index],
+          node: _animatedListController.list[index] as T,
           index: index,
           animation: animation,
           indentPadding: widget.indentPadding,
@@ -277,9 +276,9 @@ class _TreeViewState<T> extends State<TreeView<T>> {
   }
 
   Widget buildRemovedItem(
-      ITreeNode<T> item, BuildContext context, Animation<double> animation) {
-    return ExpandableNodeItem<T>(
-      builder: widget.builder,
+      T item, BuildContext context, Animation<double> animation) {
+    return ExpandableNodeItem<D, T>(
+      builder: (context, level, node) => widget.builder(context, level, node),
       animatedListController: _animatedListController,
       scrollController: _scrollController,
       node: item,
