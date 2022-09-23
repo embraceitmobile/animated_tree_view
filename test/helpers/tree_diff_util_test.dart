@@ -11,199 +11,198 @@ void main() {
     test(
         "Correct position and data is notified on inserting a new node at single level",
         () {
-      final tree1 = SimpleNode.root()
-        ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
-      final tree2 = SimpleNode.root()
+      final tree1 = TreeNode.root()
+        ..addAll([TreeNode(key: "a"), TreeNode(key: "b"), TreeNode(key: "c")]);
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c"),
-          SimpleNode("d")
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c"),
+          TreeNode(key: "d")
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as SimpleNode).key, 'd');
+      expect(((result.first as NodeAdd).data as TreeNode).key, 'd');
     });
 
     test("Correct data is notified on removing a new node at single level", () {
-      final tree1 = SimpleNode.root()
+      final tree1 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c"),
-          SimpleNode("d")
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c"),
+          TreeNode(key: "d")
         ]);
-      final tree2 = SimpleNode.root()
-        ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
+      final tree2 = TreeNode.root()
+        ..addAll([TreeNode(key: "a"), TreeNode(key: "b"), TreeNode(key: "c")]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as SimpleNode).key, 'd');
+      expect(((result.first as NodeRemove).data as TreeNode).key, 'd');
     });
 
     test(
         "Correct data is notified on simultaneous inserting and removing a new node at single level",
         () {
-      final tree1 = SimpleNode.root()
-        ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
-      final tree2 = SimpleNode.root()
-        ..addAll([SimpleNode("b"), SimpleNode("c"), SimpleNode("d")]);
+      final tree1 = TreeNode.root()
+        ..addAll([TreeNode(key: "a"), TreeNode(key: "b"), TreeNode(key: "c")]);
+      final tree2 = TreeNode.root()
+        ..addAll([TreeNode(key: "b"), TreeNode(key: "c"), TreeNode(key: "d")]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
 
       expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as SimpleNode).key, 'd');
+      expect(((result.first as NodeAdd).data as TreeNode).key, 'd');
       expect(result.last, isA<NodeRemove>());
-      expect(((result.last as NodeRemove).data as SimpleNode).key, 'a');
+      expect(((result.last as NodeRemove).data as TreeNode).key, 'a');
     });
 
     test("Correct data is notified on inserting a new node at double level",
         () {
-      final tree1 = SimpleNode.root()
-        ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
+      final tree1 = TreeNode.root()
+        ..addAll([TreeNode(key: "a"), TreeNode(key: "b"), TreeNode(key: "c")]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")..addAll([SimpleNode("c1")]),
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as SimpleNode).path, "/.c.c1");
+      expect(((result.first as NodeAdd).data as TreeNode).path, "/.c.c1");
     });
 
     test("Correct data is notified on removing a node at double level", () {
-      final tree1 = SimpleNode.root()
+      final tree1 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")..addAll([SimpleNode("c1")])
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")])
         ]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c"),
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c"),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as SimpleNode).path, "/.c.c1");
+      expect(((result.first as NodeRemove).data as TreeNode).path, "/.c.c1");
     });
 
     test(
         "Correct data is notified on inserting and removing a node at double level",
         () {
-      final tree1 = SimpleNode.root()
+      final tree1 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")..addAll([SimpleNode("c1")]),
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")]),
         ]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a")..addAll([SimpleNode("a1")]),
-          SimpleNode("b"),
-          SimpleNode("c"),
+          TreeNode(key: "a")..addAll([TreeNode(key: "a1")]),
+          TreeNode(key: "b"),
+          TreeNode(key: "c"),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as SimpleNode).path, "/.a.a1");
+      expect(((result.first as NodeAdd).data as TreeNode).path, "/.a.a1");
       expect(result.last, isA<NodeRemove>());
-      expect(((result.last as NodeRemove).data as SimpleNode).path, "/.c.c1");
+      expect(((result.last as NodeRemove).data as TreeNode).path, "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on inserting a nodes at double level",
         () {
-      final tree1 = SimpleNode.root()
-        ..addAll([SimpleNode("a"), SimpleNode("b"), SimpleNode("c")]);
+      final tree1 = TreeNode.root()
+        ..addAll([TreeNode(key: "a"), TreeNode(key: "b"), TreeNode(key: "c")]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b")
+          TreeNode(key: "a"),
+          TreeNode(key: "b")
             ..addAll([
-              SimpleNode("b1")
+              TreeNode(key: "b1")
                 ..addAll([
-                  SimpleNode("b1-1")..addAll([SimpleNode("b1-1-1")])
+                  TreeNode(key: "b1-1")..addAll([TreeNode(key: "b1-1-1")])
                 ])
             ]),
-          SimpleNode("c")..addAll([SimpleNode("c1")]),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as SimpleNode).path, "/.b.b1");
+      expect(((result.first as NodeAdd).data as TreeNode).path, "/.b.b1");
       expect(result.last, isA<NodeAdd>());
-      expect(((result.last as NodeAdd).data as SimpleNode).path, "/.c.c1");
+      expect(((result.last as NodeAdd).data as TreeNode).path, "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on inserting a new node at third level",
         () {
-      final tree1 = SimpleNode.root()
+      final tree1 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")..addAll([SimpleNode("c1")]),
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")]),
         ]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")
             ..addAll([
-              SimpleNode("c1")..addAll([SimpleNode("c1-1")]),
+              TreeNode(key: "c1")..addAll([TreeNode(key: "c1-1")]),
             ]),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeAdd>());
-      expect(
-          ((result.first as NodeAdd).data as SimpleNode).path, "/.c.c1.c1-1");
+      expect(((result.first as NodeAdd).data as TreeNode).path, "/.c.c1.c1-1");
     });
 
     test(
         "Correct position and data is notified on removing a node at third level",
         () {
-      final tree1 = SimpleNode.root()
+      final tree1 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")
             ..addAll([
-              SimpleNode("c1")..addAll([SimpleNode("c1-1")]),
+              TreeNode(key: "c1")..addAll([TreeNode(key: "c1-1")]),
             ]),
         ]);
 
-      final tree2 = SimpleNode.root()
+      final tree2 = TreeNode.root()
         ..addAll([
-          SimpleNode("a"),
-          SimpleNode("b"),
-          SimpleNode("c")..addAll([SimpleNode("c1")]),
+          TreeNode(key: "a"),
+          TreeNode(key: "b"),
+          TreeNode(key: "c")..addAll([TreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<Node>(tree1, tree2);
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as SimpleNode).path,
-          "/.c.c1.c1-1");
+      expect(
+          ((result.first as NodeRemove).data as TreeNode).path, "/.c.c1.c1-1");
     });
   });
 
@@ -211,21 +210,21 @@ void main() {
     test(
         "Correct position and data is notified on inserting a new node at single level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
         ]);
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c"),
-          SimpleIndexedNode("d")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c"),
+          IndexedTreeNode(key: "d")
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
       expect((result.first as NodeInsert).position, 3);
@@ -234,21 +233,21 @@ void main() {
     test(
         "Correct position and data is notified on removing a new node at single level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c"),
-          SimpleIndexedNode("d")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c"),
+          IndexedTreeNode(key: "d")
         ]);
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
       expect((result.first as NodeRemove).position, 3);
@@ -257,20 +256,20 @@ void main() {
     test(
         "Correct position and data is notified on simultaneous inserting and removing a new node at single level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
         ]);
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c"),
-          SimpleIndexedNode("d")
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c"),
+          IndexedTreeNode(key: "d")
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
 
       expect(result.first, isA<NodeInsert>());
@@ -282,170 +281,172 @@ void main() {
     test(
         "Correct position and data is notified on inserting a new node at double level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
           "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on removing a node at double level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")])
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")])
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c"),
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c"),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeRemove).data as IndexedTreeNode).path,
           "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on inserting and removing a node at double level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")]),
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a")..addAll([SimpleIndexedNode("a1")]),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c"),
+          IndexedTreeNode(key: "a")..addAll([IndexedTreeNode(key: "a1")]),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c"),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
           "/.a.a1");
       expect(result.last, isA<NodeRemove>());
-      expect(((result.last as NodeRemove).data as SimpleIndexedNode).path,
-          "/.c.c1");
+      expect(
+          ((result.last as NodeRemove).data as IndexedTreeNode).path, "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on inserting a nodes at double level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b")
             ..addAll([
-              SimpleIndexedNode("b1")
+              IndexedTreeNode(key: "b1")
                 ..addAll([
-                  SimpleIndexedNode("b1-1")
-                    ..addAll([SimpleIndexedNode("b1-1-1")])
+                  IndexedTreeNode(key: "b1-1")
+                    ..addAll([IndexedTreeNode(key: "b1-1-1")])
                 ])
             ]),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
       expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
           "/.b.b1");
       expect(result.last, isA<NodeInsert>());
-      expect(((result.last as NodeInsert).data as SimpleIndexedNode).path,
-          "/.c.c1");
+      expect(
+          ((result.last as NodeInsert).data as IndexedTreeNode).path, "/.c.c1");
     });
 
     test(
         "Correct position and data is notified on inserting a new node at third level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")]),
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
             ..addAll([
-              SimpleIndexedNode("c1")..addAll([SimpleIndexedNode("c1-1")]),
+              IndexedTreeNode(key: "c1")
+                ..addAll([IndexedTreeNode(key: "c1-1")]),
             ]),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
           "/.c.c1.c1-1");
     });
 
     test(
         "Correct position and data is notified on removing a node at third level",
         () {
-      final tree1 = SimpleIndexedNode.root()
+      final tree1 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")
             ..addAll([
-              SimpleIndexedNode("c1")..addAll([SimpleIndexedNode("c1-1")]),
+              IndexedTreeNode(key: "c1")
+                ..addAll([IndexedTreeNode(key: "c1-1")]),
             ]),
         ]);
 
-      final tree2 = SimpleIndexedNode.root()
+      final tree2 = IndexedTreeNode.root()
         ..addAll([
-          SimpleIndexedNode("a"),
-          SimpleIndexedNode("b"),
-          SimpleIndexedNode("c")..addAll([SimpleIndexedNode("c1")]),
+          IndexedTreeNode(key: "a"),
+          IndexedTreeNode(key: "b"),
+          IndexedTreeNode(key: "c")..addAll([IndexedTreeNode(key: "c1")]),
         ]);
 
-      final result = calculateTreeDiff<IndexedNode>(tree1, tree2);
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
       expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as SimpleIndexedNode).path,
+      expect(((result.first as NodeRemove).data as IndexedTreeNode).path,
           "/.c.c1.c1-1");
     });
   });
 
   group("Test multiple tree modifications", () {
     test("Test correct result is returned on adding nodes", () {
-      final result = calculateTreeDiff<Node>(defaultTree, nodesAddedTree);
+      final result = calculateTreeDiff<TreeNode>(defaultTree, nodesAddedTree);
       expect(result.length, 2);
       expect(result.first, isA<NodeAdd>());
       expect(result.last, isA<NodeAdd>());
@@ -454,7 +455,8 @@ void main() {
     });
 
     test("Test correct result is returned on removing nodes", () {
-      final result = calculateTreeDiff<Node>(nodesAddedTree, nodesRemovedTree);
+      final result =
+          calculateTreeDiff<TreeNode>(nodesAddedTree, nodesRemovedTree);
       expect(result.length, 3);
       expect(result.first, isA<NodeRemove>());
       expect(result.last, isA<NodeRemove>());
@@ -463,7 +465,7 @@ void main() {
     });
 
     test("Test correct result is returned on removing nodes on level 1", () {
-      final result = calculateTreeDiff<Node>(
+      final result = calculateTreeDiff<TreeNode>(
           nodesRemovedTree, nodesLevelOneChildRemovedTree);
       expect(result.length, 2);
       expect(result.first, isA<NodeRemove>());
@@ -475,7 +477,7 @@ void main() {
     });
 
     test("Test correct result is returned on removing nodes on level 2", () {
-      final result = calculateTreeDiff<Node>(
+      final result = calculateTreeDiff<TreeNode>(
           nodesLevelOneChildRemovedTree, nodesLevelTwoChildRemovedTree);
       expect(result.length, 2);
       expect(result.first, isA<NodeRemove>());
@@ -491,7 +493,7 @@ void main() {
 
   group("Test multiple indexed tree modifications", () {
     test("Test correct result is returned on adding indexed nodes", () {
-      final result = calculateTreeDiff<IndexedNode>(
+      final result = calculateTreeDiff<IndexedTreeNode>(
           defaultIndexedTree, nodesAddedIndexedTree);
       expect(result.length, 2);
       expect(result.first, isA<NodeInsert>());
@@ -501,7 +503,7 @@ void main() {
     });
 
     test("Test correct result is returned on removing indexed nodes", () {
-      final result = calculateTreeDiff<IndexedNode>(
+      final result = calculateTreeDiff<IndexedTreeNode>(
           nodesAddedIndexedTree, nodesRemovedIndexedTree);
       expect(result.length, 3);
       expect(result.first, isA<NodeRemove>());
@@ -512,7 +514,7 @@ void main() {
 
     test("Test correct result is returned on removing indexed nodes on level 1",
         () {
-      final result = calculateTreeDiff<IndexedNode>(
+      final result = calculateTreeDiff<IndexedTreeNode>(
           nodesRemovedIndexedTree, nodesLevelOneChildRemovedIndexedTree);
       expect(result.length, 2);
       expect(result.first, isA<NodeRemove>());
@@ -525,7 +527,7 @@ void main() {
 
     test("Test correct result is returned on removing indexed nodes on level 2",
         () {
-      final result = calculateTreeDiff<IndexedNode>(
+      final result = calculateTreeDiff<IndexedTreeNode>(
           nodesLevelOneChildRemovedIndexedTree,
           nodesLevelTwoChildRemovedIndexedTree);
       expect(result.length, 2);

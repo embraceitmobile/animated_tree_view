@@ -8,94 +8,94 @@ late final testTrees = [
   nodesLevelTwoChildRemovedTree,
 ];
 
-final defaultTree = SimpleNode.root()
+final defaultTree = TreeNode.root()
   ..addAll([
-    SimpleNode("0A")..add(SimpleNode("0A1A")),
-    SimpleNode("0B"),
-    SimpleNode("0C")
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0B"),
+    TreeNode(key: "0C")
       ..addAll([
-        SimpleNode("0C1A"),
-        SimpleNode("0C1B"),
-        SimpleNode("0C1C")
+        TreeNode(key: "0C1A"),
+        TreeNode(key: "0C1B"),
+        TreeNode(key: "0C1C")
           ..addAll([
-            SimpleNode("0C1C2A")
+            TreeNode(key: "0C1C2A")
               ..addAll([
-                SimpleNode("0C1C2A3A"),
-                SimpleNode("0C1C2A3B"),
-                SimpleNode("0C1C2A3C"),
+                TreeNode(key: "0C1C2A3A"),
+                TreeNode(key: "0C1C2A3B"),
+                TreeNode(key: "0C1C2A3C"),
               ]),
           ]),
       ]),
   ]);
 
-final nodesAddedTree = SimpleNode.root()
+final nodesAddedTree = TreeNode.root()
   ..addAll([
-    SimpleNode("0A")..add(SimpleNode("0A1A")),
-    SimpleNode("0B"),
-    SimpleNode("0C")
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0B"),
+    TreeNode(key: "0C")
       ..addAll([
-        SimpleNode("0C1A"),
-        SimpleNode("0C1B"),
-        SimpleNode("0C1C")
+        TreeNode(key: "0C1A"),
+        TreeNode(key: "0C1B"),
+        TreeNode(key: "0C1C")
           ..addAll([
-            SimpleNode("0C1C2A")
+            TreeNode(key: "0C1C2A")
               ..addAll([
-                SimpleNode("0C1C2A3A"),
-                SimpleNode("0C1C2A3B"),
-                SimpleNode("0C1C2A3C"),
+                TreeNode(key: "0C1C2A3A"),
+                TreeNode(key: "0C1C2A3B"),
+                TreeNode(key: "0C1C2A3C"),
               ]),
           ]),
       ]),
-    SimpleNode("0D"),
-    SimpleNode("0E"),
+    TreeNode(key: "0D"),
+    TreeNode(key: "0E"),
   ]);
 
-final nodesRemovedTree = SimpleNode.root()
+final nodesRemovedTree = TreeNode.root()
   ..addAll([
-    SimpleNode("0A")..add(SimpleNode("0A1A")),
-    SimpleNode("0C")
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0C")
       ..addAll([
-        SimpleNode("0C1A"),
-        SimpleNode("0C1B"),
-        SimpleNode("0C1C")
+        TreeNode(key: "0C1A"),
+        TreeNode(key: "0C1B"),
+        TreeNode(key: "0C1C")
           ..addAll([
-            SimpleNode("0C1C2A")
+            TreeNode(key: "0C1C2A")
               ..addAll([
-                SimpleNode("0C1C2A3A"),
-                SimpleNode("0C1C2A3B"),
-                SimpleNode("0C1C2A3C"),
-              ]),
-          ]),
-      ]),
-  ]);
-
-final nodesLevelOneChildRemovedTree = SimpleNode.root()
-  ..addAll([
-    SimpleNode("0A")..add(SimpleNode("0A1A")),
-    SimpleNode("0C")
-      ..addAll([
-        SimpleNode("0C1C")
-          ..addAll([
-            SimpleNode("0C1C2A")
-              ..addAll([
-                SimpleNode("0C1C2A3A"),
-                SimpleNode("0C1C2A3B"),
-                SimpleNode("0C1C2A3C"),
+                TreeNode(key: "0C1C2A3A"),
+                TreeNode(key: "0C1C2A3B"),
+                TreeNode(key: "0C1C2A3C"),
               ]),
           ]),
       ]),
   ]);
 
-final nodesLevelTwoChildRemovedTree = SimpleNode.root()
+final nodesLevelOneChildRemovedTree = TreeNode.root()
   ..addAll([
-    SimpleNode("0A")..add(SimpleNode("0A1A")),
-    SimpleNode("0C")
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0C")
       ..addAll([
-        SimpleNode("0C1C")
+        TreeNode(key: "0C1C")
           ..addAll([
-            SimpleNode("0C1C2A")
+            TreeNode(key: "0C1C2A")
               ..addAll([
-                SimpleNode("0C1C2A3A"),
+                TreeNode(key: "0C1C2A3A"),
+                TreeNode(key: "0C1C2A3B"),
+                TreeNode(key: "0C1C2A3C"),
+              ]),
+          ]),
+      ]),
+  ]);
+
+final nodesLevelTwoChildRemovedTree = TreeNode.root()
+  ..addAll([
+    TreeNode(key: "0A")..add(TreeNode(key: "0A1A")),
+    TreeNode(key: "0C")
+      ..addAll([
+        TreeNode(key: "0C1C")
+          ..addAll([
+            TreeNode(key: "0C1C2A")
+              ..addAll([
+                TreeNode(key: "0C1C2A3A"),
               ]),
           ]),
       ]),
