@@ -4,18 +4,8 @@ import 'package:flutter/material.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
-// extension ExpandableNode on INode {
-//   static const _isExpandedKey = "is_expanded";
-//
-//   bool get isExpanded => meta?[_isExpandedKey] == true;
-//
-//   void setExpanded(bool isExpanded) {
-//     (meta ??= {})[_isExpandedKey] = isExpanded;
-//   }
-// }
-
 class ExpandableNodeItem<T> extends StatelessWidget {
-  final LeveledItemWidgetBuilder<ITreeNode<T>> builder;
+  final LeveledItemWidgetBuilder<T> builder;
   final AnimatedListController<T> animatedListController;
   final AutoScrollController scrollController;
   final ITreeNode<T> node;

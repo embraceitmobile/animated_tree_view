@@ -32,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // final controller = TreeViewController<SimpleNode>();
   final globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -44,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TreeView(
         tree: TreeNode.root(),
-        // controller: controller,
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
         expansionIndicator: ExpansionIndicator.DownUpChevron,
