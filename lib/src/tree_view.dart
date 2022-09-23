@@ -123,7 +123,7 @@ class TreeView<T> extends StatefulWidget {
   factory TreeView({
     required LeveledItemWidgetBuilder<T> builder,
     required final TreeNode<T> tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,

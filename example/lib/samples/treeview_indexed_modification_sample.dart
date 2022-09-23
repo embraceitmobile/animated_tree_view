@@ -11,13 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Animated Indexed Tree View Demo',
+      title: 'Indexed TreeView Modification Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(
-        title: 'Animated Indexed Tree View Demo',
+        title: 'Indexed TreeView Modification Demo',
       ),
     );
   }
