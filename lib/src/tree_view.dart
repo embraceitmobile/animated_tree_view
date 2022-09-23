@@ -121,6 +121,7 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
         this.showRootNode = showRootNode ?? true;
 
   static TreeView<D, TreeNode<D>> simple<D>({
+    Key? key,
     required LeveledItemWidgetBuilder<D, TreeNode<D>> builder,
     required final TreeNode<D> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
@@ -135,6 +136,7 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
     bool? showRootNode,
   }) =>
       TreeView._(
+        key: key,
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
@@ -150,6 +152,7 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
       );
 
   static TreeView<D, IndexedTreeNode<D>> indexed<D>({
+    Key? key,
     required LeveledItemWidgetBuilder<D, IndexedTreeNode<D>> builder,
     required final IndexedTreeNode<D> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
@@ -164,6 +167,7 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
     bool? showRootNode,
   }) =>
       TreeView._(
+        key: key,
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
@@ -179,11 +183,13 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
       );
 
   @override
-  State<StatefulWidget> createState() => _TreeViewState<D, T>();
+  State<StatefulWidget> createState() => TreeViewState<D, T>();
 }
 
-class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
-  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
+  late final TreeViewController<D, T> controller;
+
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late final AnimatedListController<D> _animatedListController;
   late final AutoScrollController _scrollController;
 
@@ -197,13 +203,15 @@ class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
     _animatedListController = AnimatedListController<D>(
-      listKey: listKey,
+      listKey: _listKey,
       tree: widget.tree,
-      removedItemBuilder: buildRemovedItem,
+      removedItemBuilder: _buildRemovedItem,
       showRootNode: widget.showRootNode,
       scrollController: _scrollController,
       expansionBehavior: widget.expansionBehavior,
     );
+
+    controller = TreeViewController(_animatedListController);
   }
 
   @override
@@ -213,10 +221,10 @@ class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
       _animatedListController.expansionBehavior = widget.expansionBehavior;
 
-    didUpdateTree();
+    _didUpdateTree();
   }
 
-  void didUpdateTree() {
+  void _didUpdateTree() {
     final treeDiff = calculateTreeDiff<ITreeNode<D>>(_tree, widget.tree);
     if (treeDiff.isEmpty) return;
 
@@ -249,7 +257,7 @@ class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
-      key: listKey,
+      key: _listKey,
       initialItemCount: _animatedListController.list.length,
       controller: _scrollController,
       primary: widget.primary,
@@ -275,7 +283,7 @@ class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
     );
   }
 
-  Widget buildRemovedItem(
+  Widget _buildRemovedItem(
       T item, BuildContext context, Animation<double> animation) {
     return ExpandableNodeItem<D, T>(
       builder: (context, level, node) => widget.builder(context, level, node),
@@ -290,4 +298,25 @@ class _TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
       minLevelToIndent: widget.showRootNode ? 0 : 1,
     );
   }
+}
+
+class TreeViewController<D, T extends ITreeNode<D>> {
+  final AnimatedListController<D> _animatedListController;
+
+  TreeViewController(this._animatedListController);
+
+  Future scrollToIndex(int index) async =>
+      _animatedListController.scrollToIndex;
+
+  Future scrollToItem(T item) async => _animatedListController.scrollToItem;
+
+  void collapseNode(T item) => _animatedListController.collapseNode;
+
+  void expandNode(T item) => _animatedListController.expandNode;
+
+  void toggleExpansion(T item) => _animatedListController.toggleExpansion;
+
+  ITreeNode<D> get tree => _animatedListController.tree;
+
+  INode elementAt(String path) => tree.elementAt(path);
 }

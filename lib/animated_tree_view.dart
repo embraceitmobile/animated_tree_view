@@ -2,7 +2,6 @@ library animated_tree_view;
 
 export 'package:scroll_to_index/scroll_to_index.dart';
 
-export 'src/controllers/tree_list_view_controller.dart';
 export 'src/tree_node/expansion_indicator.dart';
 export 'src/helpers/exceptions.dart';
 export 'src/tree_node/tree_node.dart';

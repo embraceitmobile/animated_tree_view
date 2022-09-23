@@ -32,6 +32,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<TreeViewState> _treeKey = GlobalKey<TreeViewState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: TreeView.simple(
+        key: _treeKey,
         tree: sampleTree,
         expansionIndicator: ExpansionIndicator.RightUpChevron,
         builder: (context, level, item) => Card(
