@@ -230,25 +230,25 @@ class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
 
     for (final update in treeDiff) {
       update.when(add: (node) {
-        node as D;
+        node as T;
         final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
             as INodeActions;
         parentNode.add(node);
       }, insert: (node, pos) {
-        node as D;
+        node as T;
         final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
             as IIndexedNodeActions;
         parentNode.insert(pos, node as IndexedNode);
       }, remove: (node, pos) {
-        node as D;
+        node as T;
         final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
             as INodeActions;
 
         parentNode.remove(node);
       }, update: (node) {
-        node as D;
-
-        //TODO: add node update implementation here
+        node as T;
+        final oldNode = _tree.elementAt(node.path) as T;
+        oldNode.data = node.data;
       });
     }
   }
