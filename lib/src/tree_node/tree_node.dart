@@ -26,7 +26,7 @@ class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
   ///   ...
   ///   }
   /// ```
-  TreeNode({T? data, this.isExpanded = false, super.key})
+  TreeNode({T? data, this.isExpanded = false, super.key, super.parent})
       : this.listenableData = ValueNotifier(data);
 
   factory TreeNode.root() => TreeNode(key: INode.ROOT_KEY);
@@ -53,7 +53,7 @@ class IndexedTreeNode<T> extends IndexedListenableNode implements ITreeNode<T> {
   ///   ...
   ///   }
   /// ```
-  IndexedTreeNode({T? data, this.isExpanded = false, super.key})
+  IndexedTreeNode({T? data, this.isExpanded = false, super.key, super.parent})
       : this.listenableData = ValueNotifier(data);
 
   factory IndexedTreeNode.root() => IndexedTreeNode(key: INode.ROOT_KEY);
