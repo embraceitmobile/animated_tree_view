@@ -9,6 +9,8 @@ abstract class TreeDiffUpdate {
   const factory TreeDiffUpdate.remove({int? position, required INode data}) =
       NodeRemove;
 
+  const factory TreeDiffUpdate.update(INode data) = NodeUpdate;
+
   /// call one of the given callback functions depending on the type of this object.
   ///
   /// @param insert callback function to be called if this object is of type [NodeInsert]
@@ -19,6 +21,7 @@ abstract class TreeDiffUpdate {
     required S Function(INode data, int position) insert,
     required S Function(INode data, int? position) remove,
     required S Function(INode data) add,
+    required S Function(INode update) update,
   });
 }
 
@@ -48,6 +51,7 @@ class NodeInsert implements TreeDiffUpdate {
     required S Function(INode data, int pos) insert,
     S Function(INode data, int? pos)? remove,
     S Function(INode data)? add,
+    S Function(INode update)? update,
   }) {
     return insert(data, position);
   }
@@ -79,6 +83,7 @@ class NodeRemove implements TreeDiffUpdate {
     S Function(INode data, int pos)? insert,
     required S Function(INode data, int? pos) remove,
     S Function(INode data)? add,
+    S Function(INode update)? update,
   }) {
     return remove(data, position);
   }
@@ -109,6 +114,7 @@ class NodeAdd implements TreeDiffUpdate {
     S Function(INode data, int pos)? insert,
     S Function(INode data, int? pos)? remove,
     required S Function(INode data) add,
+    S Function(INode update)? update,
   }) {
     return add(data);
   }
@@ -116,5 +122,36 @@ class NodeAdd implements TreeDiffUpdate {
   @override
   String toString() {
     return 'Add{data: $data}';
+  }
+}
+
+class NodeUpdate implements TreeDiffUpdate {
+  final INode data;
+
+  const NodeUpdate(this.data);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NodeUpdate &&
+          runtimeType == other.runtimeType &&
+          data == other.data;
+
+  @override
+  int get hashCode => data.hashCode;
+
+  @override
+  S when<S>({
+    S Function(INode data, int pos)? insert,
+    S Function(INode data, int? pos)? remove,
+    S Function(INode data)? add,
+    required S Function(INode update) update,
+  }) {
+    return update(data);
+  }
+
+  @override
+  String toString() {
+    return 'Update{data: $data}';
   }
 }

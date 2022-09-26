@@ -546,4 +546,101 @@ void main() {
       );
     });
   });
+
+  group("Test nodes updates on tree", () {
+    test("Test nodes updates on level 0", () {
+      final tree1 = TreeNode.root()
+        ..addAll([
+          TreeNode(key: "a", data: "A"),
+          TreeNode(key: "b", data: "B"),
+          TreeNode(key: "c", data: "C")
+        ]);
+
+      final tree2 = TreeNode.root()
+        ..addAll([
+          TreeNode(key: "a", data: "A"),
+          TreeNode(key: "b", data: "B"),
+          TreeNode(key: "c", data: "C1")
+        ]);
+
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
+      expect(result.length, 1);
+      expect(result.first, isA<NodeUpdate>());
+      expect(((result.first as NodeUpdate).data as TreeNode).key, 'c');
+      expect(((result.first as NodeUpdate).data as TreeNode).data, 'C1');
+    });
+
+    test("Test nodes updates on level 1", () {
+      final tree1 = TreeNode.root()
+        ..addAll([
+          TreeNode(key: "a", data: "A"),
+          TreeNode(key: "b", data: "B"),
+          TreeNode(key: "c", data: "C")
+            ..addAll([TreeNode(key: "c1", data: "CC1")]),
+        ]);
+
+      final tree2 = TreeNode.root()
+        ..addAll([
+          TreeNode(key: "a", data: "A"),
+          TreeNode(key: "b", data: "B"),
+          TreeNode(key: "c", data: "C")
+            ..addAll([TreeNode(key: "c1", data: "CC2")])
+        ]);
+
+      final result = calculateTreeDiff<TreeNode>(tree1, tree2);
+      expect(result.length, 1);
+      expect(result.first, isA<NodeUpdate>());
+      expect(((result.first as NodeUpdate).data as TreeNode).key, 'c1');
+      expect(((result.first as NodeUpdate).data as TreeNode).data, 'CC2');
+    });
+  });
+
+  group("Test nodes updates on indexed tree", () {
+    test("Test nodes updates on level 0", () {
+      final tree1 = IndexedTreeNode.root()
+        ..addAll([
+          IndexedTreeNode(key: "a", data: "A"),
+          IndexedTreeNode(key: "b", data: "B"),
+          IndexedTreeNode(key: "c", data: "C")
+        ]);
+
+      final tree2 = IndexedTreeNode.root()
+        ..addAll([
+          IndexedTreeNode(key: "a", data: "A"),
+          IndexedTreeNode(key: "b", data: "B"),
+          IndexedTreeNode(key: "c", data: "C1")
+        ]);
+
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
+      expect(result.length, 1);
+      expect(result.first, isA<NodeUpdate>());
+      expect(((result.first as NodeUpdate).data as IndexedTreeNode).key, 'c');
+      expect(((result.first as NodeUpdate).data as IndexedTreeNode).data, 'C1');
+    });
+
+    test("Test nodes updates on level 1", () {
+      final tree1 = IndexedTreeNode.root()
+        ..addAll([
+          IndexedTreeNode(key: "a", data: "A"),
+          IndexedTreeNode(key: "b", data: "B"),
+          IndexedTreeNode(key: "c", data: "C")
+            ..addAll([IndexedTreeNode(key: "c1", data: "CC1")]),
+        ]);
+
+      final tree2 = IndexedTreeNode.root()
+        ..addAll([
+          IndexedTreeNode(key: "a", data: "A"),
+          IndexedTreeNode(key: "b", data: "B"),
+          IndexedTreeNode(key: "c", data: "C")
+            ..addAll([IndexedTreeNode(key: "c1", data: "CC2")])
+        ]);
+
+      final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
+      expect(result.length, 1);
+      expect(result.first, isA<NodeUpdate>());
+      expect(((result.first as NodeUpdate).data as IndexedTreeNode).key, 'c1');
+      expect(
+          ((result.first as NodeUpdate).data as IndexedTreeNode).data, 'CC2');
+    });
+  });
 }

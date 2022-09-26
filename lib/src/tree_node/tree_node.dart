@@ -4,8 +4,16 @@ import 'package:flutter/foundation.dart';
 
 abstract class ITreeNode<T> extends IListenableNode
     implements ValueListenable<INode> {
-  ValueNotifier<T?>? data;
+  final ValueNotifier<T?> listenableData;
   late bool isExpanded;
+
+  ITreeNode(this.listenableData);
+
+  T? get data => listenableData.value;
+
+  set data(T? value) {
+    listenableData.value = value;
+  }
 }
 
 class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
@@ -19,15 +27,20 @@ class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
   ///   }
   /// ```
   TreeNode({T? data, this.isExpanded = false, super.key})
-      : this.data = ValueNotifier(data);
+      : this.listenableData = ValueNotifier(data);
 
   factory TreeNode.root() => TreeNode(key: INode.ROOT_KEY);
 
   @override
   bool isExpanded;
 
-  @override
-  ValueNotifier<T?>? data;
+  final ValueNotifier<T?> listenableData;
+
+  T? get data => listenableData.value;
+
+  set data(T? value) {
+    listenableData.value = value;
+  }
 }
 
 class IndexedTreeNode<T> extends IndexedListenableNode implements ITreeNode<T> {
@@ -36,18 +49,23 @@ class IndexedTreeNode<T> extends IndexedListenableNode implements ITreeNode<T> {
   /// To use your own custom data with [IndexedTreeView], wrap your model [T] in [IndexedTreeNode]
   /// like this:
   /// ```dart
-  ///   class YourCustomNode extends TreeNode<CustomClass> {
+  ///   class YourCustomNode extends IndexedTreeView<CustomClass> {
   ///   ...
   ///   }
   /// ```
   IndexedTreeNode({T? data, this.isExpanded = false, super.key})
-      : this.data = ValueNotifier(data);
+      : this.listenableData = ValueNotifier(data);
 
   factory IndexedTreeNode.root() => IndexedTreeNode(key: INode.ROOT_KEY);
 
   @override
   bool isExpanded;
 
-  @override
-  ValueNotifier<T?>? data;
+  final ValueNotifier<T?> listenableData;
+
+  T? get data => listenableData.value;
+
+  set data(T? value) {
+    listenableData.value = value;
+  }
 }

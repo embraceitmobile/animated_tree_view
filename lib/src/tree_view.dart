@@ -229,28 +229,27 @@ class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
-      update.when(
-        add: (node) {
-          node as D;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
-          parentNode.add(node);
-        },
-        insert: (node, pos) {
-          node as D;
-          final parentNode =
-              _tree.elementAt(node.parent?.path ?? node.root.path)
-                  as IIndexedNodeActions;
-          parentNode.insert(pos, node as IndexedNode);
-        },
-        remove: (node, pos) {
-          node as D;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+      update.when(add: (node) {
+        node as D;
+        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
+            as INodeActions;
+        parentNode.add(node);
+      }, insert: (node, pos) {
+        node as D;
+        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
+            as IIndexedNodeActions;
+        parentNode.insert(pos, node as IndexedNode);
+      }, remove: (node, pos) {
+        node as D;
+        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
+            as INodeActions;
 
-          parentNode.remove(node);
-        },
-      );
+        parentNode.remove(node);
+      }, update: (node) {
+        node as D;
+
+        //TODO: add node update implementation here
+      });
     }
   }
 
@@ -266,18 +265,21 @@ class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
       shrinkWrap: widget.shrinkWrap,
       itemBuilder: (context, index, animation) => ValueListenableBuilder<INode>(
         valueListenable: _animatedListController.list[index],
-        builder: (context, value, child) => ExpandableNodeItem<D, T>(
-          builder: (context, level, node) =>
-              widget.builder(context, level, node),
-          animatedListController: _animatedListController,
-          scrollController: _scrollController,
-          node: _animatedListController.list[index] as T,
-          index: index,
-          animation: animation,
-          indentPadding: widget.indentPadding,
-          expansionIndicator: widget.expansionIndicator,
-          onItemTap: widget.onItemTap,
-          minLevelToIndent: widget.showRootNode ? 0 : 1,
+        builder: (context, treeNode, _) => ValueListenableBuilder(
+          valueListenable: (treeNode as T).listenableData,
+          builder: (context, data, _) => ExpandableNodeItem<D, T>(
+            builder: (context, level, node) =>
+                widget.builder(context, level, node),
+            animatedListController: _animatedListController,
+            scrollController: _scrollController,
+            node: _animatedListController.list[index] as T,
+            index: index,
+            animation: animation,
+            indentPadding: widget.indentPadding,
+            expansionIndicator: widget.expansionIndicator,
+            onItemTap: widget.onItemTap,
+            minLevelToIndent: widget.showRootNode ? 0 : 1,
+          ),
         ),
       ),
     );
