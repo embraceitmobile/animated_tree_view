@@ -151,10 +151,72 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
         showRootNode: showRootNode,
       );
 
+  static TreeView<D, T> simpleTyped<D, T extends TreeNode<D>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<D, T> builder,
+    required final T tree,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
+    double? indentPadding,
+    AutoScrollController? scrollController,
+    ExpansionIndicator? expansionIndicator,
+    ValueSetter<D>? onItemTap,
+    bool? primary,
+    ScrollPhysics? physics,
+    EdgeInsetsGeometry? padding,
+    bool? shrinkWrap,
+    bool? showRootNode,
+  }) =>
+      TreeView._(
+        key: key,
+        builder: builder,
+        tree: tree,
+        expansionBehavior: expansionBehavior,
+        indentPadding: indentPadding,
+        expansionIndicator: expansionIndicator,
+        scrollController: scrollController,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        padding: padding,
+        shrinkWrap: shrinkWrap,
+        showRootNode: showRootNode,
+      );
+
   static TreeView<D, IndexedTreeNode<D>> indexed<D>({
     Key? key,
     required LeveledItemWidgetBuilder<D, IndexedTreeNode<D>> builder,
     required final IndexedTreeNode<D> tree,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    double? indentPadding,
+    AutoScrollController? scrollController,
+    ExpansionIndicator? expansionIndicator,
+    ValueSetter<D>? onItemTap,
+    bool? primary,
+    ScrollPhysics? physics,
+    EdgeInsetsGeometry? padding,
+    bool? shrinkWrap,
+    bool? showRootNode,
+  }) =>
+      TreeView._(
+        key: key,
+        builder: builder,
+        tree: tree,
+        expansionBehavior: expansionBehavior,
+        indentPadding: indentPadding,
+        expansionIndicator: expansionIndicator,
+        scrollController: scrollController,
+        onItemTap: onItemTap,
+        primary: primary,
+        physics: physics,
+        padding: padding,
+        shrinkWrap: shrinkWrap,
+        showRootNode: showRootNode,
+      );
+
+  static TreeView<D, T> indexTyped<D, T extends IndexedTreeNode<D>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<D, T> builder,
+    required final T tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
     AutoScrollController? scrollController,
@@ -305,7 +367,7 @@ class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
 class TreeViewController<D, T extends ITreeNode<D>> {
   final AnimatedListController<D> _animatedListController;
 
-  TreeViewController(this._animatedListController);
+  const TreeViewController(this._animatedListController);
 
   Future scrollToIndex(int index) async =>
       _animatedListController.scrollToIndex;
@@ -318,7 +380,7 @@ class TreeViewController<D, T extends ITreeNode<D>> {
 
   void toggleExpansion(T item) => _animatedListController.toggleExpansion;
 
-  ITreeNode<D> get tree => _animatedListController.tree;
+  T get tree => _animatedListController.tree as T;
 
-  INode elementAt(String path) => tree.elementAt(path);
+  T elementAt(String path) => tree.elementAt(path) as T;
 }

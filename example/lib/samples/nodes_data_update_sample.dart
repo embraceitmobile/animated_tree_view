@@ -80,6 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class StringTreeNode extends TreeNode<String> {
+  StringTreeNode({super.data, super.parent});
+}
+
 late final testTrees = <MapEntry<String, TreeNode>>[
   MapEntry("Default tree", defaultTree),
   MapEntry("Updated tree", updatedTree),
