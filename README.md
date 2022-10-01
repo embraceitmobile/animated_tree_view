@@ -7,13 +7,13 @@ The widget is based on the Flutter’s [AnimatedList](https://api.flutter.dev/fl
 ![Animated Tree View Demo](https://media.giphy.com/media/LfGExvX5OG9Eg3CyRa/giphy.gif)
 
 ## Variants
-There are two variants available in the package: the simple `TreeView` and the more comprehensive `IndexedTreeView`. 
+There are two variants available in the package: the simple `TreeView` and the more comprehensive `TreeView.indexed`. 
 
-### TreeView
+### TreeView.simple
 The `TreeView` uses a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) data-structure to handle the Nodes and their children, using a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) makes the `TreeView` more performant with a complexity on traversing the Nodes being O(n), where n is the level of the node. However the simple `TreeView` lacks the indexed based operations like `insertAt` and `removeAt` operations.
 
-### IndexedTreeView
-The `IndexedTreeView` uses a [List](https://api.dart.dev/stable/2.10.5/dart-core/List-class.html) data-structure to handle the Nodes and their children. This allows it to perform all the list based operations that require indices, like `insertAt` or `removeAt`. The drawback of using an `IndexedTreeView` instead of `TreeView` is that the Node traversal operations on the `IndexedTreeView` are more expensive with a complexity of O(n^m), where n is the number of children in a node, and m is the node level.
+### TreeView.indexed
+The `TreeView.indexed` uses a [List](https://api.dart.dev/stable/2.10.5/dart-core/List-class.html) data-structure to handle the Nodes and their children. This allows it to perform all the list based operations that require indices, like `insertAt` or `removeAt`. The drawback of using an `TreeView.indexed` instead of `TreeView` is that the Node traversal operations on the `TreeView.indexed` are more expensive with a complexity of O(n^m), where n is the number of children in a node, and m is the node level.
 
 ## Features
 * Infinite levels and child nodes.
@@ -21,27 +21,26 @@ The `IndexedTreeView` uses a [List](https://api.dart.dev/stable/2.10.5/dart-core
 * Familiar API due to inspiration from AnimatedList.
 * Provides plenty of utility methods for adding, inserting and removing child nodes.
 * Easily traverse the tree laterally or vertically from the root to the leaf and back.
+* Tree Diff Util to compute the difference between two trees, and automatically apply the changes in the tree view.
 * Implementation of ValueListenable makes it easy to listen to changes in the data.
 
 ## How to use
 ### TreeView
-You can simply use the provided `SimpleNode` or extend your data object from `ListenableNode<T>` like this
+You can simply use the provided `TreeNode` or extend your data object from `TreeNode<T>` like this
 
+To use your own custom data with [TreeView], wrap your model [T] in [TreeNode] like this:
 ```dart
-class CustomNode extends ListenableNode<CustomNode> {
-  CustomNode([String? key]) : super(key: key);
-}
+   class YourCustomNode extends TreeNode<CustomClass> {
+   ...
+   }
 ```
 *Note: If the `key` is omitted, then a unique key will be automatically assigned to the Node.*
-
-You can provide an optional `TreeListViewController<T>` and `initialItems` to the TreeListView if required. 
-
-If no `initialItems` are provided to the `TreeView`, then the `TreeView` will only contain a Root-Node until some children are added to it.
 
 Finally, initialize the `TreeView` by providing it a builder.
 
 ```dart
-TreeListView<SimpleNode>(
+TreeView.simple(
+    tree: TreeNode.root(),
     builder: (context, level, node) {
         // build your node item here
         // return any widget that you need
@@ -53,19 +52,20 @@ TreeListView<SimpleNode>(
                 
 ```
 
-### IndexedTreeView
-The usage of `IndexedTreeView` is exactly the same as a simple `TreeView`. You only need to replace `SimpleNode` with `SimpleIndexedNode` or extend you `CustomNode` from `ListenableIndexedNode` like this
+### TreeView.indexed
+The usage of `TreeView.indexed` is exactly the same as a simple `TreeView`. You only need to replace `TreeNode` with `IndexedTreeNode` or extend your `YourCustomNode` from `IndexedTreeNode` like this
 
 ```dart
-class CustomIndexedNode extends ListenableIndexedNode<CustomIndexedNode> {
-  CustomIndexedNode([String? key]) : super(key: key);
-}
+   class YourCustomNode extends IndexedTreeNode<CustomClass> {
+   ...
+   }
 ```
 
 Finally initialize the widget like this:
 
 ```dart
-IndexedTreeListView<CustomIndexedNode>(
+TreeView.indexed(
+    tree: IndexedTreeNode.root(),
     builder: (context, level, node) {
         // build your node item here
         // return any widget that you need
@@ -83,8 +83,7 @@ IndexedTreeListView<CustomIndexedNode>(
 Attributes              | Description
 ------------------------|-------------
 builder                 | The builder function that is provided to the item builder. Called, as needed, to build list item widgets. The built widget is passed to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html)'s itemBuilder.
-controller              | Allows controlling the [TreeView] programmatically using utility methods. Use `TreeViewController` for the `TreeView`, and `IndexedTreeViewController` for the `IndexedTreeView`.
-initialItems            | Node that is used to populate the `TreeView` initially. If no `initialItems` are provided, then the Tree will only contain the RootNode.
+tree                    | Tree that is used to populate the `TreeView`. If the `tree` is updated using any state management tools like setState or Bloc, then the [TreeDiffUtil](#treeDiffUtil) is used to get the diff between the two trees, and apply all the changes from the new tree onto the old tree.
 scrollController        | Provide a scrollController for more granular control over scrolling behavior.
 expansionIndicator      | Provide an `ExpansionIndicator` to set the expand widget and collapse widget. Typically these are [Icon](https://api.flutter.dev/flutter/widgets/Icon-class.html) widgets. You can pass in `null` if you do not want to show any expansion indicator.
 indentPadding           | This is the padding is applied to the start of an item. `IndentPadding` will be multiplied by Node-Level before being applied. 
@@ -126,6 +125,12 @@ Collapse all other nodes, only the current node will remain expanded, also snap 
 
 ![ExpansionBehavior.collapseOthersAndSnapToTop](https://media.giphy.com/media/YDOKCA8EmaRxuOFDTQ/giphy.gif)
 
+## Tree Diff Util <a name="treeDiffUtil"></a>
+A `TreeDiffUtil` is used to determine the difference between two trees if the `tree` is udpated using any state management tool like setState or Bloc etc.
+
+For `TreeView.simple`, which uses a `Map` internally to store the child nodes, this is a simple difference operation on all the nodes of the tree. Complexity is O(2n), where n is the total number of nodes in the tree.
+
+For `TreeView.indexed`, which uses a `List` internally to store the child nodes, it is a little more complex as Myer's algorithm is used to determine the difference in the children of each respective node. Complexity is O(N + D^2), where D is the length of the edit script. For more details see [diffutil_dart](https://pub.dev/packages/diffutil_dart).
 
 ## Available APIs
 ### Node
@@ -165,15 +170,4 @@ elementAt                 | Get any item at path from the root. The keys  of the
 root                      | Root node of the TreeView
 scrollToIndex             | Allows to scroll to any item with index in the list. If you do not have the index of the item, then use the alternate scrollToItem method item instead.
 scrollToItem              | Utility method to scroll to any visible item in the tree.
-toggleNodeExpandCollapse  | Utility method to expand or collapse an item.
-
-
-## Future Goals
-* [x] Improve documentation
-* [x] Add more ExpansionBehaviors
-* [ ] Add more examples
-* [ ] Add more utility functions for Node
-* [ ] Add a `DiffUtil` to the controller to update the whole tree data more easily
-
-## Development Status
-This library is under development. We are trying to provide you a performant and easy to use library, however at this stage we cannot guarantee a bug free experience. Please feel free to equest any feature or report any issues that you may face.
+toggleExpansion           | Utility method to expand or collapse an item.

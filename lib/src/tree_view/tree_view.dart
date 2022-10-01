@@ -487,12 +487,6 @@ class TreeViewController<D, T extends ITreeNode<D>> {
   Future scrollToItem(T node) async =>
       _animatedListController.scrollToItem(node);
 
-  /// Method for programmatically collapsing an expanded [TreeNode].
-  void collapseNode(T node) => _animatedListController.collapseNode(node);
-
-  /// Method for programmatically expanding an collapsing [TreeNode].
-  void expandNode(T node) => _animatedListController.expandNode(node);
-
   /// Method for programmatically toggling the expansion state of a [TreeNode].
   /// If the [TreeNode] is in expanded state, then it will be collapsed.
   /// Else if the [TreeNode] is in collapsed state, then it will be expanded.
