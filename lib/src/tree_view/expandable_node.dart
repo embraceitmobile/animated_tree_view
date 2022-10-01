@@ -1,6 +1,7 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/controllers/animated_list_controller.dart';
 import 'package:flutter/material.dart';
+
+import 'animated_list_controller.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 

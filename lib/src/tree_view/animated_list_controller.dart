@@ -1,8 +1,7 @@
 import 'dart:async';
-
-import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
+import 'package:animated_tree_view/animated_tree_view.dart';
 
 class AnimatedListController<T> {
   static const TAG = "AnimatedListController";

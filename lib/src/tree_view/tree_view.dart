@@ -1,10 +1,10 @@
-import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/tree_node/expandable_node.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import '../tree_diff/tree_diff_util.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_tree_view/animated_tree_view.dart';
 
-import 'controllers/animated_list_controller.dart';
-import 'tree_diff/tree_diff_util.dart';
+import 'animated_list_controller.dart';
+import 'expandable_node.dart';
 
 /// The builder function that allows to build any item of type [T].
 /// The builder function also provides the [level] of the node.
@@ -34,11 +34,33 @@ enum ExpansionBehavior {
   collapseOthersAndSnapToTop,
 }
 
+/// The [TreeView] allows to visually display a tree data structure in a linear
+/// list which animates the node addition, removal, changes and expansion/collapse
+/// of the node.
+///
+/// The [TreeView] is based on the [AnimatedList], so it can be used as a replacement
+/// of [AnimatedList].
+///
+/// The default [TreeView.simple] uses a [TreeNode] internally, which is based on the
+/// [Map] data structure for maintaining the children states.
+/// The [TreeNode] does not allow insertion and removal of
+/// items at index positions. This allows for more efficient insertion and
+/// retrieval of items at child nodes, as child items can be readily accessed
+/// using the map keys.
+///
+/// The complexity for accessing child nodes in [TreeView] is simply O(node_level).
+/// e.g. for path './.level1/level2', complexity is simply O(2).
+///
+/// For a [TreeView] that allows for insertion and removal of
+/// items at index positions, use the alternate [TreeView.indexed].
 class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
   final LeveledItemWidgetBuilder<D, T> builder;
 
-  /// The rootNode of the [tree]
+  /// The rootNode of the [tree]. If the [tree] is updated using setState or any
+  /// other state management tool, then a [TreeDiff] is performed to get all the
+  /// nodes that have been modified between the old and new trees. The [TreeDiffUpdate]
+  /// result is then used to apply the changes in the new tree to the old tree.
   final ITreeNode<D> tree;
 
   /// An optional [scrollController] that provides more granular control over
@@ -120,6 +142,26 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
   })  : this.shrinkWrap = shrinkWrap ?? false,
         this.showRootNode = showRootNode ?? true;
 
+  /// The default implementation of [TreeView] that uses a [TreeNode] internally,
+  /// which is based on the
+  /// [Map] data structure for maintaining the children states.
+  /// The [TreeNode] does not allow insertion and removal of
+  /// items at index positions. This allows for more efficient insertion and
+  /// retrieval of items at child nodes, as child items can be readily accessed
+  /// using the map keys.
+  ///
+  /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
+  /// e.g. for path './.level1/level2', complexity is simply O(2).
+  ///
+  /// ** See code in example/lib/samples/widgets/treeview_modification_sample.dart **
+  /// {@end-tool}
+  ///
+  /// See also:
+  ///   * For a [TreeView] that allows for insertion and removal of
+  ///   items at index positions, use the alternate [TreeView.indexed].
+  ///   * For using an object that extends the [TreeNode] instead of using [TreeNode]
+  ///   directly, used the [TreeView.simpleTyped] which allows for typed objects
+  ///   to be returned in the [builder]
   static TreeView<D, TreeNode<D>> simple<D>({
     Key? key,
     required LeveledItemWidgetBuilder<D, TreeNode<D>> builder,
@@ -151,6 +193,28 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
         showRootNode: showRootNode,
       );
 
+  /// Use the typed constructor if you are extending the [TreeNode] instead of
+  /// directly wrapping the data in the [TreeNode]. Using the [TreeView.simpleTyped]
+  /// allows the [builder] to return the correctly typed [T] object.
+  ///
+  /// The default implementation of [TreeView] that uses a [TreeNode] internally,
+  /// which is based on the [Map] data structure for maintaining the children states.
+  /// The [TreeNode] does not allow insertion and removal of
+  /// items at index positions. This allows for more efficient insertion and
+  /// retrieval of items at child nodes, as child items can be readily accessed
+  /// using the map keys.
+  ///
+  /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
+  /// e.g. for path './.level1/level2', complexity is simply O(2).
+  ///
+  /// ** See code in example/lib/samples/widgets/treeview_indexed_modification_sample.dart **
+  ///  {@end-tool}
+  ///
+  /// See also:
+  ///   * For a [TreeView] that allows for insertion and removal of
+  ///   items at index positions, use the alternate [TreeView.indexTyped].
+  ///   * If you are wrapping the data directly in the [TreeNode] instead of
+  ///   extending the [TreeNode], then you can also use the simpler [TreeView.simple].
   static TreeView<D, T> simpleTyped<D, T extends TreeNode<D>>({
     Key? key,
     required LeveledItemWidgetBuilder<D, T> builder,
@@ -182,6 +246,27 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
         showRootNode: showRootNode,
       );
 
+  /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
+  /// which is based on the [List] data structure for maintaining the children states.
+  /// The [IndexedNode] allows indexed based operations like insertion and removal of
+  /// items at index positions. This allows for movement, addition and removal of
+  /// child nodes based on indices.
+  ///
+  /// The complexity for accessing child nodes in [TreeView.indexed] is simply
+  /// O(node_level ^ children).
+  ///
+  /// ** See code in example/lib/samples/widgets/treeview_indexed_modification_sample.dart **
+  ///  {@end-tool}
+  ///
+  /// If you do not require index based operations, the more performant and efficient
+  /// [TreeView.simple] instead.
+  ///
+  /// See also:
+  ///   * If you do not require index based operations, the more performant and
+  ///   efficient [TreeView.simple] instead.
+  ///   * For using an object that extends the [IndexedTreeNode] instead of using
+  ///   [IndexedTreeNode] directly, used the [TreeView.indexTyped] which allows
+  ///   for typed objects to be returned in the [builder]
   static TreeView<D, IndexedTreeNode<D>> indexed<D>({
     Key? key,
     required LeveledItemWidgetBuilder<D, IndexedTreeNode<D>> builder,
@@ -213,6 +298,28 @@ class TreeView<D, T extends ITreeNode<D>> extends StatefulWidget {
         showRootNode: showRootNode,
       );
 
+  /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
+  /// of directly wrapping the data in the [IndexedTreeNode].
+  /// Using the [TreeView.indexTyped] allows the [builder] to return the correctly
+  /// typed [T] object.
+  ///
+  /// This alternate implementation of [TreeView] uses an [IndexedNode] internally,
+  /// which is based on the [List] data structure for maintaining the children states.
+  /// The [IndexedNode] allows indexed based operations like insertion and removal of
+  /// items at index positions. This allows for movement, addition and removal of
+  /// child nodes based on indices.
+  ///
+  /// The complexity for accessing child nodes in [TreeView.indexed] is simply
+  /// O(node_level ^ children).
+  ///
+  /// If you do not require index based operations, the more performant and efficient
+  /// [TreeView.simple] instead.
+  ///
+  /// See also:
+  ///   * If you do not require index based operations, the more performant and
+  ///     efficient [TreeView.simpleTyped] instead.
+  ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
+  ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
   static TreeView<D, T> indexTyped<D, T extends IndexedTreeNode<D>>({
     Key? key,
     required LeveledItemWidgetBuilder<D, T> builder,
@@ -364,23 +471,36 @@ class TreeViewState<D, T extends ITreeNode<D>> extends State<TreeView<D, T>> {
   }
 }
 
+///Utility class to provide easy access to basic node operations.
+///The [TreeViewController] also exposes basic scrolling methods that can be used
+///for scrolling to an item or a list index.
 class TreeViewController<D, T extends ITreeNode<D>> {
   final AnimatedListController<D> _animatedListController;
 
   const TreeViewController(this._animatedListController);
 
+  /// Method for programmatically scrolling to an [index] in the flat list of the [TreeView].
   Future scrollToIndex(int index) async =>
       _animatedListController.scrollToIndex;
 
-  Future scrollToItem(T item) async => _animatedListController.scrollToItem;
+  /// Method for programmatically scrolling to a [node] in the [TreeView].
+  Future scrollToItem(T node) async =>
+      _animatedListController.scrollToItem(node);
 
-  void collapseNode(T item) => _animatedListController.collapseNode;
+  /// Method for programmatically collapsing an expanded [TreeNode].
+  void collapseNode(T node) => _animatedListController.collapseNode(node);
 
-  void expandNode(T item) => _animatedListController.expandNode;
+  /// Method for programmatically expanding an collapsing [TreeNode].
+  void expandNode(T node) => _animatedListController.expandNode(node);
 
-  void toggleExpansion(T item) => _animatedListController.toggleExpansion;
+  /// Method for programmatically toggling the expansion state of a [TreeNode].
+  /// If the [TreeNode] is in expanded state, then it will be collapsed.
+  /// Else if the [TreeNode] is in collapsed state, then it will be expanded.
+  void toggleExpansion(T node) => _animatedListController.toggleExpansion(node);
 
+  /// Returns the [INode.ROOT_KEY] root of the [tree]
   T get tree => _animatedListController.tree as T;
 
+  /// Returns the [ITreeNode] at the provided [path]
   T elementAt(String path) => tree.elementAt(path) as T;
 }

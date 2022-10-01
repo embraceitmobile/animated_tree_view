@@ -4,7 +4,7 @@ version: 0.1.2
 repository: https://github.com/embraceitmobile/animated_tree_view
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.18.0 <3.0.0"
 
 dependencies:
   scroll_to_index: ^3.0.1
