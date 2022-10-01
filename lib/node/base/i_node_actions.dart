@@ -1,4 +1,4 @@
-import 'package:animated_tree_view/src/node/indexed_node.dart';
+import 'package:animated_tree_view/node/indexed_node.dart';
 
 import 'i_node.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/helpers/event_stream_controller.dart';
+import 'package:animated_tree_view/helpers/event_stream_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 

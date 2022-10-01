@@ -1,6 +1,6 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/tree_diff/tree_diff_update.dart';
-import 'package:animated_tree_view/src/tree_diff/tree_diff_util.dart';
+import 'package:animated_tree_view/tree_diff/tree_diff_update.dart';
+import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mocks/mock_indexed_trees.dart';

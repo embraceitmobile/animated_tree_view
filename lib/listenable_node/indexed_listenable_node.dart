@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:animated_tree_view/src/helpers/event_stream_controller.dart';
-import 'package:animated_tree_view/src/helpers/exceptions.dart';
-import 'package:animated_tree_view/src/node/base/i_node.dart';
-import 'package:animated_tree_view/src/node/indexed_node.dart';
+import 'package:animated_tree_view/helpers/event_stream_controller.dart';
+import 'package:animated_tree_view/helpers/exceptions.dart';
+import 'package:animated_tree_view/node/base/i_node.dart';
+import 'package:animated_tree_view/node/indexed_node.dart';
 import 'package:flutter/foundation.dart';
 
 import 'base/i_listenable_node.dart';

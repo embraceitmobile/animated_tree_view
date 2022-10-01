@@ -1,4 +1,4 @@
-import 'package:animated_tree_view/src/node/base/i_node.dart';
+import 'package:animated_tree_view/node/base/i_node.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 

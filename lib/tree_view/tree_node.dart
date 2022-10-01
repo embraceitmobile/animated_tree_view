@@ -1,5 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/src/listenable_node/base/i_listenable_node.dart';
+import 'package:animated_tree_view/listenable_node/base/i_listenable_node.dart';
 import 'package:flutter/foundation.dart';
 
 /// Base class that allows a data of type [T] to be wrapped in a [ListenableNode]
