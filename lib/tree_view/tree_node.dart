@@ -40,7 +40,7 @@ class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
       : this.listenableData = ValueNotifier(data);
 
   /// Factory constructor to be used only for root [TreeNode]
-  factory TreeNode.root() => TreeNode(key: INode.ROOT_KEY);
+  factory TreeNode.root({T? data}) => TreeNode(key: INode.ROOT_KEY, data: data);
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
   final ValueNotifier<T?> listenableData;
