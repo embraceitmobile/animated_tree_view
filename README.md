@@ -160,9 +160,7 @@ Method          | TreeView                | IndexedTreeView   | Description
 `indexWhere`    | :o:                     | :white_check_mark:| Get the index of the first child node that matches the criterion in the test.
 
 ### TreeViewController
-The `TreeViewController` provides utility methods that allow controlling the [TreeView] programmatically. 
-
-There are two different `TreeViewController`s for the two variants of `TreeView`. Namely the `TreeViewController` for `TreeView`, and the `IndexedTreeViewController` for `IndexedTreeView`
+The `TreeViewController` provides utility methods that allow controlling the `TreeView` programmatically. 
 
 Method                    | Description
 --------------------------| -----------
