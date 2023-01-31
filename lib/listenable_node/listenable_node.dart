@@ -7,9 +7,7 @@ import 'package:flutter/foundation.dart';
 
 import 'base/i_listenable_node.dart';
 
-class ListenableNode extends Node
-    with ChangeNotifier
-    implements IListenableNode {
+class ListenableNode extends Node with ChangeNotifier implements IListenableNode {
   /// A listenable implementation the [Node].
   /// The mutations to the [Node] can be listened to using the [ValueListenable]
   /// interface or the [addedNodes] and [removedNodes] streams.
@@ -39,14 +37,11 @@ class ListenableNode extends Node
   ListenableNode get root => super.root as ListenableNode;
 
   /// This returns the [children] as an iterable list.
-  List<ListenableNode> get childrenAsList =>
-      List<ListenableNode>.from(super.childrenAsList);
+  List<ListenableNode> get childrenAsList => List<ListenableNode>.from(super.childrenAsList);
 
-  final EventStreamController<NodeAddEvent<INode>> _addedNodes =
-      EventStreamController();
+  final EventStreamController<NodeAddEvent<INode>> _addedNodes = EventStreamController();
 
-  final EventStreamController<NodeRemoveEvent<INode>> _removedNodes =
-      EventStreamController();
+  final EventStreamController<NodeRemoveEvent<INode>> _removedNodes = EventStreamController();
 
   /// Listen to this [Stream] to get updates on when a Node or a collection of
   /// Nodes is added to the current node.
@@ -70,9 +65,7 @@ class ListenableNode extends Node
 
   /// The insertNodes stream is not allowed for the ListenableNode.
   /// The index based operations like 'insert' are not implemented in ListenableNode
-  Stream<
-      NodeInsertEvent<
-          INode>> get insertedNodes => throw ActionNotAllowedException(
+  Stream<NodeInsertEvent<INode>> get insertedNodes => throw ActionNotAllowedException(
       this,
       "The insertNodes stream is not allowed"
       "for the ListenableNode. The index based operations like 'insert' are "
@@ -141,8 +134,7 @@ class ListenableNode extends Node
     final remainingChildren = childrenAsList.toSet();
     allChildren.removeAll(remainingChildren);
 
-    if (allChildren.isNotEmpty)
-      _notifyNodesRemoved(NodeRemoveEvent(List.from(allChildren)));
+    if (allChildren.isNotEmpty) _notifyNodesRemoved(NodeRemoveEvent(List.from(allChildren)));
   }
 
   /// Clear all the child nodes from [children]. The [children] will be empty
@@ -189,8 +181,7 @@ class ListenableNode extends Node
   ///   0C.0C1C
   ///
   /// Note: The root node [ROOT_KEY] does not need to be in the path
-  ListenableNode elementAt(String path) =>
-      super.elementAt(path) as ListenableNode;
+  ListenableNode elementAt(String path) => super.elementAt(path) as ListenableNode;
 
   /// Overloaded operator for [elementAt]
   ListenableNode operator [](String path) => elementAt(path);
