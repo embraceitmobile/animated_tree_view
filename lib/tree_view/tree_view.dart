@@ -578,10 +578,10 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
                 scrollController != null,
             "\n\nTo apply an ExpansionBehaviour, please also provide an AutoScrollController as well.\n\n"
             "The same instance of the scroll controller needs to be applied to the SliverTreeView and the CustomScrollView holding the SliverTreeView.\n\n"
-            "For more info see example/lib/samples/sliver_treeview_sample.dart\n\n");
+            "For more info see example/lib/samples/sliver_treeview/sliver_treeview_sample.dart\n\n");
 
   @override
-  State<StatefulWidget> createState() => SliverTreeViewState<Data,Tree>();
+  State<StatefulWidget> createState() => SliverTreeViewState<Data, Tree>();
 
   static SliverTreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
@@ -607,13 +607,90 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         showRootNode: showRootNode,
       );
+
+  static SliverTreeView<Data, Tree>
+      simpleTyped<Data, Tree extends TreeNode<Data>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<Tree> builder,
+    required final Tree tree,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
+    double? indentPadding,
+    AutoScrollController? scrollController,
+    ExpansionIndicator? expansionIndicator,
+    ValueSetter<Data>? onItemTap,
+    EdgeInsetsGeometry? padding,
+    bool showRootNode = false,
+  }) =>
+          SliverTreeView._(
+            key: key,
+            builder: builder,
+            tree: tree,
+            expansionBehavior: expansionBehavior,
+            indentPadding: indentPadding,
+            expansionIndicator: expansionIndicator,
+            scrollController: scrollController,
+            onItemTap: onItemTap,
+            padding: padding,
+            showRootNode: showRootNode,
+          );
+
+  static SliverTreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
+    Key? key,
+    required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
+    required final IndexedTreeNode<Data> tree,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    double? indentPadding,
+    AutoScrollController? scrollController,
+    ExpansionIndicator? expansionIndicator,
+    ValueSetter<Data>? onItemTap,
+    EdgeInsetsGeometry? padding,
+    bool showRootNode = false,
+  }) =>
+      SliverTreeView._(
+        key: key,
+        builder: builder,
+        tree: tree,
+        expansionBehavior: expansionBehavior,
+        indentPadding: indentPadding,
+        expansionIndicator: expansionIndicator,
+        scrollController: scrollController,
+        onItemTap: onItemTap,
+        padding: padding,
+        showRootNode: showRootNode,
+      );
+
+  static SliverTreeView<Data, Tree>
+      indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
+    Key? key,
+    required LeveledItemWidgetBuilder<Tree> builder,
+    required final Tree tree,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    double? indentPadding,
+    AutoScrollController? scrollController,
+    ExpansionIndicator? expansionIndicator,
+    ValueSetter<Data>? onItemTap,
+    EdgeInsetsGeometry? padding,
+    bool showRootNode = false,
+  }) =>
+          SliverTreeView._(
+            key: key,
+            builder: builder,
+            tree: tree,
+            expansionBehavior: expansionBehavior,
+            indentPadding: indentPadding,
+            expansionIndicator: expansionIndicator,
+            scrollController: scrollController,
+            onItemTap: onItemTap,
+            padding: padding,
+            showRootNode: showRootNode,
+          );
 }
 
 class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<SliverTreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, SliverTreeView<Data, Tree>> {
   final _SliverAnimatedListState _listState =
-  _SliverAnimatedListState(GlobalKey<SliverAnimatedListState>());
+      _SliverAnimatedListState(GlobalKey<SliverAnimatedListState>());
 
   @override
   Widget build(BuildContext context) {
