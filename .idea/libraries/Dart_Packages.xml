@@ -5,6 +5,7 @@
         <entry key="async">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/async-2.10.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/async-2.10.0/lib" />
             </list>
           </value>
@@ -12,6 +13,7 @@
         <entry key="boolean_selector">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
             </list>
           </value>
@@ -19,6 +21,7 @@
         <entry key="characters">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/characters-1.2.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/characters-1.2.1/lib" />
             </list>
           </value>
@@ -26,6 +29,7 @@
         <entry key="clock">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/clock-1.1.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/clock-1.1.1/lib" />
             </list>
           </value>
@@ -33,6 +37,7 @@
         <entry key="collection">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/collection-1.17.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/collection-1.17.0/lib" />
             </list>
           </value>
@@ -47,6 +52,7 @@
         <entry key="diffutil_dart">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0/lib" />
             </list>
           </value>
@@ -54,6 +60,7 @@
         <entry key="fake_async">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/fake_async-1.3.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/fake_async-1.3.1/lib" />
             </list>
           </value>
@@ -61,20 +68,21 @@
         <entry key="flutter">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/stable/packages/flutter/lib" />
+              <option value="$USER_HOME$/Development/flutter/packages/flutter/lib" />
             </list>
           </value>
         </entry>
         <entry key="flutter_test">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/stable/packages/flutter_test/lib" />
+              <option value="$USER_HOME$/Development/flutter/packages/flutter_test/lib" />
             </list>
           </value>
         </entry>
         <entry key="js">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/js-0.6.5/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/js-0.6.5/lib" />
             </list>
           </value>
@@ -82,6 +90,7 @@
         <entry key="matcher">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/matcher-0.12.13/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/matcher-0.12.13/lib" />
             </list>
           </value>
@@ -89,6 +98,7 @@
         <entry key="material_color_utilities">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0/lib" />
             </list>
           </value>
@@ -96,6 +106,7 @@
         <entry key="meta">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/meta-1.8.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/meta-1.8.0/lib" />
             </list>
           </value>
@@ -103,6 +114,7 @@
         <entry key="path">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/path-1.8.2/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path-1.8.2/lib" />
             </list>
           </value>
@@ -110,6 +122,7 @@
         <entry key="scroll_to_index">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1/lib" />
             </list>
           </value>
@@ -117,13 +130,14 @@
         <entry key="sky_engine">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/stable/bin/cache/pkg/sky_engine/lib" />
+              <option value="$USER_HOME$/Development/flutter/bin/cache/pkg/sky_engine/lib" />
             </list>
           </value>
         </entry>
         <entry key="source_span">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/source_span-1.9.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/source_span-1.9.1/lib" />
             </list>
           </value>
@@ -131,6 +145,7 @@
         <entry key="stack_trace">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
             </list>
           </value>
@@ -138,6 +153,7 @@
         <entry key="stream_channel">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
             </list>
           </value>
@@ -145,6 +161,7 @@
         <entry key="string_scanner">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/string_scanner-1.2.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/string_scanner-1.2.0/lib" />
             </list>
           </value>
@@ -152,6 +169,7 @@
         <entry key="term_glyph">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/term_glyph-1.2.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/term_glyph-1.2.1/lib" />
             </list>
           </value>
@@ -159,6 +177,7 @@
         <entry key="test_api">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/test_api-0.4.16/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.4.16/lib" />
             </list>
           </value>
@@ -166,6 +185,7 @@
         <entry key="tuple">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/tuple-2.0.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/tuple-2.0.1/lib" />
             </list>
           </value>
@@ -173,6 +193,7 @@
         <entry key="vector_math">
           <value>
             <list>
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib" />
             </list>
           </value>
@@ -202,9 +223,30 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.4.16/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/tuple-2.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/stable/bin/cache/pkg/sky_engine/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/stable/packages/flutter/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/stable/packages/flutter_test/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/async-2.10.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/characters-1.2.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/clock-1.1.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/collection-1.17.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/fake_async-1.3.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/js-0.6.5/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/matcher-0.12.13/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/meta-1.8.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/path-1.8.2/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/source_span-1.9.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/string_scanner-1.2.0/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/term_glyph-1.2.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/test_api-0.4.16/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/tuple-2.0.1/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/packages/flutter/lib" />
+      <root url="file://$USER_HOME$/Development/flutter/packages/flutter_test/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

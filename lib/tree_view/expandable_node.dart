@@ -5,8 +5,9 @@ import 'animated_list_controller.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
-class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWidget {
-  final LeveledItemWidgetBuilder<Data, Tree> builder;
+class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
+    extends StatelessWidget {
+  final LeveledItemWidgetBuilder<Tree> builder;
   final AnimatedListController<Data> animatedListController;
   final AutoScrollController scrollController;
   final Tree node;
@@ -21,7 +22,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWi
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required AnimatedListController<Data> animatedListController,
     required int index,
-    required LeveledItemWidgetBuilder<Data, Tree> builder,
+    required LeveledItemWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
@@ -34,7 +35,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWi
       builder: (context, treeNode, _) => ValueListenableBuilder(
         valueListenable: (treeNode as Tree).listenableData,
         builder: (context, data, _) => ExpandableNodeItem<Data, Tree>(
-          builder: (context, level, node) => builder(context, level, node),
+          builder: builder,
           animatedListController: animatedListController,
           scrollController: scrollController,
           node: animatedListController.list[index] as Tree,
@@ -52,7 +53,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWi
   static Widget removedNode<D, T extends ITreeNode<D>>({
     required AnimatedListController<D> animatedListController,
     required T item,
-    required LeveledItemWidgetBuilder<D, T> builder,
+    required LeveledItemWidgetBuilder<T> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
@@ -61,7 +62,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWi
     required bool showRootNode,
   }) {
     return ExpandableNodeItem<D, T>(
-      builder: (context, level, node) => builder(context, level, node),
+      builder: builder,
       animatedListController: animatedListController,
       scrollController: scrollController,
       node: item,
@@ -95,9 +96,11 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWi
       animation: animation,
       item: node,
       child: builder(context, node.level, node),
-      indentPadding: indentPadding * (node.level - minLevelToIndent).clamp(0, double.maxFinite),
+      indentPadding: indentPadding *
+          (node.level - minLevelToIndent).clamp(0, double.maxFinite),
       isExpanded: node.isExpanded,
-      expansionIndicator: node.childrenAsList.isEmpty ? null : expansionIndicator,
+      expansionIndicator:
+          node.childrenAsList.isEmpty ? null : expansionIndicator,
       onTap: remove
           ? null
           : (dynamic item) {
@@ -156,7 +159,9 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
                 padding: expansionIndicator!.padding,
                 child: Align(
                   alignment: expansionIndicator!.alignment,
-                  child: isExpanded ? expansionIndicator!.collapseIcon : expansionIndicator!.expandIcon,
+                  child: isExpanded
+                      ? expansionIndicator!.collapseIcon
+                      : expansionIndicator!.expandIcon,
                 ),
               ),
           ],

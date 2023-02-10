@@ -3,145 +3,145 @@
   "packages": [
     {
       "name": "async",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/async-2.10.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/async-2.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "boolean_selector",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/characters-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "clock",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/clock-1.1.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/clock-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/collection-1.17.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "diffutil_dart",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "fake_async",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/jawwadhassan/fvm/versions/stable/packages/flutter",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/jawwadhassan/fvm/versions/stable/packages/flutter_test",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/js-0.6.5",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/matcher-0.12.13",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.13"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/meta-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/path-1.8.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "scroll_to_index",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/jawwadhassan/fvm/versions/stable/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/source_span-1.9.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/source_span-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/test_api-0.4.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "tuple",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/tuple-2.0.1",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/tuple-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
+      "rootUri": "file:///Users/jawwadhassan/Development/flutter/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -152,7 +152,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-01-27T10:37:34.085990Z",
+  "generated": "2023-02-10T09:46:58.152415Z",
   "generator": "pub",
-  "generatorVersion": "2.19.0"
+  "generatorVersion": "2.19.2"
 }
