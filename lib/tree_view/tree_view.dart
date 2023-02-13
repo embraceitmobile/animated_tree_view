@@ -235,8 +235,9 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
 /// The complexity for accessing child nodes in [TreeView] is simply O(node_level).
 /// e.g. for path './.level1/level2', complexity is simply O(2).
 ///
-/// For a [TreeView] that allows for insertion and removal of
-/// items at index positions, use the alternate [TreeView.indexed].
+/// See also:
+///   For a TreeView that supports Slivers, that can used with a [CustomScrollView]
+///   look into the [SliverTreeView].
 class TreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   /// Whether this is the primary scroll view associated with the parent
@@ -286,8 +287,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
   /// e.g. for path './.level1/level2', complexity is simply O(2).
   ///
-  /// ** See code in example/lib/samples/widgets/treeview_modification_sample.dart **
-  /// {@end-tool}
+  /// ** See code in example/lib/samples/treeview/treeview_modification_sample.dart **
   ///
   /// See also:
   ///   * For a [TreeView] that allows for insertion and removal of
@@ -328,7 +328,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
   /// directly wrapping the data in the [TreeNode]. Using the [TreeView.simpleTyped]
-  /// allows the [builder] to return the correctly typed [T] object.
+  /// allows the [builder] to return the correctly typed [Tree] object.
   ///
   /// The default implementation of [TreeView] that uses a [TreeNode] internally,
   /// which is based on the [Map] data structure for maintaining the children states.
@@ -340,8 +340,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
   /// e.g. for path './.level1/level2', complexity is simply O(2).
   ///
-  /// ** See code in example/lib/samples/widgets/treeview_indexed_modification_sample.dart **
-  ///  {@end-tool}
+  /// ** See code in example/lib/samples/treeview/treeview_indexed_modification_sample.dart **
   ///
   /// See also:
   ///   * For a [TreeView] that allows for insertion and removal of
@@ -388,15 +387,11 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.indexed] is simply
   /// O(node_level ^ children).
   ///
-  /// ** See code in example/lib/samples/widgets/treeview_indexed_modification_sample.dart **
-  ///  {@end-tool}
-  ///
-  /// If you do not require index based operations, the more performant and efficient
-  /// [TreeView.simple] instead.
+  /// ** See code in example/lib/samples/treeview/treeview_indexed_modification_sample.dart **
   ///
   /// See also:
-  ///   * If you do not require index based operations, the more performant and
-  ///   efficient [TreeView.simple] instead.
+  ///   * If you do not require index based operations, then use the more performant 
+  ///   and efficient [TreeView.simple] instead.
   ///   * For using an object that extends the [IndexedTreeNode] instead of using
   ///   [IndexedTreeNode] directly, used the [TreeView.indexTyped] which allows
   ///   for typed objects to be returned in the [builder]
@@ -434,7 +429,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
   /// of directly wrapping the data in the [IndexedTreeNode].
   /// Using the [TreeView.indexTyped] allows the [builder] to return the correctly
-  /// typed [T] object.
+  /// typed [Tree] object.
   ///
   /// This alternate implementation of [TreeView] uses an [IndexedNode] internally,
   /// which is based on the [List] data structure for maintaining the children states.
@@ -445,12 +440,9 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.indexed] is simply
   /// O(node_level ^ children).
   ///
-  /// If you do not require index based operations, the more performant and efficient
-  /// [TreeView.simple] instead.
-  ///
   /// See also:
-  ///   * If you do not require index based operations, the more performant and
-  ///     efficient [TreeView.simpleTyped] instead.
+  ///   * If you do not require index based operations, then use the more performant 
+  ///   and efficient [TreeView.simpleTyped] instead.
   ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
   ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
   static TreeView<Data, Tree>
@@ -566,6 +558,28 @@ class _SliverAnimatedListState implements ListState {
   }
 }
 
+/// The [SliverTreeView] allows to visually display a tree data structure in a
+/// linear list which animates the node addition, removal, changes and
+/// expansion/collapse of the node.
+///
+/// The [SliverTreeView] is based on the [SliverAnimatedList], so it can be used
+/// as a replacement of [SliverAnimatedList].
+///
+/// The main advantage of using a [SliverTreeView] over the [TreeView] is that
+/// it can be easily used with others slivers in a [CustomScrollView], which means
+/// that you can easily implement a fancy animated list. The slivers
+/// are lazy loaded by default, so it can be easily mixed with other widgets
+/// without any loss of performance.
+///
+/// The default [SliverTreeView.simple] uses a [TreeNode] internally, which is
+/// based on the [Map] data structure for maintaining the children states.
+/// The [TreeNode] does not allow insertion and removal of
+/// items at index positions. This allows for more efficient insertion and
+/// retrieval of items at child nodes, as child items can be readily accessed
+/// using the map keys.
+///
+/// The complexity for accessing child nodes in [SliverTreeView] is simply O(node_level).
+/// e.g. for path './.level1/level2', complexity is simply O(2).
 class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   const SliverTreeView._({
@@ -589,6 +603,30 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   @override
   State<StatefulWidget> createState() => SliverTreeViewState<Data, Tree>();
 
+  /// The default implementation of [SliverTreeView] that uses a [TreeNode] internally,
+  /// which is based on the [Map] data structure for maintaining the children states.
+  /// The [TreeNode] does not allow insertion and removal of
+  /// items at index positions. This allows for more efficient insertion and
+  /// retrieval of items at child nodes, as child items can be readily accessed
+  /// using the map keys.
+  ///
+  /// The main advantage of using a [SliverTreeView] over the [TreeView] is that
+  /// it can be easily used with others slivers in a [CustomScrollView], which means
+  /// that you can easily implement a fancy animated list. The slivers
+  /// are lazy loaded by default, so it can be easily mixed with other widgets
+  /// without any loss of performance.
+  ///
+  /// The complexity for accessing child nodes in [SliverTreeView.simple] is simply O(node_level).
+  /// e.g. for path './.level1/level2', complexity is simply O(2).
+  ///
+  /// ** See code in example/lib/samples/sliver_treeview/sliver_treeview_sample.dart **
+  ///
+  /// See also:
+  ///   * For a [SliverTreeView] that allows for insertion and removal of
+  ///   items at index positions, use the alternate [SliverTreeView.indexed].
+  ///   * For using an object that extends the [TreeNode] instead of using [TreeNode]
+  ///   directly, used the [SliverTreeView.simpleTyped] which allows for typed objects
+  ///   to be returned in the [builder]
   static SliverTreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
     required LeveledItemWidgetBuilder<TreeNode<Data>> builder,
@@ -614,6 +652,32 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
       );
 
+  /// Use the typed constructor if you are extending the [TreeNode] instead of
+  /// directly wrapping the data in the [TreeNode]. Using the [SliverTreeView.simpleTyped]
+  /// allows the [builder] to return the correctly typed [Tree] object.
+  ///
+  /// The default implementation of [SliverTreeView] that uses a [TreeNode] internally,
+  /// which is based on the [Map] data structure for maintaining the children states.
+  /// The [TreeNode] does not allow insertion and removal of
+  /// items at index positions. This allows for more efficient insertion and
+  /// retrieval of items at child nodes, as child items can be readily accessed
+  /// using the map keys.
+  ///
+  /// The main advantage of using a [SliverTreeView] over the [TreeView] is that
+  /// it can be easily used with others slivers in a [CustomScrollView], which means
+  /// that you can easily implement a fancy animated list. The slivers
+  /// are lazy loaded by default, so it can be easily mixed with other widgets
+  /// without any loss of performance.
+  /// The complexity for accessing child nodes in [SliverTreeView.simple] is simply O(node_level).
+  /// e.g. for path './.level1/level2', complexity is simply O(2).
+  ///
+  /// ** See code in example/lib/samples/sliver_treeview/sliver_treeview_custom_object_sample.dart **
+  ///
+  /// See also:
+  ///   * For a [SliverTreeView] that allows for insertion and removal of
+  ///   items at index positions, use the alternate [SliverTreeView.indexTyped].
+  ///   * If you are wrapping the data directly in the [TreeNode] instead of
+  ///   extending the [TreeNode], then you can also use the simpler [SliverTreeView.simple].
   static SliverTreeView<Data, Tree>
       simpleTyped<Data, Tree extends TreeNode<Data>>({
     Key? key,
@@ -640,6 +704,28 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             showRootNode: showRootNode,
           );
 
+  /// The alternate implementation of [SliverTreeView] uses an [IndexedNode]
+  /// internally, which is based on the [List] data structure for maintaining the
+  /// children states. The [IndexedNode] allows indexed based operations like
+  /// insertion and removal of items at index positions. This allows for movement,
+  /// addition and removal of child nodes based on indices.
+  ///
+  /// The complexity for accessing child nodes in [SliverTreeView.indexed] is simply
+  /// O(node_level ^ children).
+  /// The main advantage of using a [SliverTreeView] over the [TreeView] is that
+  /// it can be easily used with others slivers in a [CustomScrollView], which means
+  /// that you can easily implement a fancy animated list. The slivers
+  /// are lazy loaded by default, so it can be easily mixed with other widgets
+  /// without any loss of performance.
+  ///
+  /// ** See code in example/lib/samples/sliver_treeview/sliver_treeview_sample.dart **
+  ///
+  /// See also:
+  ///   * If you do not require index based operations, then use the more performant
+  ///   and efficient [SliverTreeView.simple] instead.
+  ///   * For using an object that extends the [IndexedTreeNode] instead of using
+  ///   [IndexedTreeNode] directly, used the [SliverTreeView.indexTyped] which allows
+  ///   for typed objects to be returned in the [builder]
   static SliverTreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
     Key? key,
     required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
@@ -664,6 +750,36 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         showRootNode: showRootNode,
       );
+
+  /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
+  /// of directly wrapping the data in the [IndexedTreeNode].
+  /// Using the [SliverTreeView.indexTyped] allows the [builder] to return the correctly
+  /// typed [Tree] object.
+  ///
+  /// This alternate implementation of [SliverTreeView] uses an [IndexedNode] internally,
+  /// which is based on the [List] data structure for maintaining the children states.
+  /// The [IndexedNode] allows indexed based operations like insertion and removal of
+  /// items at index positions. This allows for movement, addition and removal of
+  /// child nodes based on indices.
+  /// The complexity for accessing child nodes in [SliverTreeView.indexed] is simply
+  /// O(node_level ^ children).
+  /// 
+  /// The main advantage of using a [SliverTreeView] over the [TreeView] is that
+  /// it can be easily used with others slivers in a [CustomScrollView], which means
+  /// that you can easily implement a fancy animated list. The slivers
+  /// are lazy loaded by default, so it can be easily mixed with other widgets
+  /// without any loss of performance.
+  ///
+  /// The complexity for accessing child nodes in [SliverTreeView.indexed] is simply
+  /// O(node_level ^ children).
+  /// 
+  /// ** See code in example/lib/samples/sliver_treeview/sliver_treeview_custom_object_sample.dart **
+  ///
+  /// See also:
+  ///   * If you do not require index based operations, the more performant and
+  ///     efficient [SliverTreeView.simpleTyped] instead.
+  ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
+  ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
 
   static SliverTreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
