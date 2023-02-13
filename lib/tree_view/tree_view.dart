@@ -187,27 +187,33 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
-      update.when(add: (node) {
-        node as Tree;
-        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
-            as INodeActions;
-        parentNode.add(node);
-      }, insert: (node, pos) {
-        node as Tree;
-        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
-            as IIndexedNodeActions;
-        parentNode.insert(pos, node as IndexedNode);
-      }, remove: (node, pos) {
-        node as Tree;
-        final parentNode = _tree.elementAt(node.parent?.path ?? node.root.path)
-            as INodeActions;
+      update.when(
+        add: (node) {
+          node as Tree;
+          final parentNode = _tree
+              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+          parentNode.add(node);
+        },
+        insert: (node, pos) {
+          node as Tree;
+          final parentNode =
+              _tree.elementAt(node.parent?.path ?? node.root.path)
+                  as IIndexedNodeActions;
+          parentNode.insert(pos, node as IndexedNode);
+        },
+        remove: (node, pos) {
+          node as Tree;
+          final parentNode = _tree
+              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
 
-        parentNode.remove(node);
-      }, update: (node) {
-        node as Tree;
-        final oldNode = _tree.elementAt(node.path) as Tree;
-        oldNode.data = node.data;
-      });
+          parentNode.remove(node);
+        },
+        update: (node) {
+          node as Tree;
+          final oldNode = _tree.elementAt(node.path) as Tree;
+          oldNode.data = node.data;
+        },
+      );
     }
   }
 }
@@ -613,7 +619,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     Key? key,
     required LeveledItemWidgetBuilder<Tree> builder,
     required final Tree tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,

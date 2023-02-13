@@ -37,6 +37,8 @@ target/
 /build/
 /windows/
 .vscode
+.idea
+.idea/
 
 # Web related
 lib/generated_plugin_registrant.dart

@@ -57,8 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
           /// Typed [SliverTreeView] example
           SliverTreeView.simpleTyped<UserName, TreeNode<UserName>>(
             tree: simpleTree,
-            scrollController: scrollController,
-            expansionBehavior: ExpansionBehavior.none,
             expansionIndicator: ExpansionIndicator.DownUpChevron,
             builder: (context, level, item) => Card(
               color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
