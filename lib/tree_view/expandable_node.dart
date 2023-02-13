@@ -16,7 +16,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final ExpansionIndicator? expansionIndicator;
   final bool remove;
   final int? index;
-  final ValueSetter<Data>? onItemTap;
+  final ValueSetter<Tree>? onItemTap;
   final int minLevelToIndent;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
@@ -27,7 +27,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required Animation<double> animation,
     required double? indentPadding,
     required ExpansionIndicator? expansionIndicator,
-    required ValueSetter<Data>? onItemTap,
+    required ValueSetter<Tree>? onItemTap,
     required bool showRootNode,
   }) {
     return ValueListenableBuilder<INode>(
@@ -50,18 +50,18 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     );
   }
 
-  static Widget removedNode<D, T extends ITreeNode<D>>({
-    required AnimatedListController<D> animatedListController,
-    required T item,
-    required LeveledItemWidgetBuilder<T> builder,
+  static Widget removedNode<Data, Tree extends ITreeNode<Data>>({
+    required AnimatedListController<Data> animatedListController,
+    required Tree item,
+    required LeveledItemWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
     required ExpansionIndicator? expansionIndicator,
-    required ValueSetter<D>? onItemTap,
+    required ValueSetter<Tree>? onItemTap,
     required bool showRootNode,
   }) {
-    return ExpandableNodeItem<D, T>(
+    return ExpandableNodeItem<Data, Tree>(
       builder: builder,
       animatedListController: animatedListController,
       scrollController: scrollController,

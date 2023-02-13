@@ -96,7 +96,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
 
   /// An optional callback that can be used to handle any action when an item is
   /// tapped or clicked
-  final ValueSetter<Data>? onItemTap;
+  final ValueSetter<Tree>? onItemTap;
 
   /// Flag to show the Root Node in the [TreeView]. Root Node is always the first
   /// item in the TreeView. If it is set to [false] then the Root Node will not
@@ -303,7 +303,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<TreeNode<Data>>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -356,7 +356,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<Tree>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -408,7 +408,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -462,7 +462,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<Tree>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
@@ -597,7 +597,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<TreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
   }) =>
@@ -623,7 +623,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
   }) =>
@@ -648,7 +648,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
   }) =>
@@ -674,7 +674,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     double? indentPadding,
     AutoScrollController? scrollController,
     ExpansionIndicator? expansionIndicator,
-    ValueSetter<Data>? onItemTap,
+    ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
   }) =>
