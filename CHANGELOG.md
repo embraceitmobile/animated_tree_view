@@ -1,3 +1,8 @@
+## [1.1.0]
+* Added support for slivers with SliverTreeView
+* Fixed issues [#8](https://github.com/embraceitmobile/animated_tree_view/issues/8), [#9](https://github.com/embraceitmobile/animated_tree_view/issues/9)
+* Improved documentation 
+
 ## [1.0.0]
 * First stable release
 * ### Changes

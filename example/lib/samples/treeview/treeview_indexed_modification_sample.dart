@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton.icon(
         style: TextButton.styleFrom(
-          primary: Colors.green[800],
+          foregroundColor: Colors.green[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton(
         style: TextButton.styleFrom(
-          primary: Colors.green[800],
+          foregroundColor: Colors.green[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton(
         style: TextButton.styleFrom(
-          primary: Colors.green[800],
+          foregroundColor: Colors.green[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton(
           style: TextButton.styleFrom(
-            primary: Colors.red[800],
+            foregroundColor: Colors.red[800],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
@@ -194,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton.icon(
           style: TextButton.styleFrom(
-            primary: Colors.red[800],
+            foregroundColor: Colors.red[800],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),

@@ -44,6 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
         key: _treeKey,
         tree: sampleTree,
         expansionIndicator: ExpansionIndicator.RightUpChevron,
+        onItemTap: (item) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Item tapped: ${item.key}"),
+              duration: const Duration(milliseconds: 750),
+            ),
+          );
+        },
         builder: (context, level, item) => Card(
           color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(

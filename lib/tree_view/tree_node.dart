@@ -77,7 +77,8 @@ class IndexedTreeNode<T> extends IndexedListenableNode implements ITreeNode<T> {
       : this.listenableData = ValueNotifier(data);
 
   /// Factory constructor to be used only for root [IndexedTreeNode]
-  factory IndexedTreeNode.root() => IndexedTreeNode(key: INode.ROOT_KEY);
+  factory IndexedTreeNode.root({T? data}) =>
+      IndexedTreeNode(key: INode.ROOT_KEY, data: data);
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
   final ValueNotifier<T?> listenableData;
