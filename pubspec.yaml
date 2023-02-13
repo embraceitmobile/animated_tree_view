@@ -1,6 +1,6 @@
 name: animated_tree_view
 description: Animated TreeView based on AnimatedList that allows building fully customizable Nodes that can be nested to infinite levels and children.
-version: 1.1.1
+version: 1.1.1+1
 repository: https://github.com/embraceitmobile/animated_tree_view
 
 environment:

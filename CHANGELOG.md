@@ -1,3 +1,6 @@
+## [1.1.1+1]
+* Reformat code with dart formatter
+
 ## [1.1.1]
 * Formatting updates for static analysis checks
 * Screenshot update to png format
