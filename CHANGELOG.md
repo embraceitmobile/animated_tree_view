@@ -1,3 +1,10 @@
+## [1.1.1+1]
+* Reformat code with dart formatter
+
+## [1.1.1]
+* Formatting updates for static analysis checks
+* Screenshot update to png format
+
 ## [1.1.0]
 * Added support for slivers with SliverTreeView
 * Fixed issues [#8](https://github.com/embraceitmobile/animated_tree_view/issues/8), [#9](https://github.com/embraceitmobile/animated_tree_view/issues/9)

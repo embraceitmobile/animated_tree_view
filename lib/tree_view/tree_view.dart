@@ -390,7 +390,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// ** See code in example/lib/samples/treeview/treeview_indexed_modification_sample.dart **
   ///
   /// See also:
-  ///   * If you do not require index based operations, then use the more performant 
+  ///   * If you do not require index based operations, then use the more performant
   ///   and efficient [TreeView.simple] instead.
   ///   * For using an object that extends the [IndexedTreeNode] instead of using
   ///   [IndexedTreeNode] directly, used the [TreeView.indexTyped] which allows
@@ -441,7 +441,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// O(node_level ^ children).
   ///
   /// See also:
-  ///   * If you do not require index based operations, then use the more performant 
+  ///   * If you do not require index based operations, then use the more performant
   ///   and efficient [TreeView.simpleTyped] instead.
   ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
   ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
@@ -763,7 +763,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   /// child nodes based on indices.
   /// The complexity for accessing child nodes in [SliverTreeView.indexed] is simply
   /// O(node_level ^ children).
-  /// 
+  ///
   /// The main advantage of using a [SliverTreeView] over the [TreeView] is that
   /// it can be easily used with others slivers in a [CustomScrollView], which means
   /// that you can easily implement a fancy animated list. The slivers
@@ -772,7 +772,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///
   /// The complexity for accessing child nodes in [SliverTreeView.indexed] is simply
   /// O(node_level ^ children).
-  /// 
+  ///
   /// ** See code in example/lib/samples/sliver_treeview/sliver_treeview_custom_object_sample.dart **
   ///
   /// See also:
