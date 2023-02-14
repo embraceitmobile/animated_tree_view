@@ -4,7 +4,7 @@ import '../tree_diff/tree_diff_util.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
 
-import 'animated_list_controller.dart';
+import 'tree_view_state_helper.dart';
 import 'expandable_node.dart';
 
 /// The builder function that allows to build any item of type [Tree].
@@ -39,23 +39,24 @@ enum ExpansionBehavior {
 ///The [TreeViewController] also exposes basic scrolling methods that can be used
 ///for scrolling to an item or a list index.
 class TreeViewController<Data, Tree extends ITreeNode<Data>> {
-  final AnimatedListController<Data> _animatedListController;
+  final TreeViewStateHelper<Data> _animatedListController;
 
   const TreeViewController(this._animatedListController);
 
   /// Method for programmatically scrolling to an [index] in the flat list of the [TreeView].
   Future scrollToIndex(int index) async =>
-      _animatedListController.scrollToIndex(index);
+      _animatedListController.expansionBehaviourController.scrollToIndex(index);
 
   /// Method for programmatically scrolling to a [node] in the [TreeView].
   Future scrollToItem(Tree node) async =>
-      _animatedListController.scrollToItem(node);
+      _animatedListController.expansionBehaviourController.scrollToItem(node);
 
   /// Method for programmatically toggling the expansion state of a [TreeNode].
   /// If the [TreeNode] is in expanded state, then it will be collapsed.
   /// Else if the [TreeNode] is in collapsed state, then it will be expanded.
   void toggleExpansion(Tree node) =>
-      _animatedListController.toggleExpansion(node);
+      _animatedListController.expansionBehaviourController
+          .toggleExpansion(node);
 
   /// Returns the [INode.ROOT_KEY] root of the [tree]
   Tree get tree => _animatedListController.tree as Tree;
@@ -134,10 +135,10 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
 mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     S extends _TreeView<Data, Tree>> on State<S> implements ListState<Tree> {
   late final TreeViewController<Data, Tree> controller;
-  late final AnimatedListController<Data> _animatedListController;
+  late final TreeViewStateHelper<Data> _treeViewEventHandler;
   late final AutoScrollController _scrollController;
 
-  ITreeNode<Data> get _tree => _animatedListController.tree;
+  ITreeNode<Data> get _tree => _treeViewEventHandler.tree;
 
   @override
   void initState() {
@@ -146,29 +147,39 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     _scrollController =
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
-    _animatedListController = AnimatedListController<Data>(
+    final animatedListController = AnimatedListStateController<Data>(
       listState: this,
-      tree: widget.tree,
       showRootNode: widget.showRootNode,
-      scrollController: _scrollController,
-      expansionBehavior: widget.expansionBehavior,
+      tree: widget.tree,
     );
 
-    controller = TreeViewController(_animatedListController);
+    _treeViewEventHandler = TreeViewStateHelper<Data>(
+      animatedListStateController: animatedListController,
+      tree: widget.tree,
+      expansionBehaviourController: TreeViewExpansionBehaviourController<Data>(
+        scrollController: _scrollController,
+        expansionBehavior: widget.expansionBehavior,
+        animatedListStateController: animatedListController,
+      ),
+    );
+
+    controller = TreeViewController(_treeViewEventHandler);
   }
 
   Widget _insertedItemBuilder(
           BuildContext context, int index, Animation<double> animation) =>
       ExpandableNodeItem.insertedNode<Data, Tree>(
-        node: _animatedListController.list[index] as Tree,
+        node: _treeViewEventHandler.animatedListStateController.list[index]
+            as Tree,
         index: index,
         builder: widget.builder,
         scrollController: _scrollController,
         animation: animation,
         indentPadding: widget.indentPadding,
         expansionIndicator: widget.expansionIndicator,
-        onToggleExpansion: (item) =>
-            _animatedListController.toggleExpansion(item),
+        onToggleExpansion: (item) => _treeViewEventHandler
+            .expansionBehaviourController
+            .toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
       );
@@ -185,8 +196,9 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         animation: animation,
         indentPadding: widget.indentPadding,
         expansionIndicator: widget.expansionIndicator,
-        onToggleExpansion: (item) =>
-            _animatedListController.toggleExpansion(item),
+        onToggleExpansion: (item) => _treeViewEventHandler
+            .expansionBehaviourController
+            .toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
       );
@@ -196,7 +208,8 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     super.didUpdateWidget(oldWidget);
 
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
-      _animatedListController.expansionBehavior = widget.expansionBehavior;
+      _treeViewEventHandler.expansionBehaviourController.expansionBehavior =
+          widget.expansionBehavior;
 
     didUpdateTree();
   }
@@ -532,7 +545,8 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
   Widget build(BuildContext context) {
     return AnimatedList(
       key: _listKey,
-      initialItemCount: _animatedListController.list.length,
+      initialItemCount:
+          _treeViewEventHandler.animatedListStateController.list.length,
       controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
@@ -823,7 +837,8 @@ class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
   Widget build(BuildContext context) {
     return SliverAnimatedList(
       key: _listKey,
-      initialItemCount: _animatedListController.list.length,
+      initialItemCount:
+          _treeViewEventHandler.animatedListStateController.list.length,
       itemBuilder: _insertedItemBuilder,
     );
   }
