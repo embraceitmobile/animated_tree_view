@@ -132,9 +132,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
 }
 
 mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
-    S extends _TreeView<Data, Tree>> on State<S> {
-  ListState get _listState;
-
+    S extends _TreeView<Data, Tree>> on State<S> implements ListState<Tree> {
   late final TreeViewController<Data, Tree> controller;
   late final AnimatedListController<Data> _animatedListController;
   late final AutoScrollController _scrollController;
@@ -149,27 +147,49 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
     _animatedListController = AnimatedListController<Data>(
-      listState: _listState,
+      listState: this,
       tree: widget.tree,
       showRootNode: widget.showRootNode,
       scrollController: _scrollController,
       expansionBehavior: widget.expansionBehavior,
-      removedItemBuilder: (item, context, animation) =>
-          ExpandableNodeItem.removedNode<Data, Tree>(
-        animatedListController: _animatedListController,
-        item: item,
+    );
+
+    controller = TreeViewController(_animatedListController);
+  }
+
+  Widget _insertedItemBuilder(
+          BuildContext context, int index, Animation<double> animation) =>
+      ExpandableNodeItem.insertedNode<Data, Tree>(
+        node: _animatedListController.list[index] as Tree,
+        index: index,
+        builder: widget.builder,
+        scrollController: _scrollController,
+        animation: animation,
+        indentPadding: widget.indentPadding,
+        expansionIndicator: widget.expansionIndicator,
+        onToggleExpansion: (item) =>
+            _animatedListController.toggleExpansion(item),
+        onItemTap: widget.onItemTap,
+        showRootNode: widget.showRootNode,
+      );
+
+  Widget _removedItemBuilder(
+    BuildContext context,
+    Tree node,
+    Animation<double> animation,
+  ) =>
+      ExpandableNodeItem.removedNode<Data, Tree>(
+        node: node,
         builder: (context, level, node) => widget.builder(context, level, node),
         scrollController: _scrollController,
         animation: animation,
         indentPadding: widget.indentPadding,
         expansionIndicator: widget.expansionIndicator,
+        onToggleExpansion: (item) =>
+            _animatedListController.toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
-      ),
-    );
-
-    controller = TreeViewController(_animatedListController);
-  }
+      );
 
   @override
   void didUpdateWidget(S oldWidget) {
@@ -481,13 +501,14 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   State<StatefulWidget> createState() => TreeViewState<Data, Tree>();
 }
 
-class _AnimatedListState implements ListState {
+class TreeViewState<Data, Tree extends ITreeNode<Data>>
+    extends State<TreeView<Data, Tree>>
+    with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
   static const _errorMsg =
       "Animated list state not found from GlobalKey<AnimatedListState>";
-  final GlobalKey<AnimatedListState> _listKey;
 
-  _AnimatedListState(this._listKey)
-      : assert(_listKey.currentState == null, (_errorMsg));
+  late final GlobalKey<AnimatedListState> _listKey =
+      GlobalKey<AnimatedListState>();
 
   @override
   void insertItem(int index,
@@ -497,64 +518,28 @@ class _AnimatedListState implements ListState {
   }
 
   @override
-  void removeItem(int index, AnimatedRemovedItemBuilder builder,
+  void removeItem(int index, Tree item,
       {Duration duration = const Duration(milliseconds: 300)}) {
     if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.removeItem(index, builder, duration: duration);
+    _listKey.currentState!.removeItem(
+      index,
+      (context, animation) => _removedItemBuilder(context, item, animation),
+      duration: duration,
+    );
   }
-}
-
-class TreeViewState<Data, Tree extends ITreeNode<Data>>
-    extends State<TreeView<Data, Tree>>
-    with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
-  final _AnimatedListState _listState =
-      _AnimatedListState(GlobalKey<AnimatedListState>());
 
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
-      key: _listState._listKey,
+      key: _listKey,
       initialItemCount: _animatedListController.list.length,
       controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
-      itemBuilder: (context, index, animation) =>
-          ExpandableNodeItem.insertedNode<Data, Tree>(
-              animatedListController: _animatedListController,
-              index: index,
-              builder: widget.builder,
-              scrollController: _scrollController,
-              animation: animation,
-              indentPadding: widget.indentPadding,
-              expansionIndicator: widget.expansionIndicator,
-              onItemTap: widget.onItemTap,
-              showRootNode: widget.showRootNode),
+      itemBuilder: _insertedItemBuilder,
     );
-  }
-}
-
-class _SliverAnimatedListState implements ListState {
-  static const _errorMsg =
-      "Sliver Animated list state not found from GlobalKey<SliverAnimatedListState>";
-  final GlobalKey<SliverAnimatedListState> _listKey;
-
-  _SliverAnimatedListState(this._listKey)
-      : assert(_listKey.currentState == null, (_errorMsg));
-
-  @override
-  void insertItem(int index,
-      {Duration duration = const Duration(milliseconds: 300)}) {
-    if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.insertItem(index, duration: duration);
-  }
-
-  @override
-  void removeItem(int index, AnimatedRemovedItemBuilder builder,
-      {Duration duration = const Duration(milliseconds: 300)}) {
-    if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.removeItem(index, builder, duration: duration);
   }
 }
 
@@ -780,7 +765,6 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///     efficient [SliverTreeView.simpleTyped] instead.
   ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
   ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
-
   static SliverTreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
     Key? key,
@@ -811,25 +795,36 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
 class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<SliverTreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, SliverTreeView<Data, Tree>> {
-  final _SliverAnimatedListState _listState =
-      _SliverAnimatedListState(GlobalKey<SliverAnimatedListState>());
+  static const _errorMsg =
+      "Sliver Animated list state not found from GlobalKey<SliverAnimatedListState>";
+
+  late final GlobalKey<SliverAnimatedListState> _listKey =
+      GlobalKey<SliverAnimatedListState>();
+
+  @override
+  void insertItem(int index,
+      {Duration duration = const Duration(milliseconds: 300)}) {
+    if (_listKey.currentState == null) throw Exception(_errorMsg);
+    _listKey.currentState!.insertItem(index, duration: duration);
+  }
+
+  @override
+  void removeItem(int index, Tree item,
+      {Duration duration = const Duration(milliseconds: 300)}) {
+    if (_listKey.currentState == null) throw Exception(_errorMsg);
+    _listKey.currentState!.removeItem(
+      index,
+      (context, animation) => _removedItemBuilder(context, item, animation),
+      duration: duration,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverAnimatedList(
-      key: _listState._listKey,
+      key: _listKey,
       initialItemCount: _animatedListController.list.length,
-      itemBuilder: (context, index, animation) =>
-          ExpandableNodeItem.insertedNode<Data, Tree>(
-              animatedListController: _animatedListController,
-              index: index,
-              builder: widget.builder,
-              scrollController: _scrollController,
-              animation: animation,
-              indentPadding: widget.indentPadding,
-              expansionIndicator: widget.expansionIndicator,
-              onItemTap: widget.onItemTap,
-              showRootNode: widget.showRootNode),
+      itemBuilder: _insertedItemBuilder,
     );
   }
 }

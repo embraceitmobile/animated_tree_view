@@ -1,45 +1,45 @@
 import 'dart:async';
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:animated_tree_view/helpers/exceptions.dart';
+import 'package:animated_tree_view/node/base/i_node.dart';
+import 'package:animated_tree_view/tree_view/tree_node.dart';
+import 'package:animated_tree_view/tree_view/tree_view.dart';
 import 'package:animated_tree_view/listenable_node/base/i_listenable_node.dart';
-import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:collection/collection.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-abstract class ListState {
+abstract class ListState<Tree> {
   void insertItem(int index,
       {Duration duration = const Duration(milliseconds: 300)});
 
-  void removeItem(int index, AnimatedRemovedItemBuilder builder,
+  void removeItem(int index, Tree item,
       {Duration duration = const Duration(milliseconds: 300)});
 }
 
-class AnimatedListController<T> {
+class AnimatedListController<Tree> {
   static const TAG = "AnimatedListController";
 
   final ListState _listState;
-  final dynamic _removedItemBuilder;
-  final ITreeNode<T> tree;
+  final ITreeNode<Tree> tree;
   final AutoScrollController scrollController;
   final bool showRootNode;
   ExpansionBehavior expansionBehavior;
 
-  late List<ITreeNode<T>> _flatList;
-  late Map<String, ITreeNode<T>> _itemsMap;
+  late List<ITreeNode<Tree>> _flatList;
+  late Map<String, ITreeNode<Tree>> _itemsMap;
   late StreamSubscription<NodeAddEvent<INode>> _addedNodesSubscription;
   late StreamSubscription<NodeRemoveEvent<INode>> _removeNodesSubscription;
   StreamSubscription<NodeInsertEvent<INode>>? _insertNodesSubscription;
 
   AnimatedListController({
     required ListState listState,
-    required dynamic removedItemBuilder,
     required this.tree,
     required this.scrollController,
     required this.expansionBehavior,
     this.showRootNode = true,
-  })  : _listState = listState,
-        _removedItemBuilder = removedItemBuilder,
-        assert(removedItemBuilder != null) {
+  }) : _listState = listState {
     _flatList = List.from(showRootNode ? [tree] : tree.root.childrenAsList);
-    _itemsMap = <String, ITreeNode<T>>{
+    _itemsMap = <String, ITreeNode<Tree>>{
       for (final node in _flatList) node.path: node
     };
 
@@ -52,46 +52,42 @@ class AnimatedListController<T> {
     } on ActionNotAllowedException catch (_) {}
   }
 
-  List<ITreeNode<T>> get list => _flatList;
+  List<ITreeNode<Tree>> get list => _flatList;
 
   int get length => _flatList.length;
 
   int indexOf(INode item) => _flatList.indexWhere(
       (e) => e.parent?.key == item.parent?.key && e.key == item.key);
 
-  void insert(int index, ITreeNode<T> item) {
+  void insert(int index, ITreeNode<Tree> item) {
     _flatList.insert(index, item);
     _itemsMap[item.path] = item;
     _listState.insertItem(index);
   }
 
-  void insertAll(int index, List<ITreeNode<T>> items) {
+  void insertAll(int index, List<ITreeNode<Tree>> items) {
     for (int i = 0; i < items.length; i++) {
       insert(index + i, items[i]);
     }
   }
 
-  ITreeNode<T> removeAt(int index) {
+  ITreeNode<Tree> removeAt(int index) {
     if (index < 0 || index > _flatList.length)
       throw RangeError.index(index, _flatList);
 
     _itemsMap.remove(_flatList[index].path);
     final removedItem = _flatList.removeAt(index);
-    _listState.removeItem(
-      index,
-      (context, animation) =>
-          _removedItemBuilder(removedItem, context, animation),
-    );
+    _listState.removeItem(index, removedItem);
 
     return removedItem;
   }
 
-  void remove(ITreeNode<T> item) {
+  void remove(ITreeNode<Tree> item) {
     final index = indexOf(item);
     if (index >= 0) removeAt(indexOf(item));
   }
 
-  void removeAll(List<ITreeNode<T>> items) {
+  void removeAll(List<ITreeNode<Tree>> items) {
     for (final item in items) {
       item.isExpanded = false;
       Future.microtask(() => remove(item));
@@ -101,9 +97,10 @@ class AnimatedListController<T> {
   Future scrollToIndex(int index) async => scrollController.scrollToIndex(index,
       preferPosition: AutoScrollPosition.begin);
 
-  Future scrollToItem(ITreeNode<T> item) async => scrollToIndex(indexOf(item));
+  Future scrollToItem(ITreeNode<Tree> item) async =>
+      scrollToIndex(indexOf(item));
 
-  void collapseNode(ITreeNode<T> item) {
+  void collapseNode(ITreeNode<Tree> item) {
     final removeItems = _flatList.where((element) =>
         (element.path).startsWith('${item.path}${INode.PATH_SEPARATOR}'));
 
@@ -111,13 +108,13 @@ class AnimatedListController<T> {
     item.isExpanded = false;
   }
 
-  void expandNode(ITreeNode<T> item) {
+  void expandNode(ITreeNode<Tree> item) {
     if (item.childrenAsList.isEmpty) return;
     insertAll(indexOf(item) + 1, List.from(item.childrenAsList));
     item.isExpanded = true;
   }
 
-  void toggleExpansion(ITreeNode<T> item) {
+  void toggleExpansion(ITreeNode<Tree> item) {
     if (item.isExpanded)
       collapseNode(item);
     else {
@@ -126,7 +123,7 @@ class AnimatedListController<T> {
     }
   }
 
-  void applyExpansionBehavior(ITreeNode<T> item) {
+  void applyExpansionBehavior(ITreeNode<Tree> item) {
     switch (expansionBehavior) {
       case ExpansionBehavior.none:
         break;
@@ -167,7 +164,7 @@ class AnimatedListController<T> {
     });
   }
 
-  void snapToTop(ITreeNode<T> item,
+  void snapToTop(ITreeNode<Tree> item,
       {Duration delay = const Duration(milliseconds: 300)}) {
     Future.delayed(delay, () {
       scrollController.scrollToIndex(indexOf(item),
@@ -175,11 +172,11 @@ class AnimatedListController<T> {
     });
   }
 
-  void collapseAllOtherSiblingNodes(ITreeNode<T> node) {
+  void collapseAllOtherSiblingNodes(ITreeNode<Tree> node) {
     for (final siblingNode in node.parent?.childrenAsList ?? []) {
       if (siblingNode.key != node.key &&
           (siblingNode as ITreeNode).isExpanded) {
-        collapseNode(siblingNode as ITreeNode<T>);
+        collapseNode(siblingNode as ITreeNode<Tree>);
       }
     }
   }
@@ -190,7 +187,7 @@ class AnimatedListController<T> {
       if (_itemsMap.containsKey(node.path)) continue;
 
       if (node.isRoot || node.parent?.isRoot == true) {
-        final root = node.root as ITreeNode<T>;
+        final root = node.root as ITreeNode<Tree>;
         if (!root.isExpanded) {
           expandNode(root);
         } else {
@@ -223,8 +220,8 @@ class AnimatedListController<T> {
       if (_itemsMap.containsKey(node.path)) continue;
 
       if (node.isRoot || node.parent?.isRoot == true) {
-        if (!(node.root as ITreeNode<T>).isExpanded) {
-          expandNode(node.root as ITreeNode<T>);
+        if (!(node.root as ITreeNode<Tree>).isExpanded) {
+          expandNode(node.root as ITreeNode<Tree>);
         } else {
           insertAll(showRootNode ? event.index + 1 : event.index,
               List.from(event.items));

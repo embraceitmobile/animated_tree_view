@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../utils/utils.dart';
 
+const showSnackBar = false;
+
 void main() {
   runApp(MyApp());
 }
@@ -45,12 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
         tree: sampleTree,
         expansionIndicator: ExpansionIndicator.RightUpChevron,
         onItemTap: (item) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Item tapped: ${item.key}"),
-              duration: const Duration(milliseconds: 750),
-            ),
-          );
+          print("Item tapped: ${item.key}");
+          if (showSnackBar)
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Item tapped: ${item.key}"),
+                duration: const Duration(milliseconds: 750),
+              ),
+            );
         },
         builder: (context, level, item) => Card(
           color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
