@@ -17,7 +17,7 @@ abstract class ListState<Tree> {
 }
 
 class TreeViewStateHelper<Data> {
-  static const TAG = "TreeViewEventHandler";
+  static const TAG = "TreeViewStateHelper";
 
   final ITreeNode<Data> tree;
   final AnimatedListStateController<Data> animatedListStateController;
@@ -249,7 +249,7 @@ class TreeViewExpansionBehaviourController<Data> {
       await collapseNode(item);
     else {
       expandNode(item);
-      applyExpansionBehavior(item);
+      await applyExpansionBehavior(item);
     }
   }
 
@@ -286,7 +286,7 @@ class TreeViewExpansionBehaviourController<Data> {
     if (!scrollController.isIndexStateInLayoutRange(lastChildIndex +
         parent.level.clamp(1, 1000) +
         parent.childrenAsList.length)) {
-      scrollController.scrollToIndex(
+      await scrollController.scrollToIndex(
           lastChildIndex < animatedListStateController.list.length - 1
               ? lastChildIndex + 1
               : lastChildIndex,
@@ -298,7 +298,7 @@ class TreeViewExpansionBehaviourController<Data> {
       {Duration delay = const Duration(milliseconds: 300)}) async {
     await Future.delayed(delay);
 
-    scrollController.scrollToIndex(
+    await scrollController.scrollToIndex(
       animatedListStateController.indexOf(item),
       preferPosition: AutoScrollPosition.begin,
     );
