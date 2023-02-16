@@ -99,13 +99,14 @@ void main() {
 
   group("IndexedTreeView tests", () {
     testWidgets('Indexed tree root view is properly rendered', (tester) async {
-      await tester.pumpWidget(FakeStatelessIndexedTreeView(tree: defaultIndexedTree));
+      await tester
+          .pumpWidget(FakeStatelessIndexedTreeView(tree: defaultIndexedTree));
       expect(find.byKey(ValueKey(defaultTree.root.key)), findsOneWidget);
     });
 
     testWidgets(
         'Children of indexed tree are expanded on tapping the root tile,'
-            'and are removed on tapping the tile again', (tester) async {
+        'and are removed on tapping the tile again', (tester) async {
       final treeToTest = defaultIndexedTree;
       final rootNode = find.byKey(ValueKey(treeToTest.root.key));
 
@@ -121,40 +122,40 @@ void main() {
     });
 
     testWidgets("IndexedTreeView is updated on adding a node in the tree",
-            (tester) async {
-          final treeToTest = defaultIndexedTree;
+        (tester) async {
+      final treeToTest = defaultIndexedTree;
 
-          await tester.pumpWidget(FakeStatelessIndexedTreeView(tree: treeToTest));
-          await testAllNodesAreRendered(treeToTest, tester);
+      await tester.pumpWidget(FakeStatelessIndexedTreeView(tree: treeToTest));
+      await testAllNodesAreRendered(treeToTest, tester);
 
-          final nodeToAdd = IndexedTreeNode(key: "0B1A");
-          treeToTest.elementAt("0B").add(nodeToAdd);
-          await tester.pumpAndSettle();
-          expect(find.byKey(ValueKey(nodeToAdd.key)), findsOneWidget);
+      final nodeToAdd = IndexedTreeNode(key: "0B1A");
+      treeToTest.elementAt("0B").add(nodeToAdd);
+      await tester.pumpAndSettle();
+      expect(find.byKey(ValueKey(nodeToAdd.key)), findsOneWidget);
 
-          final node2ToAdd = IndexedTreeNode(key: "0C1C2A3C1A");
-          treeToTest.elementAt("0C.0C1C.0C1C2A.0C1C2A3C").add(node2ToAdd);
-          await tester.pumpAndSettle();
-          expect(find.byKey(ValueKey(nodeToAdd.key)), findsOneWidget);
-        });
+      final node2ToAdd = IndexedTreeNode(key: "0C1C2A3C1A");
+      treeToTest.elementAt("0C.0C1C.0C1C2A.0C1C2A3C").add(node2ToAdd);
+      await tester.pumpAndSettle();
+      expect(find.byKey(ValueKey(nodeToAdd.key)), findsOneWidget);
+    });
 
     testWidgets("IndexedTreeView is updated on removing a node in the tree",
-            (tester) async {
-          final treeToTest = defaultIndexedTree;
+        (tester) async {
+      final treeToTest = defaultIndexedTree;
 
-          await tester.pumpWidget(FakeStatelessIndexedTreeView(tree: treeToTest));
-          await testAllNodesAreRendered(treeToTest, tester);
+      await tester.pumpWidget(FakeStatelessIndexedTreeView(tree: treeToTest));
+      await testAllNodesAreRendered(treeToTest, tester);
 
-          final nodeToRemove = treeToTest.elementAt("0A.0A1A");
-          treeToTest.elementAt("0A").remove(nodeToRemove);
-          await tester.pumpAndSettle();
-          expect(find.byKey(ValueKey(nodeToRemove.key)), findsNothing);
-        });
+      final nodeToRemove = treeToTest.elementAt("0A.0A1A");
+      treeToTest.elementAt("0A").remove(nodeToRemove);
+      await tester.pumpAndSettle();
+      expect(find.byKey(ValueKey(nodeToRemove.key)), findsNothing);
+    });
 
     testWidgets("IndexedTreeView is updated on updating the tree", (tester) async {
       await tester.pumpWidget(FakeStatefulIndexedTreeView());
 
-      for (final tree in testTrees) {
+      for (final tree in testIndexedTrees) {
         final treeToTest = tree.item1;
         final rootNode = find.byKey(ValueKey(treeToTest.root.key));
         await testAllNodesAreRendered(treeToTest, tester);
@@ -171,5 +172,6 @@ void main() {
         // break;
       }
     });
+
   });
 }

@@ -242,6 +242,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "test_cov_console",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/test_cov_console-0.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "tuple",
       "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/tuple-2.0.1",
       "packageUri": "lib/",
@@ -278,7 +284,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-02-15T09:42:11.836491Z",
+  "generated": "2023-02-16T14:06:53.058103Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

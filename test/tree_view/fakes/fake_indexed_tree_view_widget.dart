@@ -28,6 +28,8 @@ class FakeStatelessIndexedTreeView<T> extends StatelessWidget {
 class FakeStatefulIndexedTreeView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => FakeStatefulIndexedTreeViewState();
+
+  const FakeStatefulIndexedTreeView({super.key});
 }
 
 class FakeStatefulIndexedTreeViewState
