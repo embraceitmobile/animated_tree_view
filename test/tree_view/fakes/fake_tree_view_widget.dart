@@ -2,10 +2,10 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
-class MockStatelessTreeView<T> extends StatelessWidget {
+class FakeStatelessTreeView<T> extends StatelessWidget {
   final TreeNode<T> tree;
 
-  const MockStatelessTreeView({super.key, required this.tree});
+  const FakeStatelessTreeView({super.key, required this.tree});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +25,12 @@ class MockStatelessTreeView<T> extends StatelessWidget {
   }
 }
 
-class MockStatefulTreeView extends StatefulWidget {
+class FakeStatefulTreeView extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MockStatefulTreeViewState();
+  State<StatefulWidget> createState() => FakeStatefulTreeViewState();
 }
 
-class MockStatefulTreeViewState extends State<MockStatefulTreeView> {
+class FakeStatefulTreeViewState extends State<FakeStatefulTreeView> {
   int stateCount = 0;
 
   void _nextTree() {
