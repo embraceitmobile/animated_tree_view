@@ -63,7 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
             tree: simpleTree,
             scrollController: scrollController,
             expansionBehavior: ExpansionBehavior.none,
-            expansionIndicator: ExpansionIndicator.RightUpChevron,
+            expansionIndicatorBuilder: (tree) =>
+                ChevronIndicator.upDown(tree: tree),
             builder: (context, level, item) => Card(
               color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(
@@ -88,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
             tree: indexedTree,
             scrollController: scrollController,
             expansionBehavior: ExpansionBehavior.scrollToLastChild,
-            expansionIndicator: ExpansionIndicator.RightUpChevron,
+            expansionIndicatorBuilder: (tree) =>
+                ChevronIndicator.upDown(tree: tree),
             builder: (context, level, item) => Card(
               color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(

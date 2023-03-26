@@ -45,7 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: TreeView.simple(
         key: _treeKey,
         tree: sampleTree,
-        expansionIndicator: ExpansionIndicator.RightUpChevron,
+        expansionIndicatorBuilder: (tree) => ChevronIndicator.rightDown(
+          tree: tree,
+          padding: EdgeInsets.all(8),
+        ),
         onItemTap: (item) {
           print("Item tapped: ${item.key}");
           if (showSnackBar)

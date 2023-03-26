@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:animated_tree_view/constants/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:animated_tree_view/helpers/exceptions.dart';
 import 'package:animated_tree_view/node/base/i_node.dart';
@@ -9,11 +10,10 @@ import 'package:collection/collection.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 abstract class ListState<Tree> {
-  void insertItem(int index,
-      {Duration duration = const Duration(milliseconds: 300)});
+  void insertItem(int index, {Duration duration = animationDuration});
 
   void removeItem(int index, Tree item,
-      {Duration duration = const Duration(milliseconds: 300)});
+      {Duration duration = animationDuration});
 }
 
 class TreeViewStateHelper<Data> {
@@ -199,7 +199,7 @@ class AnimatedListStateController<Data> {
   Future<void> removeAll(List<ITreeNode<Data>> items) async {
     await Future.wait(
       items.map((item) {
-        item.isExpanded = false;
+        item.expansionNotifier.value = false;
         return Future.microtask(() => remove(item));
       }),
     );
@@ -230,7 +230,7 @@ class TreeViewExpansionBehaviourController<Data> {
         (element.path).startsWith('${item.path}${INode.PATH_SEPARATOR}'));
 
     await animatedListStateController.removeAll(removeItems.toList());
-    item.isExpanded = false;
+    item.expansionNotifier.value = false;
   }
 
   void expandNode(ITreeNode<Data> item) {
@@ -241,7 +241,7 @@ class TreeViewExpansionBehaviourController<Data> {
       List.from(item.childrenAsList),
     );
 
-    item.isExpanded = true;
+    item.expansionNotifier.value = true;
   }
 
   Future<void> toggleExpansion(ITreeNode<Data> item) async {
@@ -268,7 +268,10 @@ class TreeViewExpansionBehaviourController<Data> {
         break;
       case ExpansionBehavior.collapseOthersAndSnapToTop:
         await collapseAllOtherSiblingNodes(item);
-        await snapToTop(item, delay: Duration(milliseconds: 400));
+        await snapToTop(
+          item,
+          delay: animationDuration + Duration(milliseconds: 100),
+        );
         break;
     }
   }
@@ -277,7 +280,7 @@ class TreeViewExpansionBehaviourController<Data> {
     final lastChild = parent.childrenAsList.lastOrNull;
     if (lastChild == null) return;
 
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(animationDuration);
 
     //get the index of the last child in the node
     final lastChildIndex = animatedListStateController.indexOf(lastChild);
@@ -295,7 +298,7 @@ class TreeViewExpansionBehaviourController<Data> {
   }
 
   Future<void> snapToTop(ITreeNode<Data> item,
-      {Duration delay = const Duration(milliseconds: 300)}) async {
+      {Duration delay = animationDuration}) async {
     await Future.delayed(delay);
 
     await scrollController.scrollToIndex(

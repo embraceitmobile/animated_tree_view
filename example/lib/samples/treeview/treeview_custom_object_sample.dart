@@ -44,7 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
         tree: tree,
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
-        expansionIndicator: ExpansionIndicator.DownUpChevron,
+        expansionIndicatorBuilder: (tree) =>
+            ChevronIndicator.upDown(tree: tree),
         builder: (context, level, item) => Card(
           color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(

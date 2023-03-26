@@ -64,7 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TreeView.simple(
         tree: testTrees[stateCount].value,
-        expansionIndicator: ExpansionIndicator.DownUpChevron,
+        expansionIndicatorBuilder: (tree) =>
+            ChevronIndicator.upDown(tree: tree),
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
         showRootNode: true,

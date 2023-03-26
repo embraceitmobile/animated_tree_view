@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
+typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
+    ITreeNode<Data>);
+
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
   final LeveledItemWidgetBuilder<Tree> builder;
@@ -10,7 +13,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final Tree node;
   final Animation<double> animation;
   final double indentPadding;
-  final ExpansionIndicator? expansionIndicator;
+  final ExpansionIndicatorBuilder<Data>? expansionIndicatorBuilder;
   final bool remove;
   final int? index;
   final ValueSetter<Tree>? onItemTap;
@@ -24,7 +27,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
-    required ExpansionIndicator? expansionIndicator,
+    required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
@@ -40,7 +43,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           index: index,
           animation: animation,
           indentPadding: indentPadding,
-          expansionIndicator: expansionIndicator,
+          expansionIndicatorBuilder: expansionIndicator,
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
           minLevelToIndent: showRootNode ? 0 : 1,
@@ -55,7 +58,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
-    required ExpansionIndicator? expansionIndicator,
+    required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
@@ -67,7 +70,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       remove: true,
       animation: animation,
       indentPadding: indentPadding,
-      expansionIndicator: expansionIndicator,
+      expansionIndicatorBuilder: expansionIndicator,
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
       minLevelToIndent: showRootNode ? 0 : 1,
@@ -84,7 +87,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     this.index,
     this.remove = false,
     this.minLevelToIndent = 0,
-    this.expansionIndicator,
+    this.expansionIndicatorBuilder,
     this.onItemTap,
     double? indentPadding,
   }) : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING;
@@ -97,9 +100,9 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       child: builder(context, node.level, node),
       indentPadding: indentPadding *
           (node.level - minLevelToIndent).clamp(0, double.maxFinite),
-      isExpanded: node.isExpanded,
-      expansionIndicator:
-          node.childrenAsList.isEmpty ? null : expansionIndicator,
+      expansionIndicator: node.childrenAsList.isEmpty
+          ? null
+          : expansionIndicatorBuilder?.call(node),
       onTap: remove
           ? null
           : (dynamic item) {
@@ -126,7 +129,6 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
   final ExpansionIndicator? expansionIndicator;
   final double indentPadding;
   final Widget child;
-  final bool isExpanded;
 
   const _ExpandableNodeContainer({
     super.key,
@@ -135,7 +137,6 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
     required this.child,
     required this.item,
     required this.indentPadding,
-    required this.isExpanded,
     this.expansionIndicator,
   });
 
@@ -154,13 +155,11 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
               child: child,
             ),
             if (expansionIndicator != null)
-              Padding(
-                padding: expansionIndicator!.padding,
-                child: Align(
-                  alignment: expansionIndicator!.alignment,
-                  child: isExpanded
-                      ? expansionIndicator!.collapseIcon
-                      : expansionIndicator!.expandIcon,
+              Align(
+                alignment: expansionIndicator!.alignment,
+                child: Padding(
+                  padding: expansionIndicator!.padding,
+                  child: expansionIndicator!,
                 ),
               ),
           ],
