@@ -69,6 +69,26 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
       _animatedListController.expansionBehaviourController
           .toggleExpansion(node);
 
+  /// Method for programmatically expanding a [TreeNode].
+  void expandNode(Tree node) =>
+      _animatedListController.expansionBehaviourController.expandNode(node);
+
+  /// Method for programmatically collapsing a [TreeNode].
+  void collapseNode(Tree node) =>
+      _animatedListController.expansionBehaviourController.collapseNode(node);
+
+  /// Utility method for programmatically expanding all the child nodes. By default
+  /// only the immediate children of the node will be expanded.
+  /// Set [recursive] to true expanding all the child nodes until the leaf is
+  /// reached.
+  void expandAllChildren(Tree node, {bool recursive = false}) {
+    expandNode(node);
+    for (final child in node.childrenAsList) {
+      expandNode(child as Tree);
+      if (child.childrenAsList.isNotEmpty) expandAllChildren(child);
+    }
+  }
+
   /// Returns the [INode.ROOT_KEY] root of the [tree]
   Tree get tree => _animatedListController.tree as Tree;
 

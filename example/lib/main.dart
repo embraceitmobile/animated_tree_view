@@ -35,12 +35,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<TreeViewState> _treeKey = GlobalKey<TreeViewState>();
+  late final controller = _treeKey.currentState?.controller;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (sampleTree.isExpanded) {
+            controller?.collapseNode(sampleTree);
+          } else {
+            controller?.expandAllChildren(sampleTree);
+          }
+          setState(() {});
+        },
+        label:
+            sampleTree.isExpanded ? Text("Collapse all") : Text("Expand all"),
       ),
       body: TreeView.simple(
         key: _treeKey,
