@@ -9,6 +9,12 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'tree_view_state_helper.dart';
 import 'expandable_node.dart';
 
+ExpansionIndicator _defExpansionIndicatorBuilder<Data>(ITreeNode<Data> tree) =>
+    ChevronIndicator.rightDown(
+      tree: tree,
+      padding: EdgeInsets.all(8),
+    );
+
 /// The builder function that allows to build any item of type [Tree].
 /// The builder function also provides the [level] of the node.
 typedef LeveledItemWidgetBuilder<Tree> = Widget Function(
@@ -89,13 +95,18 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// It takes a [Tree] and builds the expansion indicator based on whether the
   /// tree node is expanded or not.
   ///
-  /// It can customized by extending the [ExpansionIndicator].
-  /// The pre-built [ExpansionIndicator]s are:
-  ///   *
-  ///   *
-  ///   *
-  /// You can simply pass [null], if you do not want to show an [ExpansionIndicator]
-  final ExpansionIndicatorBuilder? expansionIndicatorBuilder;
+  /// The built-in [ExpansionIndicator]s are:
+  ///   * [ChevronIndicator.rightDown]
+  ///   * [ChevronIndicator.upDown]
+  ///   * [PlusMinusIndicator]
+  ///   * [NoExpansionIndicator]
+  ///
+  /// To create your own [ExpansionIndicator], simply extend the [ExpansionIndicator]
+  /// class.
+  ///
+  /// In order to not show any expansion indicator just pass in [NoExpansionIndicator]
+  /// ** By default [_defExpansionIndicatorBuilder] is used to build expansion indicator
+  final ExpansionIndicatorBuilder expansionIndicatorBuilder;
 
   /// This is the padding is applied to the start of an item. [indentPadding]
   /// will be multiplied by [INode.level] before being applied.
@@ -133,7 +144,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     required this.tree,
     this.indentPadding,
     this.scrollController,
-    this.expansionIndicatorBuilder,
+    this.expansionIndicatorBuilder = _defExpansionIndicatorBuilder,
     this.onItemTap,
     this.padding,
     this.showRootNode = false,
@@ -357,7 +368,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         tree: tree,
         expansionBehavior: expansionBehavior,
         indentPadding: indentPadding,
-        expansionIndicatorBuilder: expansionIndicatorBuilder,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -409,7 +421,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         tree: tree,
         expansionBehavior: expansionBehavior,
         indentPadding: indentPadding,
-        expansionIndicatorBuilder: expansionIndicatorBuilder,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -457,7 +470,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         tree: tree,
         expansionBehavior: expansionBehavior,
         indentPadding: indentPadding,
-        expansionIndicatorBuilder: expansionIndicatorBuilder,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -508,7 +522,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
             tree: tree,
             expansionBehavior: expansionBehavior,
             indentPadding: indentPadding,
-            expansionIndicatorBuilder: expansionIndicatorBuilder,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             primary: primary,
@@ -651,7 +666,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         tree: tree,
         expansionBehavior: expansionBehavior,
         indentPadding: indentPadding,
-        expansionIndicatorBuilder: expansionIndicatorBuilder,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         padding: padding,
@@ -703,7 +719,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             tree: tree,
             expansionBehavior: expansionBehavior,
             indentPadding: indentPadding,
-            expansionIndicatorBuilder: expansionIndicatorBuilder,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             padding: padding,
@@ -750,7 +767,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         tree: tree,
         expansionBehavior: expansionBehavior,
         indentPadding: indentPadding,
-        expansionIndicatorBuilder: expansionIndicatorBuilder,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         padding: padding,
@@ -805,7 +823,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             tree: tree,
             expansionBehavior: expansionBehavior,
             indentPadding: indentPadding,
-            expansionIndicatorBuilder: expansionIndicatorBuilder,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             padding: padding,

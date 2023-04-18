@@ -47,7 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
         tree: sampleTree,
         expansionIndicatorBuilder: (tree) => ChevronIndicator.rightDown(
           tree: tree,
-          padding: EdgeInsets.all(8),
+          color: Colors.blue[700],
+          padding: const EdgeInsets.all(8),
         ),
         onItemTap: (item) {
           print("Item tapped: ${item.key}");
