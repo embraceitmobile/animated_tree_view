@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'tree_node.dart';
 
+typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
+    BuildContext, ITreeNode<Data>);
+
 abstract class ExpansionIndicator extends StatefulWidget {
   /// Value to set the expansion state of the indicator
   final ITreeNode tree;

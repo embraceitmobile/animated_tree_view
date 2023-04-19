@@ -64,16 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TreeView.simple(
         tree: testTrees[stateCount].value,
-        expansionIndicatorBuilder: (tree) =>
-            ChevronIndicator.upDown(tree: tree),
         expansionBehavior: ExpansionBehavior.none,
         shrinkWrap: true,
         showRootNode: true,
-        builder: (context, level, item) => Card(
-          color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+        builder: (context, node) => Card(
+          color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(
-            title: Text("Item ${item.level}-${item.key}"),
-            subtitle: Text('Data ${item.data}'),
+            title: Text("Item ${node.level}-${node.key}"),
+            subtitle: Text('Data ${node.data}'),
           ),
         ),
       ),

@@ -9,7 +9,8 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'tree_view_state_helper.dart';
 import 'expandable_node.dart';
 
-ExpansionIndicator _defExpansionIndicatorBuilder<Data>(ITreeNode<Data> tree) =>
+ExpansionIndicator _defExpansionIndicatorBuilder<Data>(
+        BuildContext context, ITreeNode<Data> tree) =>
     ChevronIndicator.rightDown(
       tree: tree,
       padding: EdgeInsets.all(8),
@@ -17,9 +18,8 @@ ExpansionIndicator _defExpansionIndicatorBuilder<Data>(ITreeNode<Data> tree) =>
 
 /// The builder function that allows to build any item of type [Tree].
 /// The builder function also provides the [level] of the node.
-typedef LeveledItemWidgetBuilder<Tree> = Widget Function(
+typedef TreeNodeWidgetBuilder<Tree> = Widget Function(
   BuildContext context,
-  int level,
   Tree item,
 );
 
@@ -99,7 +99,7 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
 abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
-  final LeveledItemWidgetBuilder<Tree> builder;
+  final TreeNodeWidgetBuilder<Tree> builder;
 
   /// The rootNode of the [tree]. If the [tree] is updated using setState or any
   /// other state management tool, then a [TreeDiff] is performed to get all the
@@ -230,7 +230,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
   ) =>
       ExpandableNodeItem.removedNode<Data, Tree>(
         node: node,
-        builder: (context, level, node) => widget.builder(context, level, node),
+        builder: (context, node) => widget.builder(context, node),
         scrollController: _scrollController,
         animation: animation,
         indentPadding: widget.indentPadding,
@@ -369,7 +369,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   to be returned in the [builder]
   static TreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<TreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
     double? indentPadding,
@@ -422,7 +422,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   extending the [TreeNode], then you can also use the simpler [TreeView.simple].
   static TreeView<Data, Tree> simpleTyped<Data, Tree extends TreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
     double? indentPadding,
@@ -471,7 +471,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   for typed objects to be returned in the [builder]
   static TreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
@@ -523,7 +523,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   static TreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
@@ -670,7 +670,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///   to be returned in the [builder]
   static SliverTreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<TreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
@@ -723,7 +723,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   static SliverTreeView<Data, Tree>
       simpleTyped<Data, Tree extends TreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
@@ -771,7 +771,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///   for typed objects to be returned in the [builder]
   static SliverTreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,
@@ -827,7 +827,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   static SliverTreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     double? indentPadding,

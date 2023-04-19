@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 
 const DEFAULT_INDENT_PADDING = 24.0;
 
-typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
-    ITreeNode<Data>);
-
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
-  final LeveledItemWidgetBuilder<Tree> builder;
+  final TreeNodeWidgetBuilder<Tree> builder;
   final AutoScrollController scrollController;
   final Tree node;
   final Animation<double> animation;
@@ -23,7 +20,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
     required Tree node,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
@@ -54,7 +51,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
 
   static Widget removedNode<Data, Tree extends ITreeNode<Data>>({
     required Tree node,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
     required double? indentPadding,
@@ -97,12 +94,12 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     final itemContainer = _ExpandableNodeContainer(
       animation: animation,
       item: node,
-      child: builder(context, node.level, node),
+      child: builder(context, node),
       indentPadding: indentPadding *
           (node.level - minLevelToIndent).clamp(0, double.maxFinite),
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
-          : expansionIndicatorBuilder?.call(node),
+          : expansionIndicatorBuilder?.call(context, node),
       onTap: remove
           ? null
           : (dynamic item) {

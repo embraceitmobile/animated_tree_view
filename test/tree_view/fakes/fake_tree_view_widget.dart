@@ -15,9 +15,9 @@ class FakeStatelessTreeView<T> extends StatelessWidget {
           tree: tree,
           expansionBehavior: ExpansionBehavior.scrollToLastChild,
           showRootNode: true,
-          builder: (context, level, item) => ListTile(
-            title: Text("Item ${item.level}-${item.key}"),
-            subtitle: Text('Level $level'),
+          builder: (context, node) => ListTile(
+            title: Text("Item ${node.level}-${node.key}"),
+            subtitle: Text('Level ${node.level}'),
           ),
         ),
       ),
@@ -52,9 +52,9 @@ class FakeStatefulTreeViewState extends State<FakeStatefulTreeView> {
             tree: testTrees[stateCount].item1,
             expansionBehavior: ExpansionBehavior.scrollToLastChild,
             showRootNode: true,
-            builder: (context, level, item) => ListTile(
-              title: Text("Item ${item.level}-${item.key}"),
-              subtitle: Text('Level $level'),
+            builder: (context, node) => ListTile(
+              title: Text("Item ${node.level}-${node.key}"),
+              subtitle: Text('Level ${node.level}'),
             ),
           ),
           TextButton(

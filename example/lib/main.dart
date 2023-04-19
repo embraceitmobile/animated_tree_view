@@ -58,8 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: TreeView.simple(
         key: _treeKey,
         tree: sampleTree,
-        expansionIndicatorBuilder: (tree) => ChevronIndicator.rightDown(
-          tree: tree,
+        expansionIndicatorBuilder: (context, node) =>
+            ChevronIndicator.rightDown(
+          tree: node,
           color: Colors.blue[700],
           padding: const EdgeInsets.all(8),
         ),
@@ -73,11 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
         },
-        builder: (context, level, item) => Card(
-          color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+        builder: (context, node) => Card(
+          color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(
-            title: Text("Item ${item.level}-${item.key}"),
-            subtitle: Text('Level $level'),
+            title: Text("Item ${node.level}-${node.key}"),
+            subtitle: Text('Level ${node.level}'),
           ),
         ),
       ),

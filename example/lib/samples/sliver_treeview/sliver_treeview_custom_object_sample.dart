@@ -57,14 +57,12 @@ class _MyHomePageState extends State<MyHomePage> {
           /// Typed [SliverTreeView] example
           SliverTreeView.simpleTyped<UserName, TreeNode<UserName>>(
             tree: simpleTree,
-            expansionIndicatorBuilder: (tree) =>
-                ChevronIndicator.upDown(tree: tree),
-            builder: (context, level, item) => Card(
-              color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+            builder: (context, node) => Card(
+              color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(
-                title: Text("Typed Simple Item ${item.level}-${item.key}"),
+                title: Text("Typed Simple Item ${node.level}-${node.key}"),
                 subtitle:
-                    Text('${item.data?.firstName} ${item.data?.lastName}'),
+                    Text('${node.data?.firstName} ${node.data?.lastName}'),
               ),
             ),
           ),
@@ -84,14 +82,12 @@ class _MyHomePageState extends State<MyHomePage> {
             tree: indexedTree,
             scrollController: scrollController,
             expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
-            expansionIndicatorBuilder: (tree) =>
-                ChevronIndicator.upDown(tree: tree),
-            builder: (context, level, item) => Card(
-              color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+            builder: (context, node) => Card(
+              color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(
-                title: Text("Typed Indexed Item ${item.level}-${item.key}"),
+                title: Text("Typed Indexed Item ${node.level}-${node.key}"),
                 subtitle:
-                    Text('${item.data?.firstName} ${item.data?.lastName}'),
+                    Text('${node.data?.firstName} ${node.data?.lastName}'),
               ),
             ),
           ),
