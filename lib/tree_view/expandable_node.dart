@@ -148,21 +148,24 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: onTap == null ? null : () => onTap!(item),
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: indentPadding),
-              child: child,
-            ),
-            if (expansionIndicator != null)
-              Align(
-                alignment: expansionIndicator!.alignment,
-                child: Padding(
-                  padding: expansionIndicator!.padding,
-                  child: expansionIndicator!,
+        child: Padding(
+          padding: EdgeInsets.only(left: indentPadding),
+          child: Stack(
+            children: <Widget>[
+              child,
+              if (expansionIndicator != null)
+                Positioned(
+                  left: expansionIndicator!.alignment.x <= 0 ? 0 : null,
+                  right: expansionIndicator!.alignment.x >= 0 ? 0 : null,
+                  top: expansionIndicator!.alignment.y <= 0 ? 0 : null,
+                  bottom: expansionIndicator!.alignment.y >= 0 ? 0 : null,
+                  child: Padding(
+                    padding: expansionIndicator!.padding,
+                    child: expansionIndicator!,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
