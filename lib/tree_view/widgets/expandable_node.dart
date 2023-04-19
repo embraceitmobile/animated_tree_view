@@ -91,7 +91,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
 
   @override
   Widget build(BuildContext context) {
-    final itemContainer = _ExpandableNodeContainer(
+    final itemContainer = ExpandableNodeContainer(
       animation: animation,
       item: node,
       child: builder(context, node),
@@ -119,7 +119,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   }
 }
 
-class _ExpandableNodeContainer<T> extends StatelessWidget {
+class ExpandableNodeContainer<T> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<ITreeNode<T>>? onTap;
   final ITreeNode<T> item;
@@ -127,7 +127,7 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
   final double indentPadding;
   final Widget child;
 
-  const _ExpandableNodeContainer({
+  const ExpandableNodeContainer({
     super.key,
     required this.animation,
     required this.onTap,
