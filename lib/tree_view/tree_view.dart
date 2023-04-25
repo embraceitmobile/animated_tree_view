@@ -126,11 +126,16 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// ** By default [_defExpansionIndicatorBuilder] is used to build expansion indicator
   final ExpansionIndicatorBuilder expansionIndicatorBuilder;
 
-  /// This is the padding is applied to the start of an item. [indentPadding]
+  /// This is the indentation applied to the start of an item. [Indentation.width]
   /// will be multiplied by [INode.level] before being applied.
-  /// ** e.g. if the node level is 2 and [indentPadding] is 8, then the start
+  /// ** e.g. if the node level is 2 and [Indentation.width] is 8, then the start
   /// padding applied to an item will be 2*8 = 16
-  final double? indentPadding;
+  ///
+  /// ** By default indentation lines are not drawn, use [Indentation.withLineDecoration]
+  /// factory to show the indentation lines. The indentation can be further
+  /// customized by passing the [IndentationDecoration] to [Indentation] as
+  /// decoration.
+  final Indentation? indentation;
 
   /// An optional callback that can be used to handle any action when an item is
   /// tapped or clicked
@@ -160,7 +165,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.expansionBehavior = ExpansionBehavior.none,
     required this.builder,
     required this.tree,
-    this.indentPadding,
+    this.indentation,
     this.scrollController,
     this.expansionIndicatorBuilder = _defExpansionIndicatorBuilder,
     this.onItemTap,
@@ -212,13 +217,15 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         builder: widget.builder,
         scrollController: _scrollController,
         animation: animation,
-        indentPadding: widget.indentPadding,
+        indentation: widget.indentation,
         expansionIndicator: widget.expansionIndicatorBuilder,
         onToggleExpansion: (item) => _treeViewEventHandler
             .expansionBehaviourController
             .toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
+        isLastChild: _calcIsLastChild(
+            _treeViewEventHandler.animatedListStateController.list, index),
       );
 
   Widget _removedItemBuilder(
@@ -231,14 +238,23 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         builder: (context, node) => widget.builder(context, node),
         scrollController: _scrollController,
         animation: animation,
-        indentPadding: widget.indentPadding,
+        indentation: widget.indentation,
         expansionIndicator: widget.expansionIndicatorBuilder,
         onToggleExpansion: (item) => _treeViewEventHandler
             .expansionBehaviourController
             .toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
+        isLastChild: true,
       );
+
+  bool _calcIsLastChild(List<ITreeNode<Data>> list, int index) {
+    if (list.isEmpty) return true;
+    if (list.length < 2) return true;
+    if (index >= list.length - 1) return true;
+
+    return list[index].level != list[index + 1].level;
+  }
 
   @override
   void didUpdateWidget(S oldWidget) {
@@ -335,7 +351,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     super.expansionBehavior = ExpansionBehavior.none,
     required super.builder,
     required super.tree,
-    super.indentPadding,
+    super.indentation,
     super.scrollController,
     super.expansionIndicatorBuilder,
     super.onItemTap,
@@ -370,7 +386,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
@@ -385,7 +401,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
+        indentation: indentation,
         expansionIndicatorBuilder:
             expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
@@ -423,7 +439,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
@@ -438,7 +454,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
+        indentation: indentation,
         expansionIndicatorBuilder:
             expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
@@ -472,7 +488,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
@@ -487,7 +503,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
+        indentation: indentation,
         expansionIndicatorBuilder:
             expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
@@ -524,7 +540,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
@@ -539,7 +555,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
+            indentation: indentation,
             expansionIndicatorBuilder:
                 expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
@@ -627,7 +643,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required super.tree,
     super.expansionBehavior,
     super.expansionIndicatorBuilder,
-    super.indentPadding,
+    super.indentation,
     super.onItemTap,
     super.padding,
     super.scrollController,
@@ -671,7 +687,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
@@ -683,7 +699,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
+        indentation: indentation,
         expansionIndicatorBuilder:
             expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
@@ -724,7 +740,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
@@ -736,7 +752,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
+            indentation: indentation,
             expansionIndicatorBuilder:
                 expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
@@ -772,7 +788,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
@@ -784,7 +800,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
+        indentation: indentation,
         expansionIndicatorBuilder:
             expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
@@ -828,7 +844,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
@@ -840,7 +856,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
+            indentation: indentation,
             expansionIndicatorBuilder:
                 expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,

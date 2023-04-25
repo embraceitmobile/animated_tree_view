@@ -1,21 +1,20 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
-const DEFAULT_INDENT_PADDING = 24.0;
-
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
   final TreeNodeWidgetBuilder<Tree> builder;
   final AutoScrollController scrollController;
   final Tree node;
   final Animation<double> animation;
-  final double indentPadding;
+  final Indentation indentation;
   final ExpansionIndicatorBuilder<Data>? expansionIndicatorBuilder;
   final bool remove;
   final int? index;
   final ValueSetter<Tree>? onItemTap;
   final ValueSetter<Tree> onToggleExpansion;
   final int minLevelToIndent;
+  final bool isLastChild;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
@@ -23,11 +22,12 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
-    required double? indentPadding,
     required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
+    required bool isLastChild,
+    Indentation? indentation,
   }) {
     return ValueListenableBuilder<INode>(
       valueListenable: node,
@@ -39,10 +39,11 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           node: node,
           index: index,
           animation: animation,
-          indentPadding: indentPadding,
+          indentation: indentation,
           expansionIndicatorBuilder: expansionIndicator,
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
+          isLastChild: isLastChild,
           minLevelToIndent: showRootNode ? 0 : 1,
         ),
       ),
@@ -54,11 +55,12 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
-    required double? indentPadding,
     required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
+    required bool isLastChild,
+    Indentation? indentation,
   }) {
     return ExpandableNodeItem<Data, Tree>(
       builder: builder,
@@ -66,10 +68,11 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       node: node,
       remove: true,
       animation: animation,
-      indentPadding: indentPadding,
+      indentation: indentation,
       expansionIndicatorBuilder: expansionIndicator,
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
+      isLastChild: isLastChild,
       minLevelToIndent: showRootNode ? 0 : 1,
     );
   }
@@ -81,13 +84,14 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required this.node,
     required this.animation,
     required this.onToggleExpansion,
+    required this.isLastChild,
     this.index,
     this.remove = false,
     this.minLevelToIndent = 0,
     this.expansionIndicatorBuilder,
     this.onItemTap,
-    double? indentPadding,
-  }) : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING;
+    Indentation? indentation,
+  }) : this.indentation = indentation ?? const Indentation();
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +99,13 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       animation: animation,
       item: node,
       child: builder(context, node),
-      indentPadding: indentPadding *
-          (node.level - minLevelToIndent).clamp(0, double.maxFinite),
+      indentation: indentation.copyWith(
+          width: indentation.width *
+              (node.level - minLevelToIndent).clamp(0, double.maxFinite)),
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
           : expansionIndicatorBuilder?.call(context, node),
+      isLastChild: isLastChild,
       onTap: remove
           ? null
           : (dynamic item) {
@@ -124,7 +130,8 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
   final ValueSetter<ITreeNode<T>>? onTap;
   final ITreeNode<T> item;
   final ExpansionIndicator? expansionIndicator;
-  final double indentPadding;
+  final Indentation indentation;
+  final bool isLastChild;
   final Widget child;
 
   const ExpandableNodeContainer({
@@ -133,7 +140,8 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
     required this.onTap,
     required this.child,
     required this.item,
-    required this.indentPadding,
+    required this.indentation,
+    required this.isLastChild,
     this.expansionIndicator,
   });
 
@@ -145,24 +153,15 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: onTap == null ? null : () => onTap!(item),
-        child: Padding(
-          padding: EdgeInsets.only(left: indentPadding),
-          child: Stack(
-            children: <Widget>[
-              child,
-              if (expansionIndicator != null)
-                Positioned(
-                  left: expansionIndicator!.alignment.x <= 0 ? 0 : null,
-                  right: expansionIndicator!.alignment.x >= 0 ? 0 : null,
-                  top: expansionIndicator!.alignment.y <= 0 ? 0 : null,
-                  bottom: expansionIndicator!.alignment.y >= 0 ? 0 : null,
-                  child: Padding(
-                    padding: expansionIndicator!.padding,
-                    child: expansionIndicator!,
-                  ),
+        child: Indent(
+          indentation: indentation,
+          shouldDrawBottom: !isLastChild,
+          child: expansionIndicator == null
+              ? child
+              : PositionedExpansionIndicator(
+                  expansionIndicator: expansionIndicator!,
+                  child: child,
                 ),
-            ],
-          ),
         ),
       ),
     );

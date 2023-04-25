@@ -5,6 +5,36 @@ import 'package:flutter/material.dart';
 typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
     BuildContext, ITreeNode<Data>);
 
+class PositionedExpansionIndicator extends StatelessWidget {
+  final ExpansionIndicator expansionIndicator;
+  final Widget child;
+
+  const PositionedExpansionIndicator({
+    super.key,
+    required this.expansionIndicator,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        child,
+        Positioned(
+          left: expansionIndicator.alignment.x <= 0 ? 0 : null,
+          right: expansionIndicator.alignment.x >= 0 ? 0 : null,
+          top: expansionIndicator.alignment.y <= 0 ? 0 : null,
+          bottom: expansionIndicator.alignment.y >= 0 ? 0 : null,
+          child: Padding(
+            padding: expansionIndicator.padding,
+            child: expansionIndicator,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 abstract class ExpansionIndicator extends StatefulWidget {
   /// Value to set the expansion state of the indicator
   final ITreeNode tree;
@@ -105,12 +135,13 @@ class ChevronIndicator extends ExpansionIndicator {
     EdgeInsets padding = EdgeInsets.zero,
     Curve curve = Curves.linearToEaseOut,
     Color? color,
+    IconData? icon,
   }) =>
       ChevronIndicator._(
         key: key,
         tree: tree,
         tween: Tween(begin: 0, end: 0.25),
-        icon: Icons.keyboard_arrow_right_rounded,
+        icon: icon ?? Icons.keyboard_arrow_right_rounded,
         alignment: alignment,
         padding: padding,
         curve: curve,
@@ -130,12 +161,13 @@ class ChevronIndicator extends ExpansionIndicator {
     EdgeInsets padding = EdgeInsets.zero,
     Curve curve = Curves.linearToEaseOut,
     Color? color,
+    IconData? icon,
   }) =>
       ChevronIndicator._(
         key: key,
         tree: tree,
         tween: Tween(begin: 1, end: 0.50),
-        icon: Icons.keyboard_arrow_up_rounded,
+        icon: icon ?? Icons.keyboard_arrow_up_rounded,
         alignment: alignment,
         padding: padding,
         curve: curve,
