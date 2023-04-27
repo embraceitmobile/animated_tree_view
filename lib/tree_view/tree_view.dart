@@ -14,6 +14,10 @@ ExpansionIndicator _defExpansionIndicatorBuilder<Data>(
       padding: EdgeInsets.all(8),
     );
 
+ExpansionIndicator noExpansionIndicatorBuilder<Data>(
+        BuildContext context, ITreeNode<Data> tree) =>
+    NoExpansionIndicator(tree: tree);
+
 /// The builder function that allows to build any item of type [Tree].
 /// The builder function also provides the [level] of the node.
 typedef TreeNodeWidgetBuilder<Tree> = Widget Function(
@@ -122,7 +126,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// To create your own [ExpansionIndicator], simply extend the [ExpansionIndicator]
   /// class.
   ///
-  /// In order to not show any expansion indicator just pass in [NoExpansionIndicator]
+  /// In order to not show any expansion indicator just pass [noExpansionIndicatorBuilder]
   /// ** By default [_defExpansionIndicatorBuilder] is used to build expansion indicator
   final ExpansionIndicatorBuilder expansionIndicatorBuilder;
 
@@ -348,7 +352,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
 
   const TreeView._({
     super.key,
-    super.expansionBehavior = ExpansionBehavior.none,
+    super.expansionBehavior,
     required super.builder,
     required super.tree,
     super.indentation,
@@ -385,7 +389,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     Key? key,
     required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
@@ -427,7 +431,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
   /// e.g. for path './.level1/level2', complexity is simply O(2).
   ///
-  /// ** See code in example/lib/samples/treeview/treeview_indexed_modification_sample.dart **
+  /// ** See code in example/lib/samples/treeview/treeview_custom_object_sample.dart **
   ///
   /// See also:
   ///   * For a [TreeView] that allows for insertion and removal of
@@ -438,7 +442,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     Key? key,
     required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
     Indentation? indentation,
     AutoScrollController? scrollController,
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,

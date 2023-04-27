@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum IndentStyle { scopingLine, squareJoint, roundJoint }
+
 class Indent extends StatelessWidget {
   final Indentation indentation;
   final Widget child;
@@ -85,8 +87,18 @@ class IndentationPainter extends CustomPainter {
       size.height,
     );
 
-    switch (decoration.cornerCap) {
-      case CornerCap.round:
+    switch (decoration.indentStyle) {
+      case IndentStyle.scopingLine:
+        canvas.drawRect(
+            Rect.fromLTRB(
+              topOrigin.dx,
+              topOrigin.dy,
+              topOrigin.dx + strokeWidth,
+              shouldDrawBottom ? bottom.dy : cornerOuter.dy,
+            ),
+            paint);
+        break;
+      case IndentStyle.roundJoint:
         _drawWithRoundedCorners(
           canvas: canvas,
           paint: paint,
@@ -100,7 +112,7 @@ class IndentationPainter extends CustomPainter {
           bottom: bottom,
         );
         break;
-      case CornerCap.square:
+      case IndentStyle.squareJoint:
       default:
         _drawWithSquareCorners(
           canvas: canvas,
@@ -226,7 +238,7 @@ class Indentation {
 
   const Indentation({
     this.width = DEF_INDENT_WIDTH,
-    this.decoration,
+    this.decoration = const IndentationDecoration(),
   });
 
   factory Indentation.withLineDecoration({
@@ -257,17 +269,15 @@ class Indentation {
   int get hashCode => width.hashCode ^ decoration.hashCode;
 }
 
-enum CornerCap { square, round }
-
 class IndentationDecoration {
   final Offset offset;
   final double lineWidth;
-  final CornerCap cornerCap;
+  final IndentStyle indentStyle;
   final Color color;
 
   const IndentationDecoration({
     this.lineWidth = 1,
-    this.cornerCap = CornerCap.round,
+    this.indentStyle = IndentStyle.roundJoint,
     this.color = Colors.black45,
     this.offset = Offset.zero,
   });
@@ -280,13 +290,13 @@ class IndentationDecoration {
           lineWidth == other.lineWidth &&
           color == other.color &&
           offset == other.offset &&
-          cornerCap == other.cornerCap;
+          indentStyle == other.indentStyle;
 
   @override
   int get hashCode => lineWidth.hashCode ^ color.hashCode;
 
   @override
   String toString() {
-    return 'IndentationDecoration{offset: $offset, lineWidth: $lineWidth, cornerCap: $cornerCap, color: $color}';
+    return 'IndentationDecoration{offset: $offset, lineWidth: $lineWidth, cornerCap: $indentStyle, color: $color}';
   }
 }
