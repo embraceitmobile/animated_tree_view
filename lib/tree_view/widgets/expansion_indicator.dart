@@ -223,6 +223,7 @@ class _PlusMinusIndicatorState
     return SizedBox.square(
       dimension: 24,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           RotationTransition(
             turns: tween.animate(_controller),

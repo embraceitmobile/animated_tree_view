@@ -87,7 +87,7 @@ class IndentationPainter extends CustomPainter {
       size.height,
     );
 
-    switch (decoration.indentStyle) {
+    switch (decoration.style) {
       case IndentStyle.scopingLine:
         canvas.drawRect(
             Rect.fromLTRB(
@@ -272,13 +272,13 @@ class Indentation {
 class IndentationDecoration {
   final Offset offset;
   final double lineWidth;
-  final IndentStyle indentStyle;
+  final IndentStyle style;
   final Color color;
 
   const IndentationDecoration({
     this.lineWidth = 1,
-    this.indentStyle = IndentStyle.roundJoint,
-    this.color = Colors.black45,
+    this.style = IndentStyle.roundJoint,
+    this.color =  const Color(0xFFBDBDBD),
     this.offset = Offset.zero,
   });
 
@@ -290,13 +290,13 @@ class IndentationDecoration {
           lineWidth == other.lineWidth &&
           color == other.color &&
           offset == other.offset &&
-          indentStyle == other.indentStyle;
+          style == other.style;
 
   @override
   int get hashCode => lineWidth.hashCode ^ color.hashCode;
 
   @override
   String toString() {
-    return 'IndentationDecoration{offset: $offset, lineWidth: $lineWidth, cornerCap: $indentStyle, color: $color}';
+    return 'IndentationDecoration{offset: $offset, lineWidth: $lineWidth, cornerCap: $style, color: $color}';
   }
 }
