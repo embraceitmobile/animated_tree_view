@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: IndentStyle.scopingLine,
               ),
             ),
+            minLevelToIndent: 0,
             child: Container(
               padding: EdgeInsets.all(32),
               color: Colors.red,

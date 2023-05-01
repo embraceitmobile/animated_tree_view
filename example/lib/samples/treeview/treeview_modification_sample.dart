@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         tree: TreeNode.root(),
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         shrinkWrap: true,
+        showRootNode: true,
         builder: (context, node) =>
             node.isRoot ? buildRootItem(node) : buildListItem(node),
       ),
