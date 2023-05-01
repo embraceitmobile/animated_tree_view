@@ -110,9 +110,9 @@ class IndentationPainter extends CustomPainter {
       case IndentStyle.scopingLine:
         canvas.drawRect(
             Rect.fromLTRB(
-              topOrigin.dx - 0.5,
+              topOrigin.dx - 0.35,
               topOrigin.dy,
-              topOrigin.dx + strokeWidth - 0.5,
+              topOrigin.dx + strokeWidth - 0.35,
               bottom.dy,
             ),
             paint);

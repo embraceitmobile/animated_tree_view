@@ -4,7 +4,7 @@ A flutter package that provides a heirarchial Tree like data structure that can 
 
 The widget is based on the Flutter’s familiar APIs of [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) and [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html) and can even be used as a replacement for these widgets. Each node can be completely customized using the `TreeNodeWidgetBuilder` that is used to build the nodes.
 
-![Animated Tree View Demo](https://media.giphy.com/media/LfGExvX5OG9Eg3CyRa/giphy.gif)
+| ![Animated Tree View Demo](https://media.giphy.com/media/ZeTlxJQKxOEZnuSgK7/giphy.gif) | ![Animated Tree View Demo](https://media.giphy.com/media/7i8rXNlzkjhWvaHOnd/giphy.gif)                 |
 
 ## Variants
 There are four different variants each for the `TreeView` and the `SliverTreeView`. Based on the requirements and use case, you can use the [simple](#.simple), [simpleTyped](#.simpleTyped), [indexed](#.indexed) or the [indexTyped](#.indexTyped) variants.
@@ -147,9 +147,9 @@ needs to be provided to `SliverTreeView` and the `CustoScrollView`.
 ## ExpansionIndicator <a name="expansionIndicator"></a>
 The expansion indicator animates to change it's state based on the whether the node is collapsed or expanded. There are several built-in expansion indicators.
 
-| `ChevronIndicator.rightDown` | `ChevronIndicator.upDown` | `PlusMinusIndicator` |
-|------------------------------|---------------------------|----------------------|
-| gif here                     | gif here                  | gif here             |
+| `ChevronIndicator.rightDown`                                                        | `ChevronIndicator.upDown`                                                        | `PlusMinusIndicator`                                                                |
+|-------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| ![Right down indicator](https://media.giphy.com/media/aAy5CCdCj3ruNqq1aG/giphy.gif) | ![Up down indicator](https://media.giphy.com/media/t0jK0Xm7rQ2uEEeDFi/giphy.gif) | ![Plus minus indicator](https://media.giphy.com/media/uw9HpEhBqVpn5wsDpq/giphy.gif) |
 
 `noExpansionIndicatorBuilder` can be used when no indicator is required.
 
@@ -160,9 +160,9 @@ The indentations are drawn to show the node level and the connections between di
 
 By default no indentation is drawn, to show indents use the `Indentation.withLineDecoration` factory or pass in an `IndentationDecoration` to the `Indentation`.
 
-| `IndentStyle.scopingLines` | `IndentStyle.roundJoint` | `IndentStyle.squareJoint` |
-|----------------------------|--------------------------|---------------------------|
-| gif here                   | gif here                 | gif here                  |
+| `IndentStyle.squareJoint`                                       | `IndentStyle.roundJoint`                                       | `IndentStyle.scopingLines`                                       | `IndentStyle.none`                                           |
+|-----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------------------|
+| ![Indent.squareJoint](./example/screenshots/indents_square.png) | ![Indent.squareJoint](./example/screenshots/indents_round.png) | ![Indent.squareJoint](./example/screenshots/indents_scoping.png) | ![Indent.squareJoint](./example/screenshots/indent_none.png) |
 
 ## Tree Diff Util <a name="treeDiffUtil"></a>
 A `TreeDiffUtil` is used to determine the difference between two trees if the `tree` is updated using any state management tool like setState or Bloc etc.
@@ -211,3 +211,6 @@ The `TreeViewController` provides utility methods that allow controlling the `Tr
  | `expandNode`        | Utility method for expanding a tree node.                                                                                                               |
  | `collapseNode`      | Utility method for collapsing a tree node.                                                                                                              |
 | `expandAllChildren` | Utility method for expanding all the children of a node. It can be also be used to recursively expanded all the child nodes until the leaf is reached   |
+
+## Future plans
+* Add support for 2D scrolling when the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1) becomes available.

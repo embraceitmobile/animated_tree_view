@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: TreeView.simpleTyped<Explorable, TreeNode<Explorable>>(
           tree: tree,
           showRootNode: true,
-          expansionBehavior: ExpansionBehavior.none,
+          expansionBehavior: ExpansionBehavior.scrollToLastChild,
           expansionIndicatorBuilder: (context, node) {
             if (node.isRoot)
               return PlusMinusIndicator(
@@ -53,14 +53,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.grey[700],
               );
 
-            return ChevronIndicator.rightDown(
+            return PlusMinusIndicator(
               tree: node,
               alignment: Alignment.centerLeft,
               color: Colors.grey[700],
             );
           },
           indentation: Indentation(
-            decoration: IndentationDecoration(style: IndentStyle.squareJoint),
+            decoration: IndentationDecoration(
+              style: IndentStyle.none,
+              color: Colors.green,
+              lineWidth: 4,
+            ),
           ),
           builder: (context, node) => Padding(
             padding: const EdgeInsets.only(left: 16.0),

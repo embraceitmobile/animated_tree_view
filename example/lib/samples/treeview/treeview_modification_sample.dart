@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TreeView Modification Demo',
+      title: 'TreeView Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'TreeView Modification Demo'),
+      home: MyHomePage(title: 'TreeView Demo'),
     );
   }
 }
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TreeView.simple(
         tree: TreeNode.root(),
-        expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
+        expansionBehavior: ExpansionBehavior.scrollToLastChild,
         shrinkWrap: true,
         showRootNode: true,
         builder: (context, node) =>
