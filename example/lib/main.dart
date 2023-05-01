@@ -64,7 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.blue[700],
           padding: const EdgeInsets.all(8),
         ),
-        indentation: Indentation(),
+        indentation: Indentation(
+          decoration: IndentationDecoration(style: IndentStyle.squareJoint),
+        ),
         onItemTap: (item) {
           print("Item tapped: ${item.key}");
           if (showSnackBar)

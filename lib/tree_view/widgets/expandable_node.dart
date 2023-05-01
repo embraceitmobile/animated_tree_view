@@ -13,6 +13,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final int? index;
   final ValueSetter<Tree>? onItemTap;
   final ValueSetter<Tree> onToggleExpansion;
+  final bool showRootNode;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
@@ -40,6 +41,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           expansionIndicatorBuilder: expansionIndicator,
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
+          showRootNode: showRootNode,
         ),
       ),
     );
@@ -67,6 +69,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       expansionIndicatorBuilder: expansionIndicator,
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
+      showRootNode: showRootNode,
     );
   }
 
@@ -81,6 +84,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     this.remove = false,
     this.expansionIndicatorBuilder,
     this.onItemTap,
+    required this.showRootNode,
     Indentation? indentation,
   }) : this.indentation = indentation ?? const Indentation();
 
@@ -94,6 +98,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
           : expansionIndicatorBuilder?.call(context, node),
+      minLevelToIndent: showRootNode ? 0 : 1,
       onTap: remove
           ? null
           : (dynamic item) {
@@ -120,6 +125,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
   final ExpansionIndicator? expansionIndicator;
   final Indentation indentation;
   final Widget child;
+  final int minLevelToIndent;
 
   const ExpandableNodeContainer({
     super.key,
@@ -128,6 +134,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
     required this.child,
     required this.node,
     required this.indentation,
+    required this.minLevelToIndent,
     this.expansionIndicator,
   });
 
@@ -142,6 +149,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
         child: Indent(
           indentation: indentation,
           node: node,
+          minLevelToIndent: minLevelToIndent,
           child: expansionIndicator == null
               ? child
               : PositionedExpansionIndicator(

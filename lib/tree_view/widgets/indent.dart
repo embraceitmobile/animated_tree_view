@@ -7,29 +7,36 @@ class Indent extends StatelessWidget {
   final Indentation indentation;
   final ITreeNode node;
   final Widget child;
+  final int minLevelToIndent;
 
   const Indent({
     super.key,
     required this.indentation,
     required this.child,
     required this.node,
+    required this.minLevelToIndent,
   });
 
   @override
   Widget build(BuildContext context) {
     final content = Padding(
       padding: EdgeInsets.only(
-        left: (indentation.width * node.level).clamp(0.0, double.maxFinite),
+        left: (indentation.width * (node.level - minLevelToIndent)).clamp(
+          0.0,
+          double.maxFinite,
+        ),
       ),
       child: child,
     );
 
-    if (indentation.decoration.style == IndentStyle.none) return content;
+    if (node.level <= minLevelToIndent ||
+        indentation.decoration.style == IndentStyle.none) return content;
 
     return CustomPaint(
       foregroundPainter: IndentationPainter.fromIndentation(
         indentation: indentation,
         node: node,
+        minLevelToIndent: minLevelToIndent,
       ),
       child: content,
     );
@@ -40,27 +47,32 @@ class IndentationPainter extends CustomPainter {
   final double indentWidth;
   final IndentationDecoration decoration;
   final ITreeNode node;
+  final int minLevelToIndent;
 
   const IndentationPainter({
     required this.indentWidth,
     required this.decoration,
     required this.node,
+    required this.minLevelToIndent,
   });
 
   factory IndentationPainter.fromIndentation({
     required Indentation indentation,
     required ITreeNode node,
+    required int minLevelToIndent,
   }) =>
       IndentationPainter(
         indentWidth: indentation.width,
-        decoration: indentation.decoration ?? IndentationDecoration(),
+        decoration: indentation.decoration,
+        minLevelToIndent: minLevelToIndent,
         node: node,
       );
 
   @override
   void paint(Canvas canvas, Size size) {
     final strokeWidth = decoration.lineWidth;
-    final totalWidth = (indentWidth * node.level).clamp(0.0, double.maxFinite);
+    final totalWidth = (indentWidth * (node.level - minLevelToIndent))
+        .clamp(0.0, double.maxFinite);
     final shouldDrawBottom = !node.isLastChild;
 
     final paint = Paint()

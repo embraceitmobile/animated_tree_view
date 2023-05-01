@@ -34,6 +34,13 @@ mixin ITreeNode<T> on IListenableNode implements ValueListenable<INode> {
     (childrenAsList[length - 1] as ITreeNode).isLastChild = true;
     areChildIndicesCached = true;
   }
+
+  @protected
+  void resetIndentationCache() {
+    if (childrenAsList.isEmpty) return;
+    (childrenAsList[length - 1] as ITreeNode).isLastChild = false;
+    areChildIndicesCached = false;
+  }
 }
 
 /// A [TreeNode] that can be used with the [TreeView].
