@@ -13,8 +13,6 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final int? index;
   final ValueSetter<Tree>? onItemTap;
   final ValueSetter<Tree> onToggleExpansion;
-  final int minLevelToIndent;
-  final bool isLastChild;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
@@ -26,7 +24,6 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
-    required bool isLastChild,
     Indentation? indentation,
   }) {
     return ValueListenableBuilder<INode>(
@@ -43,8 +40,6 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           expansionIndicatorBuilder: expansionIndicator,
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
-          isLastChild: isLastChild,
-          minLevelToIndent: showRootNode ? 0 : 1,
         ),
       ),
     );
@@ -72,8 +67,6 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       expansionIndicatorBuilder: expansionIndicator,
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
-      isLastChild: isLastChild,
-      minLevelToIndent: showRootNode ? 0 : 1,
     );
   }
 
@@ -84,10 +77,8 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required this.node,
     required this.animation,
     required this.onToggleExpansion,
-    required this.isLastChild,
     this.index,
     this.remove = false,
-    this.minLevelToIndent = 0,
     this.expansionIndicatorBuilder,
     this.onItemTap,
     Indentation? indentation,
@@ -97,15 +88,12 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   Widget build(BuildContext context) {
     final itemContainer = ExpandableNodeContainer(
       animation: animation,
-      item: node,
+      node: node,
       child: builder(context, node),
-      indentation: indentation.copyWith(
-          width: indentation.width *
-              (node.level - minLevelToIndent).clamp(0, double.maxFinite)),
+      indentation: indentation,
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
           : expansionIndicatorBuilder?.call(context, node),
-      isLastChild: isLastChild,
       onTap: remove
           ? null
           : (dynamic item) {
@@ -128,10 +116,9 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
 class ExpandableNodeContainer<T> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<ITreeNode<T>>? onTap;
-  final ITreeNode<T> item;
+  final ITreeNode<T> node;
   final ExpansionIndicator? expansionIndicator;
   final Indentation indentation;
-  final bool isLastChild;
   final Widget child;
 
   const ExpandableNodeContainer({
@@ -139,9 +126,8 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
     required this.animation,
     required this.onTap,
     required this.child,
-    required this.item,
+    required this.node,
     required this.indentation,
-    required this.isLastChild,
     this.expansionIndicator,
   });
 
@@ -152,10 +138,10 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: onTap == null ? null : () => onTap!(item),
+        onTap: onTap == null ? null : () => onTap!(node),
         child: Indent(
           indentation: indentation,
-          shouldDrawBottom: !isLastChild,
+          node: node,
           child: expansionIndicator == null
               ? child
               : PositionedExpansionIndicator(

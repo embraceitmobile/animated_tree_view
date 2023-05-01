@@ -1,31 +1,35 @@
+import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:flutter/material.dart';
 
-enum IndentStyle { scopingLine, squareJoint, roundJoint }
+enum IndentStyle { none, scopingLine, squareJoint, roundJoint }
 
 class Indent extends StatelessWidget {
   final Indentation indentation;
+  final ITreeNode node;
   final Widget child;
-  final bool shouldDrawBottom;
 
-  const Indent(
-      {super.key,
-      required this.indentation,
-      required this.child,
-      required this.shouldDrawBottom});
+  const Indent({
+    super.key,
+    required this.indentation,
+    required this.child,
+    required this.node,
+  });
 
   @override
   Widget build(BuildContext context) {
     final content = Padding(
-      padding: EdgeInsets.only(left: indentation.width),
+      padding: EdgeInsets.only(
+        left: (indentation.width * node.level).clamp(0.0, double.maxFinite),
+      ),
       child: child,
     );
 
-    if (indentation.decoration == null) return content;
+    if (indentation.decoration.style == IndentStyle.none) return content;
 
     return CustomPaint(
       foregroundPainter: IndentationPainter.fromIndentation(
         indentation: indentation,
-        shouldDrawBottom: shouldDrawBottom,
+        node: node,
       ),
       child: content,
     );
@@ -33,34 +37,37 @@ class Indent extends StatelessWidget {
 }
 
 class IndentationPainter extends CustomPainter {
-  final double width;
+  final double indentWidth;
   final IndentationDecoration decoration;
-  final bool shouldDrawBottom;
+  final ITreeNode node;
 
   const IndentationPainter({
-    required this.width,
+    required this.indentWidth,
     required this.decoration,
-    required this.shouldDrawBottom,
+    required this.node,
   });
 
   factory IndentationPainter.fromIndentation({
     required Indentation indentation,
-    required bool shouldDrawBottom,
+    required ITreeNode node,
   }) =>
       IndentationPainter(
-        width: indentation.width,
+        indentWidth: indentation.width,
         decoration: indentation.decoration ?? IndentationDecoration(),
-        shouldDrawBottom: shouldDrawBottom,
+        node: node,
       );
 
   @override
   void paint(Canvas canvas, Size size) {
     final strokeWidth = decoration.lineWidth;
+    final totalWidth = (indentWidth * node.level).clamp(0.0, double.maxFinite);
+    final shouldDrawBottom = !node.isLastChild;
+
     final paint = Paint()
       ..color = decoration.color
       ..style = PaintingStyle.fill;
 
-    final center = Size(width - 12, size.height / 2);
+    final center = Size(totalWidth - 12, size.height / 2);
 
     final topOrigin = Offset(
       center.width + decoration.offset.dx,
@@ -78,7 +85,7 @@ class IndentationPainter extends CustomPainter {
     );
 
     final end = Offset(
-      width,
+      totalWidth,
       center.height + decoration.offset.dy,
     );
 
@@ -91,10 +98,10 @@ class IndentationPainter extends CustomPainter {
       case IndentStyle.scopingLine:
         canvas.drawRect(
             Rect.fromLTRB(
-              topOrigin.dx,
+              topOrigin.dx - 0.5,
               topOrigin.dy,
-              topOrigin.dx + strokeWidth,
-              shouldDrawBottom ? bottom.dy : cornerOuter.dy,
+              topOrigin.dx + strokeWidth - 0.5,
+              bottom.dy,
             ),
             paint);
         break;
@@ -128,11 +135,23 @@ class IndentationPainter extends CustomPainter {
         );
         break;
     }
+
+    if (node.parent != null)
+      _drawScopingLines(
+        canvas: canvas,
+        origin: Offset(topOrigin.dx - indentWidth, topOrigin.dy),
+        strokeWidth: strokeWidth,
+        bottom: bottom.dy,
+        node: node.parent! as ITreeNode,
+        paint: paint,
+        drawLastChild: decoration.style == IndentStyle.scopingLine,
+      );
   }
 
   @override
   bool shouldRepaint(IndentationPainter oldDelegate) {
-    return decoration != oldDelegate.decoration || width != oldDelegate.width;
+    return decoration != oldDelegate.decoration ||
+        indentWidth != oldDelegate.indentWidth;
   }
 
   void _drawWithRoundedCorners({
@@ -228,32 +247,53 @@ class IndentationPainter extends CustomPainter {
     final combinedPath = Path.combine(PathOperation.union, pathTop, pathBottom);
     canvas.drawPath(combinedPath, paint);
   }
+
+  void _drawScopingLines({
+    required Canvas canvas,
+    required Offset origin,
+    required double strokeWidth,
+    required double bottom,
+    required ITreeNode node,
+    required Paint paint,
+    bool drawLastChild = false,
+  }) {
+    if (drawLastChild || node.isLastChild == false)
+      canvas.drawRect(
+          Rect.fromLTRB(
+            origin.dx - 0.5,
+            origin.dy,
+            origin.dx + strokeWidth - 0.5,
+            bottom,
+          ),
+          paint);
+
+    if (node.parent != null) {
+      _drawScopingLines(
+        canvas: canvas,
+        origin: Offset(origin.dx - indentWidth, origin.dy),
+        strokeWidth: strokeWidth,
+        bottom: bottom,
+        node: node.parent! as ITreeNode,
+        paint: paint,
+        drawLastChild: drawLastChild,
+      );
+    }
+  }
 }
 
 class Indentation {
   static const DEF_INDENT_WIDTH = 24.0;
 
   final double width;
-  final IndentationDecoration? decoration;
+  final IndentationDecoration decoration;
 
   const Indentation({
     this.width = DEF_INDENT_WIDTH,
-    this.decoration = const IndentationDecoration(),
+    this.decoration = const IndentationDecoration(style: IndentStyle.none),
   });
 
-  factory Indentation.withLineDecoration({
-    double width = DEF_INDENT_WIDTH,
-    IndentationDecoration decoration = const IndentationDecoration(),
-  }) =>
-      Indentation(width: width, decoration: decoration);
-
-  Indentation copyWith({
-    double? width,
-    double? height,
-    IndentationDecoration? decoration,
-  }) =>
-      Indentation(
-        width: width ?? this.width,
+  Indentation copyWith({IndentationDecoration? decoration}) => Indentation(
+        width: width,
         decoration: decoration ?? this.decoration,
       );
 
@@ -278,7 +318,7 @@ class IndentationDecoration {
   const IndentationDecoration({
     this.lineWidth = 1,
     this.style = IndentStyle.roundJoint,
-    this.color =  const Color(0xFFBDBDBD),
+    this.color = const Color(0xFFBDBDBD),
     this.offset = Offset.zero,
   });
 

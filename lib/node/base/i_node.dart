@@ -79,6 +79,7 @@ abstract class INode {
 
   /// Getter to get the level i.e. how many iterations it will take to get to the
   /// [root].
+  /// ** Note: starting index is 0.
   int get level => parent == null ? 0 : parent!.level + 1;
 
   /// Getter to get the total number of [children]

@@ -50,20 +50,27 @@ class _MyHomePageState extends State<MyHomePage> {
               return PlusMinusIndicator(
                 tree: node,
                 alignment: Alignment.centerLeft,
+                color: Colors.grey[700],
               );
 
             return ChevronIndicator.rightDown(
               tree: node,
               alignment: Alignment.centerLeft,
+              color: Colors.grey[700],
             );
           },
-          indentation: Indentation.withLineDecoration(),
+          indentation: Indentation(
+            decoration: IndentationDecoration(style: IndentStyle.squareJoint),
+          ),
           builder: (context, node) => Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: ListTile(
               title: Text(node.data?.name ?? "N/A"),
               subtitle: Text(node.data?.createdAt.toString() ?? "N/A"),
-              leading: node.icon,
+              leading: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: node.icon,
+              ),
             ),
           ),
         ),
@@ -74,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 extension on ExplorableNode {
   Icon get icon {
+    if (isRoot) return Icon(Icons.data_object);
+
     if (this is FolderNode) {
       if (isExpanded) return Icon(Icons.folder_open);
       return Icon(Icons.folder);
@@ -94,6 +103,9 @@ abstract class Explorable {
   final DateTime createdAt;
 
   Explorable(this.name) : this.createdAt = DateTime.now();
+
+  @override
+  String toString() => name;
 }
 
 class File extends Explorable {

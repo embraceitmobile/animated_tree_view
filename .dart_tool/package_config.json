@@ -3,15 +3,15 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-52.0.0",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-59.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/analyzer-5.4.0",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/analyzer-5.11.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "args",
@@ -45,7 +45,7 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/built_value-8.4.3",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/built_value-8.4.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -87,9 +87,9 @@
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/dart_style-2.2.4",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/dart_style-2.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "diffutil_dart",
@@ -165,9 +165,9 @@
     },
     {
       "name": "mockito",
-      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/mockito-5.3.2",
+      "rootUri": "file:///Users/jawwadhassan/.pub-cache/hosted/pub.dev/mockito-5.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
     },
     {
       "name": "package_config",
@@ -284,7 +284,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-04-18T10:12:05.743625Z",
+  "generated": "2023-04-26T11:17:51.645550Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

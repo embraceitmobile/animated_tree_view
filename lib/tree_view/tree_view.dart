@@ -228,8 +228,6 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
             .toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
-        isLastChild: _calcIsLastChild(
-            _treeViewEventHandler.animatedListStateController.list, index),
       );
 
   Widget _removedItemBuilder(
@@ -251,14 +249,6 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         showRootNode: widget.showRootNode,
         isLastChild: true,
       );
-
-  bool _calcIsLastChild(List<ITreeNode<Data>> list, int index) {
-    if (list.isEmpty) return true;
-    if (list.length < 2) return true;
-    if (index >= list.length - 1) return true;
-
-    return list[index].level != list[index + 1].level;
-  }
 
   @override
   void didUpdateWidget(S oldWidget) {
