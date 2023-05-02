@@ -1,110 +1,108 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
-import 'animated_list_controller.dart';
-
-const DEFAULT_INDENT_PADDING = 24.0;
-
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
-  final LeveledItemWidgetBuilder<Tree> builder;
-  final AnimatedListController<Data> animatedListController;
+  final TreeNodeWidgetBuilder<Tree> builder;
   final AutoScrollController scrollController;
   final Tree node;
   final Animation<double> animation;
-  final double indentPadding;
-  final ExpansionIndicator? expansionIndicator;
+  final Indentation indentation;
+  final ExpansionIndicatorBuilder<Data>? expansionIndicatorBuilder;
   final bool remove;
   final int? index;
   final ValueSetter<Tree>? onItemTap;
-  final int minLevelToIndent;
+  final ValueSetter<Tree> onToggleExpansion;
+  final bool showRootNode;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
-    required AnimatedListController<Data> animatedListController,
     required int index,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required Tree node,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
-    required double? indentPadding,
-    required ExpansionIndicator? expansionIndicator,
+    required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
+    required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
+    required Indentation indentation,
   }) {
     return ValueListenableBuilder<INode>(
-      valueListenable: animatedListController.list[index],
+      valueListenable: node,
       builder: (context, treeNode, _) => ValueListenableBuilder(
         valueListenable: (treeNode as Tree).listenableData,
         builder: (context, data, _) => ExpandableNodeItem<Data, Tree>(
           builder: builder,
-          animatedListController: animatedListController,
           scrollController: scrollController,
-          node: animatedListController.list[index] as Tree,
+          node: node,
           index: index,
           animation: animation,
-          indentPadding: indentPadding,
-          expansionIndicator: expansionIndicator,
+          indentation: indentation,
+          expansionIndicatorBuilder: expansionIndicator,
+          onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
-          minLevelToIndent: showRootNode ? 0 : 1,
+          showRootNode: showRootNode,
         ),
       ),
     );
   }
 
   static Widget removedNode<Data, Tree extends ITreeNode<Data>>({
-    required AnimatedListController<Data> animatedListController,
-    required Tree item,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required Tree node,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required AutoScrollController scrollController,
     required Animation<double> animation,
-    required double? indentPadding,
-    required ExpansionIndicator? expansionIndicator,
+    required ExpansionIndicatorBuilder<Data>? expansionIndicator,
     required ValueSetter<Tree>? onItemTap,
+    required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
+    required bool isLastChild,
+    required Indentation indentation,
   }) {
     return ExpandableNodeItem<Data, Tree>(
       builder: builder,
-      animatedListController: animatedListController,
       scrollController: scrollController,
-      node: item,
+      node: node,
       remove: true,
       animation: animation,
-      indentPadding: indentPadding,
-      expansionIndicator: expansionIndicator,
+      indentation: indentation,
+      expansionIndicatorBuilder: expansionIndicator,
       onItemTap: onItemTap,
-      minLevelToIndent: showRootNode ? 0 : 1,
+      onToggleExpansion: onToggleExpansion,
+      showRootNode: showRootNode,
     );
   }
 
   const ExpandableNodeItem({
     super.key,
     required this.builder,
-    required this.animatedListController,
     required this.scrollController,
     required this.node,
     required this.animation,
+    required this.onToggleExpansion,
     this.index,
     this.remove = false,
-    this.minLevelToIndent = 0,
-    this.expansionIndicator,
+    this.expansionIndicatorBuilder,
     this.onItemTap,
-    double? indentPadding,
-  }) : this.indentPadding = indentPadding ?? DEFAULT_INDENT_PADDING;
+    required this.showRootNode,
+    required this.indentation,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final itemContainer = _ExpandableNodeContainer(
+    final itemContainer = ExpandableNodeContainer(
       animation: animation,
-      item: node,
-      child: builder(context, node.level, node),
-      indentPadding: indentPadding *
-          (node.level - minLevelToIndent).clamp(0, double.maxFinite),
-      isExpanded: node.isExpanded,
-      expansionIndicator:
-          node.childrenAsList.isEmpty ? null : expansionIndicator,
+      node: node,
+      child: builder(context, node),
+      indentation: indentation,
+      minLevelToIndent: showRootNode ? 0 : 1,
+      expansionIndicator: node.childrenAsList.isEmpty
+          ? null
+          : expansionIndicatorBuilder?.call(context, node),
       onTap: remove
           ? null
           : (dynamic item) {
-              animatedListController.toggleExpansion(item);
+              onToggleExpansion(item);
               if (onItemTap != null) onItemTap!(item);
             },
     );
@@ -120,23 +118,23 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   }
 }
 
-class _ExpandableNodeContainer<T> extends StatelessWidget {
+class ExpandableNodeContainer<T> extends StatelessWidget {
   final Animation<double> animation;
   final ValueSetter<ITreeNode<T>>? onTap;
-  final ITreeNode<T> item;
+  final ITreeNode<T> node;
   final ExpansionIndicator? expansionIndicator;
-  final double indentPadding;
+  final Indentation indentation;
   final Widget child;
-  final bool isExpanded;
+  final int minLevelToIndent;
 
-  const _ExpandableNodeContainer({
+  const ExpandableNodeContainer({
     super.key,
     required this.animation,
     required this.onTap,
     required this.child,
-    required this.item,
-    required this.indentPadding,
-    required this.isExpanded,
+    required this.node,
+    required this.indentation,
+    required this.minLevelToIndent,
     this.expansionIndicator,
   });
 
@@ -147,24 +145,17 @@ class _ExpandableNodeContainer<T> extends StatelessWidget {
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: onTap == null ? null : () => onTap!(item),
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: indentPadding),
-              child: child,
-            ),
-            if (expansionIndicator != null)
-              Padding(
-                padding: expansionIndicator!.padding,
-                child: Align(
-                  alignment: expansionIndicator!.alignment,
-                  child: isExpanded
-                      ? expansionIndicator!.collapseIcon
-                      : expansionIndicator!.expandIcon,
+        onTap: onTap == null ? null : () => onTap!(node),
+        child: Indent(
+          indentation: indentation,
+          node: node,
+          minLevelToIndent: minLevelToIndent,
+          child: expansionIndicator == null
+              ? child
+              : PositionedExpansionIndicator(
+                  expansionIndicator: expansionIndicator!,
+                  child: child,
                 ),
-              ),
-          ],
         ),
       ),
     );

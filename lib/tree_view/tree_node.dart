@@ -3,24 +3,39 @@ import 'package:animated_tree_view/listenable_node/base/i_listenable_node.dart';
 import 'package:flutter/foundation.dart';
 
 /// Base class that allows a data of type [T] to be wrapped in a [ListenableNode]
-abstract class ITreeNode<T> extends IListenableNode
-    implements ValueListenable<INode> {
-  /// Constructor for [ITreeNode] that allows a data of type [T] to be wrapped in a [ListenableNode]
-  ITreeNode(this.listenableData);
+mixin ITreeNode<T> on IListenableNode implements ValueListenable<INode> {
+  /// ValueNotifier for node expansion/collapse
+  late final ValueNotifier<bool> expansionNotifier = ValueNotifier(false);
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
-  final ValueNotifier<T?> listenableData;
+  ValueNotifier<T?> get listenableData;
 
   /// Shows whether the node is expanded or not
-  late bool isExpanded;
+  bool get isExpanded => expansionNotifier.value;
 
-  /// The data value [T] of wrapped in the [ITreeNode]
+  /// The data value of [T] wrapped in the [ITreeNode]
   T? get data => listenableData.value;
 
   /// The setter for data value [T] of wrapped in the Node.
   /// It will notify [listenableData] whenever the value is set.
   set data(T? value) {
     listenableData.value = value;
+  }
+
+  bool isLastChild = false;
+
+  bool areChildIndicesCached = false;
+
+  void cacheChildIndices() {
+    if (childrenAsList.isEmpty || areChildIndicesCached) return;
+    (childrenAsList[length - 1] as ITreeNode).isLastChild = true;
+    areChildIndicesCached = true;
+  }
+
+  void resetIndentationCache() {
+    if (childrenAsList.isEmpty) return;
+    (childrenAsList[length - 1] as ITreeNode).isLastChild = false;
+    areChildIndicesCached = false;
   }
 }
 
@@ -33,32 +48,20 @@ abstract class ITreeNode<T> extends IListenableNode
 ///   ...
 ///   }
 /// ```
-class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
+class TreeNode<T> extends ListenableNode with ITreeNode<T> {
   /// A [TreeNode] constructor that can be used with the [TreeView].
   /// Any data of type [T] can be wrapped with [TreeNode]
-  TreeNode({T? data, this.isExpanded = false, super.key, super.parent})
+  TreeNode({T? data, super.key, super.parent})
       : this.listenableData = ValueNotifier(data);
 
   /// Factory constructor to be used only for root [TreeNode]
-  factory TreeNode.root({T? data}) => TreeNode(key: INode.ROOT_KEY, data: data);
+  factory TreeNode.root({T? data}) => TreeNode(key: INode.ROOT_KEY, data: data)
+    ..isLastChild = true
+    ..cacheChildIndices();
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
+  @override
   final ValueNotifier<T?> listenableData;
-
-  /// Shows whether the node is expanded or not
-  @override
-  bool isExpanded;
-
-  /// The data value [T] of wrapped in the [TreeNode]
-  @override
-  T? get data => listenableData.value;
-
-  /// The setter for data value [T] of wrapped in the [TreeNode].
-  /// It will notify [listenableData] whenever the value is set.
-  @override
-  set data(T? value) {
-    listenableData.value = value;
-  }
 }
 
 /// A [IndexedTreeNode] that can be used with the [IndexedTreeView].
@@ -70,31 +73,19 @@ class TreeNode<T> extends ListenableNode implements ITreeNode<T> {
 ///   ...
 ///   }
 /// ```
-class IndexedTreeNode<T> extends IndexedListenableNode implements ITreeNode<T> {
+class IndexedTreeNode<T> extends IndexedListenableNode with ITreeNode<T> {
   /// A [IndexedTreeNode] constructor that can be used with the [IndexedTreeView].
   /// Any data of type [T] can be wrapped with [IndexedTreeView]
-  IndexedTreeNode({T? data, this.isExpanded = false, super.key, super.parent})
+  IndexedTreeNode({T? data, super.key, super.parent})
       : this.listenableData = ValueNotifier(data);
 
   /// Factory constructor to be used only for root [IndexedTreeNode]
   factory IndexedTreeNode.root({T? data}) =>
-      IndexedTreeNode(key: INode.ROOT_KEY, data: data);
+      IndexedTreeNode(key: INode.ROOT_KEY, data: data)
+        ..isLastChild = true
+        ..cacheChildIndices();
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
+  @override
   final ValueNotifier<T?> listenableData;
-
-  /// Shows whether the node is expanded or not
-  @override
-  bool isExpanded;
-
-  /// The data value [T] of wrapped in the [IndexedTreeNode]
-  @override
-  T? get data => listenableData.value;
-
-  /// The setter for data value [T] of wrapped in the [TreeNode].
-  /// It will notify [listenableData] whenever the value is set.
-  @override
-  set data(T? value) {
-    listenableData.value = value;
-  }
 }

@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TreeView Modification Demo',
+      title: 'TreeView Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'TreeView Modification Demo'),
+      home: MyHomePage(title: 'TreeView Demo'),
     );
   }
 }
@@ -42,17 +42,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TreeView.simple(
         tree: TreeNode.root(),
-        expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
+        expansionBehavior: ExpansionBehavior.scrollToLastChild,
         shrinkWrap: true,
-        expansionIndicator: ExpansionIndicator.DownUpChevron,
-        builder: (context, level, item) => item.isRoot
-            ? buildRootItem(level, item)
-            : buildListItem(level, item),
+        showRootNode: true,
+        builder: (context, node) =>
+            node.isRoot ? buildRootItem(node) : buildListItem(node),
       ),
     );
   }
 
-  Widget buildRootItem(int level, TreeNode item) {
+  Widget buildRootItem(TreeNode node) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -61,16 +60,16 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ListTile(
-              title: Text("Item ${item.level}-${item.key}"),
-              subtitle: Text('Level $level'),
+              title: Text("Item ${node.level}-${node.key}"),
+              subtitle: Text('Level ${node.level}'),
             ),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                buildAddItemChildButton(item),
-                if (item.children.isNotEmpty) buildClearAllItemButton(item)
+                buildAddItemChildButton(node),
+                if (node.children.isNotEmpty) buildClearAllItemButton(node)
               ],
             ),
           ],
@@ -79,20 +78,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildListItem(int level, TreeNode item) {
+  Widget buildListItem(TreeNode node) {
     return Card(
-      color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+      color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
       child: ListTile(
-        title: Text("Item ${item.level}-${item.key}"),
-        subtitle: Text('Level $level'),
+        title: Text("Item ${node.level}-${node.key}"),
+        subtitle: Text('Level ${node.level}'),
         dense: true,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            buildRemoveItemButton(item),
-            buildAddItemButton(item),
+            buildRemoveItemButton(node),
+            buildAddItemButton(node),
           ],
         ),
       ),

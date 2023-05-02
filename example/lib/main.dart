@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../utils/utils.dart';
 
+const showSnackBar = false;
+
 void main() {
   runApp(MyApp());
 }
@@ -33,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<TreeViewState> _treeKey = GlobalKey<TreeViewState>();
+  late final controller = _treeKey.currentState?.controller;
 
   @override
   Widget build(BuildContext context) {
@@ -40,23 +43,43 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (sampleTree.isExpanded) {
+            controller?.collapseNode(sampleTree);
+          } else {
+            controller?.expandAllChildren(sampleTree);
+          }
+          setState(() {});
+        },
+        label:
+            sampleTree.isExpanded ? Text("Collapse all") : Text("Expand all"),
+      ),
       body: TreeView.simple(
         key: _treeKey,
         tree: sampleTree,
-        expansionIndicator: ExpansionIndicator.RightUpChevron,
+        expansionIndicatorBuilder: (context, node) =>
+            ChevronIndicator.rightDown(
+          tree: node,
+          color: Colors.blue[700],
+          padding: const EdgeInsets.all(8),
+        ),
+        indentation: Indentation(style: IndentStyle.squareJoint),
         onItemTap: (item) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Item tapped: ${item.key}"),
-              duration: const Duration(milliseconds: 750),
-            ),
-          );
+          print("Item tapped: ${item.key}");
+          if (showSnackBar)
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Item tapped: ${item.key}"),
+                duration: const Duration(milliseconds: 750),
+              ),
+            );
         },
-        builder: (context, level, item) => Card(
-          color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+        builder: (context, node) => Card(
+          color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
           child: ListTile(
-            title: Text("Item ${item.level}-${item.key}"),
-            subtitle: Text('Level $level'),
+            title: Text("Item ${node.level}-${node.key}"),
+            subtitle: Text('Level ${node.level}'),
           ),
         ),
       ),

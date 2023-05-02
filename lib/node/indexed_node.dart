@@ -1,6 +1,6 @@
 import 'package:animated_tree_view/helpers/exceptions.dart';
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
 import 'base/i_node.dart';
 import 'base/i_node_actions.dart';

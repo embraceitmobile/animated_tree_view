@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               showRootNode: _showRootNode,
-              builder: (context, level, item) => buildListItem(level, item),
+              builder: buildListItem,
             ),
             if (!_showRootNode)
               Padding(
@@ -71,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildListItem(int level, IndexedTreeNode item) {
-    final color = colorMapper[level.clamp(0, colorMapper.length - 1)]!;
+  Widget buildListItem(BuildContext context, IndexedTreeNode node) {
+    final color = colorMapper[node.level.clamp(0, colorMapper.length - 1)]!;
     return Card(
       color: color,
       child: Padding(
@@ -83,36 +83,36 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ListTile(
               title: Text(
-                "Item ${item.level}-${item.key}",
+                "Item ${node.level}-${node.key}",
                 style: TextStyle(color: color.byLuminance()),
               ),
               subtitle: Text(
-                'Level $level',
+                'Level ${node.level}',
                 style: TextStyle(color: color.byLuminance().withOpacity(0.5)),
               ),
-              trailing: !item.isRoot ? buildRemoveItemButton(item) : null,
+              trailing: !node.isRoot ? buildRemoveItemButton(node) : null,
             ),
-            if (!item.isRoot)
+            if (!node.isRoot)
               FittedBox(
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buildAddItemChildButton(item),
-                    buildInsertAboveButton(item),
-                    buildInsertBelowButton(item),
+                    buildAddItemChildButton(node),
+                    buildInsertAboveButton(node),
+                    buildInsertBelowButton(node),
                   ],
                 ),
               ),
-            if (item.isRoot)
+            if (node.isRoot)
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  buildAddItemChildButton(item),
-                  if (item.children.isNotEmpty) buildClearAllItemButton(item),
+                  buildAddItemChildButton(node),
+                  if (node.children.isNotEmpty) buildClearAllItemButton(node),
                 ],
               ),
           ],

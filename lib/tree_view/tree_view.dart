@@ -1,16 +1,31 @@
 import 'dart:async';
 
-import '../tree_diff/tree_diff_util.dart';
-import 'package:flutter/material.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:animated_tree_view/constants/constants.dart';
+import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
+import 'package:flutter/material.dart';
 
-import 'animated_list_controller.dart';
-import 'expandable_node.dart';
+import 'tree_view_state_helper.dart';
+import 'widgets/expandable_node.dart';
+
+ExpansionIndicator _defExpansionIndicatorBuilder<Data>(
+        BuildContext context, ITreeNode<Data> tree) =>
+    ChevronIndicator.rightDown(
+      tree: tree,
+      padding: EdgeInsets.all(8),
+    );
+
+ExpansionIndicator noExpansionIndicatorBuilder<Data>(
+        BuildContext context, ITreeNode<Data> tree) =>
+    NoExpansionIndicator(tree: tree);
 
 /// The builder function that allows to build any item of type [Tree].
-/// The builder function also provides the [level] of the node.
-typedef LeveledItemWidgetBuilder<Tree> = Widget Function(
-    BuildContext context, int level, Tree item);
+/// The [level] has been removed from the builder in version 2.0.0. To get the
+/// node level, use the [ITreeNode.level] instead.
+typedef TreeNodeWidgetBuilder<Tree> = Widget Function(
+  BuildContext context,
+  Tree item,
+);
 
 /// The [ExpansionBehavior] provides control over the behavior of the node
 /// when it is expanded.
@@ -39,23 +54,44 @@ enum ExpansionBehavior {
 ///The [TreeViewController] also exposes basic scrolling methods that can be used
 ///for scrolling to an item or a list index.
 class TreeViewController<Data, Tree extends ITreeNode<Data>> {
-  final AnimatedListController<Data> _animatedListController;
+  final TreeViewStateHelper<Data> _animatedListController;
 
   const TreeViewController(this._animatedListController);
 
   /// Method for programmatically scrolling to an [index] in the flat list of the [TreeView].
   Future scrollToIndex(int index) async =>
-      _animatedListController.scrollToIndex(index);
+      _animatedListController.expansionBehaviourController.scrollToIndex(index);
 
   /// Method for programmatically scrolling to a [node] in the [TreeView].
   Future scrollToItem(Tree node) async =>
-      _animatedListController.scrollToItem(node);
+      _animatedListController.expansionBehaviourController.scrollToItem(node);
 
   /// Method for programmatically toggling the expansion state of a [TreeNode].
   /// If the [TreeNode] is in expanded state, then it will be collapsed.
   /// Else if the [TreeNode] is in collapsed state, then it will be expanded.
   void toggleExpansion(Tree node) =>
-      _animatedListController.toggleExpansion(node);
+      _animatedListController.expansionBehaviourController
+          .toggleExpansion(node);
+
+  /// Method for programmatically expanding a [TreeNode].
+  void expandNode(Tree node) =>
+      _animatedListController.expansionBehaviourController.expandNode(node);
+
+  /// Method for programmatically collapsing a [TreeNode].
+  void collapseNode(Tree node) =>
+      _animatedListController.expansionBehaviourController.collapseNode(node);
+
+  /// Utility method for programmatically expanding all the child nodes. By default
+  /// only the immediate children of the node will be expanded.
+  /// Set [recursive] to true expanding all the child nodes until the leaf is
+  /// reached.
+  void expandAllChildren(Tree node, {bool recursive = false}) {
+    expandNode(node);
+    for (final child in node.childrenAsList) {
+      expandNode(child as Tree);
+      if (child.childrenAsList.isNotEmpty) expandAllChildren(child);
+    }
+  }
 
   /// Returns the [INode.ROOT_KEY] root of the [tree]
   Tree get tree => _animatedListController.tree as Tree;
@@ -67,7 +103,7 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
 abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
-  final LeveledItemWidgetBuilder<Tree> builder;
+  final TreeNodeWidgetBuilder<Tree> builder;
 
   /// The rootNode of the [tree]. If the [tree] is updated using setState or any
   /// other state management tool, then a [TreeDiff] is performed to get all the
@@ -79,20 +115,36 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// scrolling behavior
   final AutoScrollController? scrollController;
 
-  /// [expansionIndicator] can be customized to provide any expansion widget
-  /// and collapse widget. The pre-built available [expansionIndicator]s are
-  /// ** [ExpansionIndicator.RightUpChevron]
-  /// ** [ExpansionIndicator.PlusMinus]
-  /// ** [ExpansionIndicator.DownUpChevron]
+  /// Builder function for building the expansion indicator.
+  /// It takes a [Tree] and builds the expansion indicator based on whether the
+  /// tree node is expanded or not.
   ///
-  /// You can simply pass [null], if you do not want to show an [expansionIndicator]
-  final ExpansionIndicator? expansionIndicator;
+  /// The built-in [ExpansionIndicator]s are:
+  ///   * [ChevronIndicator.rightDown]
+  ///   * [ChevronIndicator.upDown]
+  ///   * [PlusMinusIndicator]
+  ///   * [NoExpansionIndicator]
+  ///
+  /// To create your own [ExpansionIndicator], simply extend the [ExpansionIndicator]
+  /// class.
+  ///
+  /// In order to not show any expansion indicator just pass [noExpansionIndicatorBuilder]
+  /// ** By default [_defExpansionIndicatorBuilder] is used to build expansion indicator
+  final ExpansionIndicatorBuilder expansionIndicatorBuilder;
 
-  /// This is the padding is applied to the start of an item. [indentPadding]
+  /// This is the indentation applied to the start of an item. [Indentation.width]
   /// will be multiplied by [INode.level] before being applied.
-  /// ** e.g. if the node level is 2 and [indentPadding] is 8, then the start
+  /// ** e.g. if the node level is 2 and [Indentation.width] is 8, then the start
   /// padding applied to an item will be 2*8 = 16
-  final double? indentPadding;
+  ///
+  /// ** By default [IndentStyle.none] is used and indentation lines are not drawn.
+  /// Only the [indentation.width] will be used to add padding to the start of
+  /// the content.
+  ///
+  /// * To draw indents change the style to [IndentStyle.squareJoint] or [IndentStyle.roundJoint]
+  /// * To draw only scoping lines, change the style to [IndentStyle.scopingLine]
+  /// The [IndentStyle], width, color and thickness are fully customizable.
+  final Indentation indentation;
 
   /// An optional callback that can be used to handle any action when an item is
   /// tapped or clicked
@@ -122,24 +174,23 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.expansionBehavior = ExpansionBehavior.none,
     required this.builder,
     required this.tree,
-    this.indentPadding,
+    Indentation? indentation,
     this.scrollController,
-    this.expansionIndicator,
+    this.expansionIndicatorBuilder = _defExpansionIndicatorBuilder,
     this.onItemTap,
     this.padding,
     this.showRootNode = false,
-  });
+  }) : this.indentation =
+            indentation ?? const Indentation(style: IndentStyle.none);
 }
 
 mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
-    S extends _TreeView<Data, Tree>> on State<S> {
-  ListState get _listState;
-
+    S extends _TreeView<Data, Tree>> on State<S> implements ListState<Tree> {
   late final TreeViewController<Data, Tree> controller;
-  late final AnimatedListController<Data> _animatedListController;
+  late final TreeViewStateHelper<Data> _treeViewEventHandler;
   late final AutoScrollController _scrollController;
 
-  ITreeNode<Data> get _tree => _animatedListController.tree;
+  ITreeNode<Data> get _tree => _treeViewEventHandler.tree;
 
   @override
   void initState() {
@@ -148,35 +199,70 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     _scrollController =
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
-    _animatedListController = AnimatedListController<Data>(
-      listState: _listState,
-      tree: widget.tree,
+    final animatedListController = AnimatedListStateController<Data>(
+      listState: this,
       showRootNode: widget.showRootNode,
-      scrollController: _scrollController,
-      expansionBehavior: widget.expansionBehavior,
-      removedItemBuilder: (item, context, animation) =>
-          ExpandableNodeItem.removedNode<Data, Tree>(
-        animatedListController: _animatedListController,
-        item: item,
-        builder: (context, level, node) => widget.builder(context, level, node),
+      tree: widget.tree,
+    );
+
+    _treeViewEventHandler = TreeViewStateHelper<Data>(
+      animatedListStateController: animatedListController,
+      tree: widget.tree,
+      expansionBehaviourController: TreeViewExpansionBehaviourController<Data>(
         scrollController: _scrollController,
-        animation: animation,
-        indentPadding: widget.indentPadding,
-        expansionIndicator: widget.expansionIndicator,
-        onItemTap: widget.onItemTap,
-        showRootNode: widget.showRootNode,
+        expansionBehavior: widget.expansionBehavior,
+        animatedListStateController: animatedListController,
       ),
     );
 
-    controller = TreeViewController(_animatedListController);
+    controller = TreeViewController(_treeViewEventHandler);
   }
+
+  Widget _insertedItemBuilder(
+          BuildContext context, int index, Animation<double> animation) =>
+      ExpandableNodeItem.insertedNode<Data, Tree>(
+        node: _treeViewEventHandler.animatedListStateController.list[index]
+            as Tree,
+        index: index,
+        builder: widget.builder,
+        scrollController: _scrollController,
+        animation: animation,
+        indentation: widget.indentation,
+        expansionIndicator: widget.expansionIndicatorBuilder,
+        onToggleExpansion: (item) => _treeViewEventHandler
+            .expansionBehaviourController
+            .toggleExpansion(item),
+        onItemTap: widget.onItemTap,
+        showRootNode: widget.showRootNode,
+      );
+
+  Widget _removedItemBuilder(
+    BuildContext context,
+    Tree node,
+    Animation<double> animation,
+  ) =>
+      ExpandableNodeItem.removedNode<Data, Tree>(
+        node: node,
+        builder: (context, node) => widget.builder(context, node),
+        scrollController: _scrollController,
+        animation: animation,
+        indentation: widget.indentation,
+        expansionIndicator: widget.expansionIndicatorBuilder,
+        onToggleExpansion: (item) => _treeViewEventHandler
+            .expansionBehaviourController
+            .toggleExpansion(item),
+        onItemTap: widget.onItemTap,
+        showRootNode: widget.showRootNode,
+        isLastChild: true,
+      );
 
   @override
   void didUpdateWidget(S oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
-      _animatedListController.expansionBehavior = widget.expansionBehavior;
+      _treeViewEventHandler.expansionBehaviourController.expansionBehavior =
+          widget.expansionBehavior;
 
     didUpdateTree();
   }
@@ -262,12 +348,12 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
 
   const TreeView._({
     super.key,
-    super.expansionBehavior = ExpansionBehavior.none,
+    super.expansionBehavior,
     required super.builder,
     required super.tree,
-    super.indentPadding,
+    super.indentation,
     super.scrollController,
-    super.expansionIndicator,
+    super.expansionIndicatorBuilder,
     super.onItemTap,
     this.primary,
     this.physics,
@@ -297,12 +383,12 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   to be returned in the [builder]
   static TreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<TreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    double? indentPadding,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
@@ -315,8 +401,9 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
-        expansionIndicator: expansionIndicator,
+        indentation: indentation,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -340,7 +427,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   /// The complexity for accessing child nodes in [TreeView.simple] is simply O(node_level).
   /// e.g. for path './.level1/level2', complexity is simply O(2).
   ///
-  /// ** See code in example/lib/samples/treeview/treeview_indexed_modification_sample.dart **
+  /// ** See code in example/lib/samples/treeview/treeview_custom_object_sample.dart **
   ///
   /// See also:
   ///   * For a [TreeView] that allows for insertion and removal of
@@ -349,12 +436,12 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   extending the [TreeNode], then you can also use the simpler [TreeView.simple].
   static TreeView<Data, Tree> simpleTyped<Data, Tree extends TreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
-    ExpansionBehavior expansionBehavior = ExpansionBehavior.scrollToLastChild,
-    double? indentPadding,
+    ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
@@ -367,8 +454,9 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
-        expansionIndicator: expansionIndicator,
+        indentation: indentation,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -397,12 +485,12 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   ///   for typed objects to be returned in the [builder]
   static TreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
@@ -415,8 +503,9 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
-        expansionIndicator: expansionIndicator,
+        indentation: indentation,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         primary: primary,
@@ -448,12 +537,12 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   static TreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     bool? primary,
     ScrollPhysics? physics,
@@ -466,8 +555,9 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
-            expansionIndicator: expansionIndicator,
+            indentation: indentation,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             primary: primary,
@@ -481,80 +571,45 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
   State<StatefulWidget> createState() => TreeViewState<Data, Tree>();
 }
 
-class _AnimatedListState implements ListState {
+class TreeViewState<Data, Tree extends ITreeNode<Data>>
+    extends State<TreeView<Data, Tree>>
+    with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
   static const _errorMsg =
       "Animated list state not found from GlobalKey<AnimatedListState>";
-  final GlobalKey<AnimatedListState> _listKey;
 
-  _AnimatedListState(this._listKey)
-      : assert(_listKey.currentState == null, (_errorMsg));
+  late final GlobalKey<AnimatedListState> _listKey =
+      GlobalKey<AnimatedListState>();
 
   @override
-  void insertItem(int index,
-      {Duration duration = const Duration(milliseconds: 300)}) {
+  void insertItem(int index, {Duration duration = animationDuration}) {
     if (_listKey.currentState == null) throw Exception(_errorMsg);
     _listKey.currentState!.insertItem(index, duration: duration);
   }
 
   @override
-  void removeItem(int index, AnimatedRemovedItemBuilder builder,
-      {Duration duration = const Duration(milliseconds: 300)}) {
+  void removeItem(int index, Tree item,
+      {Duration duration = animationDuration}) {
     if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.removeItem(index, builder, duration: duration);
+    _listKey.currentState!.removeItem(
+      index,
+      (context, animation) => _removedItemBuilder(context, item, animation),
+      duration: duration,
+    );
   }
-}
-
-class TreeViewState<Data, Tree extends ITreeNode<Data>>
-    extends State<TreeView<Data, Tree>>
-    with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
-  final _AnimatedListState _listState =
-      _AnimatedListState(GlobalKey<AnimatedListState>());
 
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
-      key: _listState._listKey,
-      initialItemCount: _animatedListController.list.length,
+      key: _listKey,
+      initialItemCount:
+          _treeViewEventHandler.animatedListStateController.list.length,
       controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
-      itemBuilder: (context, index, animation) =>
-          ExpandableNodeItem.insertedNode<Data, Tree>(
-              animatedListController: _animatedListController,
-              index: index,
-              builder: widget.builder,
-              scrollController: _scrollController,
-              animation: animation,
-              indentPadding: widget.indentPadding,
-              expansionIndicator: widget.expansionIndicator,
-              onItemTap: widget.onItemTap,
-              showRootNode: widget.showRootNode),
+      itemBuilder: _insertedItemBuilder,
     );
-  }
-}
-
-class _SliverAnimatedListState implements ListState {
-  static const _errorMsg =
-      "Sliver Animated list state not found from GlobalKey<SliverAnimatedListState>";
-  final GlobalKey<SliverAnimatedListState> _listKey;
-
-  _SliverAnimatedListState(this._listKey)
-      : assert(_listKey.currentState == null, (_errorMsg));
-
-  @override
-  void insertItem(int index,
-      {Duration duration = const Duration(milliseconds: 300)}) {
-    if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.insertItem(index, duration: duration);
-  }
-
-  @override
-  void removeItem(int index, AnimatedRemovedItemBuilder builder,
-      {Duration duration = const Duration(milliseconds: 300)}) {
-    if (_listKey.currentState == null) throw Exception(_errorMsg);
-    _listKey.currentState!.removeItem(index, builder, duration: duration);
   }
 }
 
@@ -587,8 +642,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     required super.builder,
     required super.tree,
     super.expansionBehavior,
-    super.expansionIndicator,
-    super.indentPadding,
+    super.expansionIndicatorBuilder,
+    super.indentation,
     super.onItemTap,
     super.padding,
     super.scrollController,
@@ -629,12 +684,12 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///   to be returned in the [builder]
   static SliverTreeView<Data, TreeNode<Data>> simple<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<TreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<TreeNode<Data>> builder,
     required final TreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
@@ -644,8 +699,9 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
-        expansionIndicator: expansionIndicator,
+        indentation: indentation,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         padding: padding,
@@ -681,12 +737,12 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   static SliverTreeView<Data, Tree>
       simpleTyped<Data, Tree extends TreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
@@ -696,8 +752,9 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
-            expansionIndicator: expansionIndicator,
+            indentation: indentation,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             padding: padding,
@@ -728,12 +785,12 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///   for typed objects to be returned in the [builder]
   static SliverTreeView<Data, IndexedTreeNode<Data>> indexed<Data>({
     Key? key,
-    required LeveledItemWidgetBuilder<IndexedTreeNode<Data>> builder,
+    required TreeNodeWidgetBuilder<IndexedTreeNode<Data>> builder,
     required final IndexedTreeNode<Data> tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
@@ -743,8 +800,9 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         builder: builder,
         tree: tree,
         expansionBehavior: expansionBehavior,
-        indentPadding: indentPadding,
-        expansionIndicator: expansionIndicator,
+        indentation: indentation,
+        expansionIndicatorBuilder:
+            expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
         scrollController: scrollController,
         onItemTap: onItemTap,
         padding: padding,
@@ -780,16 +838,15 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
   ///     efficient [SliverTreeView.simpleTyped] instead.
   ///   * If you are wrapping the data directly in the [IndexedTreeNode] instead of
   ///     extending the [IndexedTreeNode], then you can also use the simpler [TreeView.indexed].
-
   static SliverTreeView<Data, Tree>
       indexTyped<Data, Tree extends IndexedTreeNode<Data>>({
     Key? key,
-    required LeveledItemWidgetBuilder<Tree> builder,
+    required TreeNodeWidgetBuilder<Tree> builder,
     required final Tree tree,
     ExpansionBehavior expansionBehavior = ExpansionBehavior.none,
-    double? indentPadding,
+    Indentation? indentation,
     AutoScrollController? scrollController,
-    ExpansionIndicator? expansionIndicator,
+    ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = false,
@@ -799,8 +856,9 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             builder: builder,
             tree: tree,
             expansionBehavior: expansionBehavior,
-            indentPadding: indentPadding,
-            expansionIndicator: expansionIndicator,
+            indentation: indentation,
+            expansionIndicatorBuilder:
+                expansionIndicatorBuilder ?? _defExpansionIndicatorBuilder,
             scrollController: scrollController,
             onItemTap: onItemTap,
             padding: padding,
@@ -811,25 +869,36 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
 class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<SliverTreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, SliverTreeView<Data, Tree>> {
-  final _SliverAnimatedListState _listState =
-      _SliverAnimatedListState(GlobalKey<SliverAnimatedListState>());
+  static const _errorMsg =
+      "Sliver Animated list state not found from GlobalKey<SliverAnimatedListState>";
+
+  late final GlobalKey<SliverAnimatedListState> _listKey =
+      GlobalKey<SliverAnimatedListState>();
+
+  @override
+  void insertItem(int index, {Duration duration = animationDuration}) {
+    if (_listKey.currentState == null) throw Exception(_errorMsg);
+    _listKey.currentState!.insertItem(index, duration: duration);
+  }
+
+  @override
+  void removeItem(int index, Tree item,
+      {Duration duration = animationDuration}) {
+    if (_listKey.currentState == null) throw Exception(_errorMsg);
+    _listKey.currentState!.removeItem(
+      index,
+      (context, animation) => _removedItemBuilder(context, item, animation),
+      duration: duration,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverAnimatedList(
-      key: _listState._listKey,
-      initialItemCount: _animatedListController.list.length,
-      itemBuilder: (context, index, animation) =>
-          ExpandableNodeItem.insertedNode<Data, Tree>(
-              animatedListController: _animatedListController,
-              index: index,
-              builder: widget.builder,
-              scrollController: _scrollController,
-              animation: animation,
-              indentPadding: widget.indentPadding,
-              expansionIndicator: widget.expansionIndicator,
-              onItemTap: widget.onItemTap,
-              showRootNode: widget.showRootNode),
+      key: _listKey,
+      initialItemCount:
+          _treeViewEventHandler.animatedListStateController.list.length,
+      itemBuilder: _insertedItemBuilder,
     );
   }
 }

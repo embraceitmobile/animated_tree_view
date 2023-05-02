@@ -63,12 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
             tree: simpleTree,
             scrollController: scrollController,
             expansionBehavior: ExpansionBehavior.none,
-            expansionIndicator: ExpansionIndicator.RightUpChevron,
-            builder: (context, level, item) => Card(
-              color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+            builder: (context, node) => Card(
+              color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(
-                title: Text("Simple Item ${item.level}-${item.key}"),
-                subtitle: Text('Level $level'),
+                title: Text("Simple Item ${node.level}-${node.key}"),
+                subtitle: Text('Level ${node.level}'),
               ),
             ),
           ),
@@ -88,12 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
             tree: indexedTree,
             scrollController: scrollController,
             expansionBehavior: ExpansionBehavior.scrollToLastChild,
-            expansionIndicator: ExpansionIndicator.RightUpChevron,
-            builder: (context, level, item) => Card(
-              color: colorMapper[level.clamp(0, colorMapper.length - 1)]!,
+            builder: (context, node) => Card(
+              color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
               child: ListTile(
-                title: Text("Indexed Item ${item.level}-${item.key}"),
-                subtitle: Text('Level $level'),
+                title: Text("Indexed Item ${node.level}-${node.key}"),
+                subtitle: Text('Level ${node.level}'),
               ),
             ),
           ),
