@@ -2,7 +2,7 @@
 
 A flutter package that provides a heirarchial Tree like data structure that can be visualized as a linear list view.
 
-The widget is based on the Flutter’s familiar APIs of [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) and [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html) and can even be used as a replacement for these widgets. Each node can be completely customized using the `TreeNodeWidgetBuilder` that is used to build the nodes.
+The widget is based on the Flutter’s familiar APIs of [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) and [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html) and can even be used as a replacement for these widgets. Each node can be completely customized using the `TreeNodeWidgetBuilder` that is used to build the nodes. All the mobile, web and desktop platforms are fully supported.
 
 | ![Animated Tree View Demo](https://media.giphy.com/media/ZeTlxJQKxOEZnuSgK7/giphy.gif) | ![Animated Tree View Demo](https://media.giphy.com/media/7i8rXNlzkjhWvaHOnd/giphy.gif)                 |
 
@@ -13,41 +13,33 @@ There are four different variants each for the `TreeView` and the `SliverTreeVie
 The simple `TreeView` uses the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) to build the tree view. It can be used for simple tree implementations where a combination with other scrollables is not required.
 
 ## SliverTreeView
-For implementing fancy lists and animations using [slivers](https://docs.flutter.dev/development/ui/advanced/slivers), `SliverTreeView` should be used. It is based on the [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html). It provides the same APIs as the normal `TreeView` and its usage is also the same. The `SliverTreeView` can be combined with other [slivers](https://docs.flutter.dev/development/ui/advanced/slivers) in a [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html).  Slivers provide significant performance improvements over the regular lists. 
-
-To get to know more about slivers [see here](https://docs.flutter.dev/development/ui/advanced/slivers).
+For implementing fancy lists and animations using [slivers](https://docs.flutter.dev/development/ui/advanced/slivers), `SliverTreeView` should be used. It is based on the [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html). It provides the same APIs as the normal `TreeView` and its usage is also the same. The `SliverTreeView` can be combined with other [slivers](https://docs.flutter.dev/development/ui/advanced/slivers) in a [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html).  Slivers provide significant performance improvements over the regular lists. Know more about slivers [here](https://docs.flutter.dev/development/ui/advanced/slivers).
 
 ### .simple <a name=".simple"></a>
-The `simple` variant uses a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) data-structure to handle the Nodes and their children, using a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) makes the tree view more performant with a complexity on traversing the Nodes being O(n), where n is the level of the node. However the simple `TreeView` and `SliverTreeView` lack the indexed based operations like `insertAt` and `removeAt` operations.
+The `simple` variant uses a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) data-structure to handle the Nodes and their children Using a [Map](https://api.dart.dev/stable/2.13.3/dart-core/Map-class.html) makes the tree view more performant with a complexity on traversing the Nodes being O(n), where n is the level of the node. However the `simple` and `simpleTyped` variants of `TreeView` and `SliverTreeView` lack the indexed based operations like `insertAt` and `removeAt` etc.
 
 ### .simpleTyped <a name=".simpleTyped"></a>
-The `simpleTyped` works the same as the `simple` variant however it is optimized for custom data types. The `simpleTyped` variant is recommended when using a custom data type and the indexed based operations are not needed. The linter is able to correctly infer the custom types when using the typed variants.
+The `simpleTyped` variant works the same as the `simple` variant however it is optimized for custom data types. The `simpleTyped` variant is recommended when using a custom data type and the indexed based operations are not needed. The analyzer is able to correctly infer the custom types when using the typed variants.
 
 ### .indexed <a name=".indexed"></a>
 The `indexed` variant uses a [List](https://api.dart.dev/stable/2.10.5/dart-core/List-class.html) data-structure to handle the Nodes and their children. This allows it to perform all the list based operations that require indices, like `insertAt` or `removeAt`. The drawback of using an `TreeView.indexed` or a `SliverTreeView.indexed` instead of `*.simple` variant is that the Node traversal operations on the `*.indexed` variants are more expensive with a complexity of O(n^m), where n is the number of children in a node, and m is the node level.
 
 ### .indexTyped <a name=".indexTyped"></a>
-The `indexTyped` works the same as the `indexed` variant however it is optimized for custom data types. The `indexTyped` variant is recommended when using a custom data type and the index based operations are also required. The linter is able to correctly infer the custom types when using the typed variants.
+The `indexTyped` works the same as the `indexed` variant however it is optimized for custom data types. The `indexTyped` variant is recommended when using a custom data type and the index based operations are also required. The analyzer is able to correctly infer the custom types when using the typed variants.
 
 ## Features
 * Infinite levels and child nodes.
 * Animations for Node expansion and collapse.
-* Customizable indentation lines
-* Provides plenty of utility methods for adding, inserting and removing child nodes.
+* Customizable indentation and scoping lines
+* Plenty of utility methods for adding, inserting, removing and collapsing/expanding nodes.
 * Easily traverse the tree laterally or vertically from the root to the leaf and back.
 * Tree Diff Util to compute the difference between two trees, and automatically apply the changes in the tree view.
-* Implementation of ValueListenable makes it easy to listen to changes in the data.
+* Listenable changes using ValueNotifier and event Streams.
 
 ## How to use
-### TreeView
-You can simply use the provided `TreeNode` or extend your data object from `TreeNode<T>` like this
+### TreeView.simple
+You can simply use the provided `TreeNode` or extend your data object from `TreeNode<T>`.
 
-To use your own custom data with [TreeView], wrap your model [T] in [TreeNode] like this:
-```dart
-   class YourCustomNode extends TreeNode<CustomClass> {
-   ...
-   }
-```
 *Note: If the `key` is omitted, then a unique key will be automatically assigned to the Node.*
 
 Finally, initialize the `TreeView` by providing it a builder.
@@ -66,14 +58,10 @@ TreeView.simple(
                 
 ```
 
+**_The `level` has been removed from the builder starting from version 2.0.0. To get the node level, use the `node.level` instead._**
+
 ### TreeView.indexed
 The usage of `TreeView.indexed` is exactly the same as a simple `TreeView`. You only need to replace `TreeNode` with `IndexedTreeNode` or extend your `YourCustomNode` from `IndexedTreeNode` like this
-
-```dart
-   class YourCustomNode extends IndexedTreeNode<CustomClass> {
-   ...
-   }
-```
 
 Finally initialize the widget like this:
 
@@ -92,6 +80,25 @@ TreeView.indexed(
 ```
 
 *Please see this [example](https://github.com/embraceitmobile/animated_tree_view/blob/main/example/lib/main.dart) for a more comprehsive code sample.*
+
+### TreeView.simpleTyped
+To use your custom data type `CustomClass` with TreeView, wrap your custom class inside the TreeNode like this `TreeNode<CustomClass>`
+
+```dart
+TreeView.simpleTyped<CustomClass, TreeNode<CustomClass>>(
+    tree: TreeNode<CustomClass>.root(),
+    builder: (context, node) {
+      // build your node item here
+      // return any widget that you need
+      return ListTile(
+          title: Text("Item ${node.level}-${node.key}"),
+          subtitle: Text('Level ${node.data?.foo}'),
+    );
+  }     
+)          
+```
+
+*Please see this [example](https://github.com/embraceitmobile/animated_tree_view/blob/main/example/lib/samples/treeview/treeview_custom_object_sample.dart) for a more comprehsive custom object code sample.*
 
 ## SliverTreeView
 The API and usage of `SliverTreeView` is the same as `TreeView`. You just need to wrap the `SliverTreeView`
@@ -115,14 +122,16 @@ CustomScrollView(
   );
 ```
 
+*Please see this [example](https://github.com/embraceitmobile/animated_tree_view/blob/main/example/lib/samples/sliver_treeview/sliver_treeview_sample.dart) for a more comprehsive sliver treeview sample.*
+
 ## Configuration and Behavior
 | Attributes                   | Description                                                                                                                                                                                                                                                                                                                              |
 |------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| builder                      | The builder function that is provided to the item builder. Called as needed, to build list item widgets. The built widget is passed to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) or [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html)'s itemBuilder. |
+| builder                      | The builder function that is provided to the item builder. It lazily builds the list items. The built widget is passed to the [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) or [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html)'s itemBuilder. |
 | tree                         | Tree that is used to populate the `TreeView`. If the `tree` is updated using any state management tools like setState or Bloc, then the [TreeDiffUtil](#treeDiffUtil) is used to get the diff between the two trees, and apply all the changes from the new tree onto the old tree.                                                      |
 | scrollController             | Provide a scrollController for more granular control over scrolling behavior.                                                                                                                                                                                                                                                            |
 | expansionIndicatorBuilder    | Builds an animated expansion indicator based on the node data. See [ExpansionIndicator](#expansionIndicator) for available expansion indicators.                                                                                                                                                                                         |
-| indentation                  | The indentation style that is used to draw the indents for each node. `Indentation.width` will be multiplied by Node-Level before being applied. See [Indentation](#indentation) for available indent styles and decoration.                                                                                                             |
+| indentation                  | The indentation style that is used to draw the indents for each node. `Indentation.width` will be multiplied by Node-Level before being applied as starting padding to the item widget. See [Indentation](#indentation) for available indent styles and decoration.                                                                                                             |
 | onItemTap                    | Callback that can be used to handle any action when an item is tapped or clicked.                                                                                                                                                                                                                                                        |
 | showRootNode                 | Flag to show the Root Node in the TreeView.                                                                                                                                                                                                                                                                                              |
 | expansionBehavior            | The `ExpansionBehavior` provides control over the behavior of the node when it is expanded. See [ExpansionBehavior](#expansionBehavior) for available behaviors.                                                                                                                                                                         |
@@ -132,7 +141,7 @@ CustomScrollView(
 | shrinkWrap _(TreeView only)_ | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.                                                                                                                                                                                                                        |
 
 ## ExpansionBehavior <a name="expansionBehavior"></a>
-The 'ExpansionBehavior' provides control over the behavior of the node when it is expanded.
+The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
 There are five available ExpansionBehaviors to choose from.
 
 **Note: For using an `ExpansionBehavior` with a `SliverTreeView`, the same instance of an [AutoScrollController](https://pub.dev/documentation/scroll_to_index/latest/scroll_to_index/AutoScrollController-class.html)
@@ -156,9 +165,12 @@ The expansion indicator animates to change it's state based on the whether the n
 `ExpansionIndicator` class can be extended to create a fully customizable expansion indicator.
 
 ## Indentation <a name="indentation"></a>
-The indentations are drawn to show the node level and the connections between different nodes. The lineWidth, color and offset of the indentation can be customized using the `IndentationDecoration`.
+The indentations are drawn to show the node level and the connections between different nodes. The lineWidth, color and offset of the indentation can be customized with the `Indentation`.
 
-By default no indentation is drawn, to show indents use the `Indentation.withLineDecoration` factory or pass in an `IndentationDecoration` to the `Indentation`.
+By default `IndentStyle.none` is used and indentation lines are not drawn. Only the `indentation.width` will be used to add padding to the start of the content.
+
+ To draw indents change the style to `IndentStyle.squareJoint` or `IndentStyle.roundJoint`.
+ To draw only scoping lines, change the style to `IndentStyle.scopingLine`.
 
 | `IndentStyle.squareJoint`                                       | `IndentStyle.roundJoint`                                       | `IndentStyle.scopingLines`                                       | `IndentStyle.none`                                           |
 |-----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------------------|
@@ -212,5 +224,6 @@ The `TreeViewController` provides utility methods that allow controlling the `Tr
  | `collapseNode`      | Utility method for collapsing a tree node.                                                                                                              |
 | `expandAllChildren` | Utility method for expanding all the children of a node. It can be also be used to recursively expanded all the child nodes until the leaf is reached   |
 
-## Future plans
-* Add support for 2D scrolling when the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1) becomes available.
+## Future Goals
+* [ ] Add RTL support
+* [ ] Add support for 2D scrolling when the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1) becomes available.

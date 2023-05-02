@@ -19,7 +19,8 @@ ExpansionIndicator noExpansionIndicatorBuilder<Data>(
     NoExpansionIndicator(tree: tree);
 
 /// The builder function that allows to build any item of type [Tree].
-/// The builder function also provides the [level] of the node.
+/// The [level] has been removed from the builder in version 2.0.0. To get the
+/// node level, use the [ITreeNode.level] instead.
 typedef TreeNodeWidgetBuilder<Tree> = Widget Function(
   BuildContext context,
   Tree item,

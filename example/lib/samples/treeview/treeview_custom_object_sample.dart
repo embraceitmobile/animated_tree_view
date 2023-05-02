@@ -40,18 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TreeView.simpleTyped<UserName, TreeNode<UserName>>(
-        tree: tree,
-        expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
-        shrinkWrap: true,
-        builder: (context, node) => Card(
-          color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
-          child: ListTile(
-            title: Text("Item ${node.level}-${node.key}"),
-            subtitle: Text('${node.data?.firstName} ${node.data?.lastName}'),
+        body: TreeView.simpleTyped<UserName, TreeNode<UserName>>(
+          tree: tree,
+          expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
+          shrinkWrap: true,
+          builder: (context, node) => Card(
+            color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
+            child: ListTile(
+              title: Text("Item ${node.level}-${node.key}"),
+              subtitle: Text('${node.data?.firstName} ${node.data?.lastName}'),
+            ),
           ),
         ),
-      ),
     );
   }
 }
