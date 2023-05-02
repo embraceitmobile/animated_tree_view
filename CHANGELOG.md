@@ -1,3 +1,18 @@
+## [2.0.0]
+* ### Added
+* Add support for indentation and scoping lines
+* Add animated expansion indicators
+* Add more expand/collapse utility methods to TreeViewController [#5](https://github.com/embraceitmobile/animated_tree_view/issues/5)
+* New samples
+* ### Changes
+* **Breaking:**
+  * [expansionIndicator] param replaced with [expansionIndicatorBuilder]
+  * [indentPadding] param moved to [indentation] as [width]
+  * [level] removed from [TreeNodeWidgetBuilder], it can still be accessed as [node.level]
+* ### Improvements
+* Simplified APIs
+* Improved documentation
+
 ## [1.1.1+1]
 * Reformat code with dart formatter
 
@@ -34,5 +49,4 @@
 * Update the public APIs
 
 ## [0.1.0]
-
 * Publish the packages to pub.dev
