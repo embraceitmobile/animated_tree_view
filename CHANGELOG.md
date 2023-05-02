@@ -1,3 +1,6 @@
+## [2.0.1]
+* Fix the indentation screenshot links in readme.md
+
 ## [2.0.0]
 * ### Added
 * Add support for indentation and scoping lines
