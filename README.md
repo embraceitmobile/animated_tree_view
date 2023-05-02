@@ -172,9 +172,9 @@ By default `IndentStyle.none` is used and indentation lines are not drawn. Only 
  To draw indents change the style to `IndentStyle.squareJoint` or `IndentStyle.roundJoint`.
  To draw only scoping lines, change the style to `IndentStyle.scopingLine`.
 
-| `IndentStyle.squareJoint`                                       | `IndentStyle.roundJoint`                                       | `IndentStyle.scopingLines`                                       | `IndentStyle.none`                                           |
-|-----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------------------|
-| ![Indent.squareJoint](./example/screenshots/indents_square.png) | ![Indent.squareJoint](./example/screenshots/indents_round.png) | ![Indent.squareJoint](./example/screenshots/indents_scoping.png) | ![Indent.squareJoint](./example/screenshots/indent_none.png) |
+| `IndentStyle.squareJoint`                              | `IndentStyle.roundJoint`                               | `IndentStyle.scopingLines`                             | `IndentStyle.none`                                     |
+|--------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
+| ![Indent.squareJoint](https://i.imgur.com/l0XKOSO.png) | ![Indent.squareJoint](https://i.imgur.com/Zo1MJoK.png) | ![Indent.squareJoint](https://i.imgur.com/xuIVQaX.png) | ![Indent.squareJoint](https://i.imgur.com/gq49Sp2.png) |
 
 ## Tree Diff Util <a name="treeDiffUtil"></a>
 A `TreeDiffUtil` is used to determine the difference between two trees if the `tree` is updated using any state management tool like setState or Bloc etc.
