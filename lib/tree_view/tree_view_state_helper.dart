@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:animated_tree_view/constants/constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:animated_tree_view/helpers/exceptions.dart';
+import 'package:animated_tree_view/listenable_node/base/i_listenable_node.dart';
 import 'package:animated_tree_view/node/base/i_node.dart';
 import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:animated_tree_view/tree_view/tree_view.dart';
-import 'package:animated_tree_view/listenable_node/base/i_listenable_node.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 abstract class ListState<Tree> {

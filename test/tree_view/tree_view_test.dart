@@ -152,7 +152,8 @@ void main() {
       expect(find.byKey(ValueKey(nodeToRemove.key)), findsNothing);
     });
 
-    testWidgets("IndexedTreeView is updated on updating the tree", (tester) async {
+    testWidgets("IndexedTreeView is updated on updating the tree",
+        (tester) async {
       await tester.pumpWidget(FakeStatefulIndexedTreeView());
 
       for (final tree in testIndexedTrees) {
@@ -172,6 +173,5 @@ void main() {
         // break;
       }
     });
-
   });
 }

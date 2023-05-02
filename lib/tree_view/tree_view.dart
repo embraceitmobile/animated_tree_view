@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/constants/constants.dart';
 import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_tree_view/animated_tree_view.dart';
+
 import 'tree_view_state_helper.dart';
 import 'widgets/expandable_node.dart';
 
