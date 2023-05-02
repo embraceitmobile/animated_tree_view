@@ -22,20 +22,16 @@ mixin ITreeNode<T> on IListenableNode implements ValueListenable<INode> {
     listenableData.value = value;
   }
 
-  @protected
   bool isLastChild = false;
 
-  @protected
   bool areChildIndicesCached = false;
 
-  @protected
   void cacheChildIndices() {
     if (childrenAsList.isEmpty || areChildIndicesCached) return;
     (childrenAsList[length - 1] as ITreeNode).isLastChild = true;
     areChildIndicesCached = true;
   }
 
-  @protected
   void resetIndentationCache() {
     if (childrenAsList.isEmpty) return;
     (childrenAsList[length - 1] as ITreeNode).isLastChild = false;
