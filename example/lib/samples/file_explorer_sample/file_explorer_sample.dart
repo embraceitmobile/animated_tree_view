@@ -53,19 +53,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.grey[700],
               );
 
-            return PlusMinusIndicator(
+            return ChevronIndicator.rightDown(
               tree: node,
               alignment: Alignment.centerLeft,
               color: Colors.grey[700],
             );
           },
-          indentation: Indentation(
-            decoration: IndentationDecoration(
-              style: IndentStyle.none,
-              color: Colors.green,
-              lineWidth: 4,
-            ),
-          ),
+          indentation: const Indentation(),
           builder: (context, node) => Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: ListTile(

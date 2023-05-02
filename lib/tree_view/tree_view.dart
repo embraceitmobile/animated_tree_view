@@ -135,11 +135,14 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// ** e.g. if the node level is 2 and [Indentation.width] is 8, then the start
   /// padding applied to an item will be 2*8 = 16
   ///
-  /// ** By default indentation lines are not drawn, use [Indentation.withLineDecoration]
-  /// factory to show the indentation lines. The indentation can be further
-  /// customized by passing the [IndentationDecoration] to [Indentation] as
-  /// decoration.
-  final Indentation? indentation;
+  /// ** By default [IndentStyle.none] is used and indentation lines are not drawn.
+  /// Only the [indentation.width] will be used to add padding to the start of
+  /// the content.
+  ///
+  /// * To draw indents change the style to [IndentStyle.squareJoint] or [IndentStyle.roundJoint]
+  /// * To draw only scoping lines, change the style to [IndentStyle.scopingLine]
+  /// The [IndentStyle], width, color and thickness are fully customizable.
+  final Indentation indentation;
 
   /// An optional callback that can be used to handle any action when an item is
   /// tapped or clicked
@@ -169,13 +172,14 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.expansionBehavior = ExpansionBehavior.none,
     required this.builder,
     required this.tree,
-    this.indentation,
+    Indentation? indentation,
     this.scrollController,
     this.expansionIndicatorBuilder = _defExpansionIndicatorBuilder,
     this.onItemTap,
     this.padding,
     this.showRootNode = false,
-  });
+  }) : this.indentation =
+            indentation ?? const Indentation(style: IndentStyle.none);
 }
 
 mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,

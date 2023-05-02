@@ -46,11 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
             node: TreeNode(),
             indentation: Indentation(
               width: 100,
-              decoration: IndentationDecoration(
-                lineWidth: 20,
-                color: Colors.green,
-                style: IndentStyle.scopingLine,
-              ),
+              thickness: 20,
+              color: Colors.green,
+              style: IndentStyle.scopingLine,
             ),
             minLevelToIndent: 0,
             child: Container(

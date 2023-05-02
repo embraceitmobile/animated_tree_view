@@ -1,8 +1,76 @@
 import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:flutter/material.dart';
 
-enum IndentStyle { none, scopingLine, squareJoint, roundJoint }
+enum IndentStyle {
+  /// Do not apply any indentation or scoping lines
+  none,
 
+  /// Apply scoping lines as indents
+  scopingLine,
+
+  /// Use square joints as connectors for indents
+  squareJoint,
+
+  /// Use round joints as connectors for indents
+  roundJoint,
+}
+
+/// Configuration class for building the [Indent].
+class Indentation {
+  static const DEF_INDENT_WIDTH = 24.0;
+
+  /// The [width] that an [Indent] will take before building the actual content
+  /// By default [DEF_INDENT_WIDTH]=24.0 is used for [width].
+  final double width;
+
+  /// Set an [offset] to move the [Indent] joint in the x, y directions.
+  /// Scoping lines will only by affected by the y-component of the [offset].
+  /// By default the joint is drawn at the y-center and 12dps left of the content.
+  /// By default [Offset.zero] is used for [offset]
+  final Offset offset;
+
+  /// Sets the [thickness] of the line used for indents and scoping lines
+  /// By default 1 is used for [thickness]
+  final double thickness;
+
+  /// The [IndentStyle] used to draw the [Indent]. The scoping lines are not
+  /// affected by the [style].
+  /// By default [IndentStyle.squareJoint] is used as [style]
+  final IndentStyle style;
+
+  /// The [color] used to to draw the lines for indents and scoping lines.
+  /// By default light grey [0xFFBDBDBD] is used for [color].
+  final Color color;
+
+  const Indentation({
+    this.width = DEF_INDENT_WIDTH,
+    this.thickness = 1,
+    this.style = IndentStyle.squareJoint,
+    this.color = const Color(0xFFBDBDBD),
+    this.offset = Offset.zero,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Indentation &&
+          runtimeType == other.runtimeType &&
+          width == other.width &&
+          offset == other.offset &&
+          thickness == other.thickness &&
+          style == other.style &&
+          color == other.color;
+
+  @override
+  int get hashCode =>
+      width.hashCode ^
+      offset.hashCode ^
+      thickness.hashCode ^
+      style.hashCode ^
+      color.hashCode;
+}
+
+@protected
 class Indent extends StatelessWidget {
   final Indentation indentation;
   final ITreeNode node;
@@ -29,11 +97,11 @@ class Indent extends StatelessWidget {
       child: child,
     );
 
-    if (node.level <= minLevelToIndent ||
-        indentation.decoration.style == IndentStyle.none) return content;
+    if (node.level <= minLevelToIndent || indentation.style == IndentStyle.none)
+      return content;
 
     return CustomPaint(
-      foregroundPainter: IndentationPainter.fromIndentation(
+      foregroundPainter: _IndentationPainter(
         indentation: indentation,
         node: node,
         minLevelToIndent: minLevelToIndent,
@@ -43,70 +111,56 @@ class Indent extends StatelessWidget {
   }
 }
 
-class IndentationPainter extends CustomPainter {
-  final double indentWidth;
-  final IndentationDecoration decoration;
+class _IndentationPainter extends CustomPainter {
+  final Indentation indentation;
   final ITreeNode node;
   final int minLevelToIndent;
 
-  const IndentationPainter({
-    required this.indentWidth,
-    required this.decoration,
+  const _IndentationPainter({
+    required this.indentation,
     required this.node,
     required this.minLevelToIndent,
   });
 
-  factory IndentationPainter.fromIndentation({
-    required Indentation indentation,
-    required ITreeNode node,
-    required int minLevelToIndent,
-  }) =>
-      IndentationPainter(
-        indentWidth: indentation.width,
-        decoration: indentation.decoration,
-        minLevelToIndent: minLevelToIndent,
-        node: node,
-      );
-
   @override
   void paint(Canvas canvas, Size size) {
-    final strokeWidth = decoration.lineWidth;
-    final totalWidth = (indentWidth * (node.level - minLevelToIndent))
+    final strokeWidth = indentation.thickness;
+    final totalWidth = (indentation.width * (node.level - minLevelToIndent))
         .clamp(0.0, double.maxFinite);
     final shouldDrawBottom = !node.isLastChild;
 
     final paint = Paint()
-      ..color = decoration.color
+      ..color = indentation.color
       ..style = PaintingStyle.fill;
 
     final center = Size(totalWidth - 12, size.height / 2);
 
     final topOrigin = Offset(
-      center.width + decoration.offset.dx,
+      center.width + indentation.offset.dx,
       0,
     );
 
     final cornerOuter = Offset(
-      center.width + decoration.offset.dx - strokeWidth / 2,
-      center.height + decoration.offset.dy + strokeWidth / 2,
+      center.width + indentation.offset.dx - strokeWidth / 2,
+      center.height + indentation.offset.dy + strokeWidth / 2,
     );
 
     final cornerInner = Offset(
-      center.width + decoration.offset.dx + (strokeWidth * 1.5),
-      center.height + decoration.offset.dy + strokeWidth / 2,
+      center.width + indentation.offset.dx + (strokeWidth * 1.5),
+      center.height + indentation.offset.dy + strokeWidth / 2,
     );
 
     final end = Offset(
       totalWidth,
-      center.height + decoration.offset.dy,
+      center.height + indentation.offset.dy,
     );
 
     final bottom = Offset(
-      center.width + decoration.offset.dx,
+      center.width + indentation.offset.dx,
       size.height,
     );
 
-    switch (decoration.style) {
+    switch (indentation.style) {
       case IndentStyle.scopingLine:
         canvas.drawRect(
             Rect.fromLTRB(
@@ -151,19 +205,18 @@ class IndentationPainter extends CustomPainter {
     if (node.parent != null)
       _drawScopingLines(
         canvas: canvas,
-        origin: Offset(topOrigin.dx - indentWidth, topOrigin.dy),
+        origin: Offset(topOrigin.dx - indentation.width, topOrigin.dy),
         strokeWidth: strokeWidth,
         bottom: bottom.dy,
         node: node.parent! as ITreeNode,
         paint: paint,
-        drawLastChild: decoration.style == IndentStyle.scopingLine,
+        drawLastChild: indentation.style == IndentStyle.scopingLine,
       );
   }
 
   @override
-  bool shouldRepaint(IndentationPainter oldDelegate) {
-    return decoration != oldDelegate.decoration ||
-        indentWidth != oldDelegate.indentWidth;
+  bool shouldRepaint(_IndentationPainter oldDelegate) {
+    return indentation != oldDelegate.indentation || node != oldDelegate.node;
   }
 
   void _drawWithRoundedCorners({
@@ -282,7 +335,7 @@ class IndentationPainter extends CustomPainter {
     if (node.parent != null) {
       _drawScopingLines(
         canvas: canvas,
-        origin: Offset(origin.dx - indentWidth, origin.dy),
+        origin: Offset(origin.dx - indentation.width, origin.dy),
         strokeWidth: strokeWidth,
         bottom: bottom,
         node: node.parent! as ITreeNode,
@@ -290,65 +343,5 @@ class IndentationPainter extends CustomPainter {
         drawLastChild: drawLastChild,
       );
     }
-  }
-}
-
-class Indentation {
-  static const DEF_INDENT_WIDTH = 24.0;
-
-  final double width;
-  final IndentationDecoration decoration;
-
-  const Indentation({
-    this.width = DEF_INDENT_WIDTH,
-    this.decoration = const IndentationDecoration(style: IndentStyle.none),
-  });
-
-  Indentation copyWith({IndentationDecoration? decoration}) => Indentation(
-        width: width,
-        decoration: decoration ?? this.decoration,
-      );
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Indentation &&
-          runtimeType == other.runtimeType &&
-          width == other.width &&
-          decoration == other.decoration;
-
-  @override
-  int get hashCode => width.hashCode ^ decoration.hashCode;
-}
-
-class IndentationDecoration {
-  final Offset offset;
-  final double lineWidth;
-  final IndentStyle style;
-  final Color color;
-
-  const IndentationDecoration({
-    this.lineWidth = 1,
-    this.style = IndentStyle.roundJoint,
-    this.color = const Color(0xFFBDBDBD),
-    this.offset = Offset.zero,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is IndentationDecoration &&
-          runtimeType == other.runtimeType &&
-          lineWidth == other.lineWidth &&
-          color == other.color &&
-          offset == other.offset &&
-          style == other.style;
-
-  @override
-  int get hashCode => lineWidth.hashCode ^ color.hashCode;
-
-  @override
-  String toString() {
-    return 'IndentationDecoration{offset: $offset, lineWidth: $lineWidth, cornerCap: $style, color: $color}';
   }
 }

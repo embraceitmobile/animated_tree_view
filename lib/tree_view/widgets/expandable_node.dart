@@ -25,7 +25,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
-    Indentation? indentation,
+    required Indentation indentation,
   }) {
     return ValueListenableBuilder<INode>(
       valueListenable: node,
@@ -57,7 +57,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
     required bool isLastChild,
-    Indentation? indentation,
+    required Indentation indentation,
   }) {
     return ExpandableNodeItem<Data, Tree>(
       builder: builder,
@@ -85,8 +85,8 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     this.expansionIndicatorBuilder,
     this.onItemTap,
     required this.showRootNode,
-    Indentation? indentation,
-  }) : this.indentation = indentation ?? const Indentation();
+    required this.indentation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +95,10 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       node: node,
       child: builder(context, node),
       indentation: indentation,
+      minLevelToIndent: showRootNode ? 0 : 1,
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
           : expansionIndicatorBuilder?.call(context, node),
-      minLevelToIndent: showRootNode ? 0 : 1,
       onTap: remove
           ? null
           : (dynamic item) {
