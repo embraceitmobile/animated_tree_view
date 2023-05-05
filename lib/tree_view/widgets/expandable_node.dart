@@ -1,6 +1,8 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
+import '../../helpers/single_double_tap_gesture_recognizer.dart';
+
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
   final TreeNodeWidgetBuilder<Tree> builder;
@@ -143,9 +145,19 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
     return SizeTransition(
       axis: Axis.vertical,
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-      child: GestureDetector(
+      child: RawGestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: onTap == null ? null : () => onTap!(node),
+        gestures: {
+          SingleDoubleTapGestureRecognizer:
+              GestureRecognizerFactoryWithHandlers<
+                  SingleDoubleTapGestureRecognizer>(
+            () => SingleDoubleTapGestureRecognizer(
+              onSingleTap: onTap == null ? null : () => onTap!(node),
+              onDoubleTap: onTap == null ? null : () => onTap!(node),
+            ),
+            (SingleDoubleTapGestureRecognizer instance) {},
+          )
+        },
         child: Indent(
           indentation: indentation,
           node: node,

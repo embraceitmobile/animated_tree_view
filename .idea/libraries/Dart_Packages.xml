@@ -19,7 +19,7 @@
         <entry key="args">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.4.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.4.1/lib" />
             </list>
           </value>
         </entry>
@@ -54,7 +54,7 @@
         <entry key="built_value">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/built_value-8.4.4/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/built_value-8.5.0/lib" />
             </list>
           </value>
         </entry>
@@ -96,7 +96,7 @@
         <entry key="crypto">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.2/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.3/lib" />
             </list>
           </value>
         </entry>
@@ -110,7 +110,7 @@
         <entry key="dart_style">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.1/lib" />
             </list>
           </value>
         </entry>
@@ -145,14 +145,14 @@
         <entry key="flutter">
           <value>
             <list>
-              <option value="$USER_HOME$/Development/flutter/packages/flutter/lib" />
+              <option value="$USER_HOME$/development/flutter/packages/flutter/lib" />
             </list>
           </value>
         </entry>
         <entry key="flutter_test">
           <value>
             <list>
-              <option value="$USER_HOME$/Development/flutter/packages/flutter_test/lib" />
+              <option value="$USER_HOME$/development/flutter/packages/flutter_test/lib" />
             </list>
           </value>
         </entry>
@@ -222,7 +222,7 @@
         <entry key="pub_semver">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/pub_semver-2.1.3/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/pub_semver-2.1.4/lib" />
             </list>
           </value>
         </entry>
@@ -236,14 +236,14 @@
         <entry key="sky_engine">
           <value>
             <list>
-              <option value="$USER_HOME$/Development/flutter/bin/cache/pkg/sky_engine/lib" />
+              <option value="$USER_HOME$/development/flutter/bin/cache/pkg/sky_engine/lib" />
             </list>
           </value>
         </entry>
         <entry key="source_gen">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/source_gen-1.2.7/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/source_gen-1.3.0/lib" />
             </list>
           </value>
         </entry>
@@ -327,7 +327,7 @@
         <entry key="yaml">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/yaml-3.1.1/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/yaml-3.1.2/lib" />
             </list>
           </value>
         </entry>
@@ -336,20 +336,20 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-59.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/analyzer-5.11.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.4.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.4.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/async-2.10.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/build-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/built_collection-5.1.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/built_value-8.4.4/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/built_value-8.5.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/characters-1.2.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/clock-1.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/code_builder-4.4.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/collection-1.17.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/convert-3.1.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.2/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.5/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/diffutil_dart-3.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/fake_async-1.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/file-6.1.4/lib" />
@@ -363,9 +363,9 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/mockito-5.4.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/package_config-2.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/path-1.8.2/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/pub_semver-2.1.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/pub_semver-2.1.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/scroll_to_index-3.0.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/source_gen-1.2.7/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/source_gen-1.3.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/source_span-1.9.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
@@ -377,10 +377,10 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/typed_data-1.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/watcher-1.0.2/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/yaml-3.1.1/lib" />
-      <root url="file://$USER_HOME$/Development/flutter/bin/cache/pkg/sky_engine/lib" />
-      <root url="file://$USER_HOME$/Development/flutter/packages/flutter/lib" />
-      <root url="file://$USER_HOME$/Development/flutter/packages/flutter_test/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/yaml-3.1.2/lib" />
+      <root url="file://$USER_HOME$/development/flutter/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$USER_HOME$/development/flutter/packages/flutter/lib" />
+      <root url="file://$USER_HOME$/development/flutter/packages/flutter_test/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
