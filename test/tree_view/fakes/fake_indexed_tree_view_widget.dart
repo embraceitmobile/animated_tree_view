@@ -4,8 +4,13 @@ import 'package:tuple/tuple.dart';
 
 class FakeStatelessIndexedTreeView<T> extends StatelessWidget {
   final IndexedTreeNode<T> tree;
+  final TreeReadyCallback<T, IndexedTreeNode<T>>? onTreeReady;
 
-  const FakeStatelessIndexedTreeView({super.key, required this.tree});
+  const FakeStatelessIndexedTreeView({
+    super.key,
+    required this.tree,
+    this.onTreeReady,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,7 @@ class FakeStatelessIndexedTreeView<T> extends StatelessWidget {
           tree: tree,
           expansionBehavior: ExpansionBehavior.scrollToLastChild,
           showRootNode: true,
+          onTreeReady: onTreeReady,
           builder: (context, node) => ListTile(
             title: Text("Item ${node.level}-${node.key}"),
             subtitle: Text('Level ${node.level}'),

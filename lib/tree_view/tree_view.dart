@@ -409,7 +409,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
@@ -464,7 +464,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
       TreeView._(
@@ -515,7 +515,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
@@ -569,7 +569,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           TreeView._(
@@ -716,7 +716,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
@@ -771,7 +771,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
@@ -821,7 +821,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
@@ -879,7 +879,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
