@@ -235,7 +235,7 @@ class TreeViewExpansionBehaviourController<Data> {
   }
 
   void expandNode(ITreeNode<Data> item) {
-    if (item.childrenAsList.isEmpty) return;
+    if (item.childrenAsList.isEmpty || item.isExpanded) return;
 
     animatedListStateController.insertAll(
       animatedListStateController.indexOf(item) + 1,

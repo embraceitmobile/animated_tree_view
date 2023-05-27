@@ -43,21 +43,25 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (sampleTree.isExpanded) {
-            controller?.collapseNode(sampleTree);
-          } else {
-            controller?.expandAllChildren(sampleTree);
-          }
-          setState(() {});
+      floatingActionButton: ValueListenableBuilder<bool>(
+        valueListenable: sampleTree.expansionNotifier,
+        builder: (context, isExpanded, _) {
+          return FloatingActionButton.extended(
+            onPressed: () {
+              if (sampleTree.isExpanded) {
+                controller?.collapseNode(sampleTree);
+              } else {
+                controller?.expandAllChildren(sampleTree);
+              }
+            },
+            label: isExpanded ? Text("Collapse all") : Text("Expand all"),
+          );
         },
-        label:
-            sampleTree.isExpanded ? Text("Collapse all") : Text("Expand all"),
       ),
       body: TreeView.simple(
         key: _treeKey,
         tree: sampleTree,
+        showRootNode: true,
         expansionIndicatorBuilder: (context, node) =>
             ChevronIndicator.rightDown(
           tree: node,
