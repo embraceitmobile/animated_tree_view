@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../utils/utils.dart';
 
 const showSnackBar = false;
+const expandChildrenOnReady = true;
 
 void main() {
   runApp(MyApp());
@@ -34,8 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final GlobalKey<TreeViewState> _treeKey = GlobalKey<TreeViewState>();
-  late final controller = _treeKey.currentState?.controller;
+  TreeViewController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
           return FloatingActionButton.extended(
             onPressed: () {
               if (sampleTree.isExpanded) {
-                controller?.collapseNode(sampleTree);
+                _controller?.collapseNode(sampleTree);
               } else {
-                controller?.expandAllChildren(sampleTree);
+                _controller?.expandAllChildren(sampleTree);
               }
             },
             label: isExpanded ? Text("Collapse all") : Text("Expand all"),
@@ -59,7 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       body: TreeView.simple(
-        key: _treeKey,
         tree: sampleTree,
         showRootNode: true,
         expansionIndicatorBuilder: (context, node) =>
@@ -78,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 duration: const Duration(milliseconds: 750),
               ),
             );
+        },
+        onTreeReady: (controller) {
+          _controller = controller;
+          if (expandChildrenOnReady) controller.expandAllChildren(sampleTree);
         },
         builder: (context, node) => Card(
           color: colorMapper[node.level.clamp(0, colorMapper.length - 1)]!,
