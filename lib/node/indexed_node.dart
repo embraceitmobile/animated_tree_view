@@ -26,7 +26,6 @@ class IndexedNode extends INode implements IIndexedNodeActions {
   /// Make sure that the provided [key] is unique to among the siblings of the node.
   /// If a [key] is not provided, then a [UniqueKey] will automatically be
   /// assigned to the [Node].
-  @mustCallSuper
   IndexedNode({String? key, this.parent})
       : assert(key == null || !key.contains(INode.PATH_SEPARATOR),
             "Key should not contain the PATH_SEPARATOR '${INode.PATH_SEPARATOR}'"),
