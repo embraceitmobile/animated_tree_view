@@ -1,4 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/utils.dart';
@@ -7,10 +8,12 @@ const showSnackBar = false;
 const expandChildrenOnReady = true;
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -20,21 +23,21 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Simple Animated Tree Demo'),
+      home: const MyHomePage(title: 'Simple Animated Tree Demo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   TreeViewController? _controller;
 
   @override
@@ -54,7 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 _controller?.expandAllChildren(sampleTree);
               }
             },
-            label: isExpanded ? Text("Collapse all") : Text("Expand all"),
+            label: isExpanded
+                ? const Text("Collapse all")
+                : const Text("Expand all"),
           );
         },
       ),
@@ -67,16 +72,18 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.blue[700],
           padding: const EdgeInsets.all(8),
         ),
-        indentation: Indentation(style: IndentStyle.squareJoint),
+        indentation: const Indentation(style: IndentStyle.squareJoint),
         onItemTap: (item) {
-          print("Item tapped: ${item.key}");
-          if (showSnackBar)
+          if (kDebugMode) print("Item tapped: ${item.key}");
+
+          if (showSnackBar) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Item tapped: ${item.key}"),
                 duration: const Duration(milliseconds: 750),
               ),
             );
+          }
         },
         onTreeReady: (controller) {
           _controller = controller;

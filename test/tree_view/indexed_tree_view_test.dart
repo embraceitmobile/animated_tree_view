@@ -67,12 +67,13 @@ void main() {
     await tester.pumpWidget(FakeStatefulIndexedTreeView());
 
     for (final tree in testIndexedTrees) {
-      final treeToTest = tree.item1;
+      final (treeToTest, removedNodes) = tree;
+
       final rootNode = find.byKey(ValueKey(treeToTest.root.key));
       await testAllNodesAreRenderedOnTap(treeToTest, tester);
 
-      for (final removedNodes in tree.item2) {
-        expect(find.byKey(ValueKey(removedNodes.key)), findsNothing);
+      for (final removedNode in removedNodes) {
+        expect(find.byKey(ValueKey(removedNode.key)), findsNothing);
       }
 
       await tester.tap(find.byKey(ValueKey("nextButton")));

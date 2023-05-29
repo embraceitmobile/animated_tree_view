@@ -5,6 +5,7 @@ import 'package:animated_tree_view/constants/constants.dart';
 import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
 import 'package:flutter/material.dart';
 
+import '../tree_diff/tree_diff_change.dart';
 import 'tree_view_state_helper.dart';
 import 'widgets/expandable_node.dart';
 
@@ -287,33 +288,37 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
-      update.when(
-        add: (node) {
-          node as Tree;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
-          parentNode.add(node);
-        },
-        insert: (node, pos) {
-          node as Tree;
-          final parentNode =
-              _tree.elementAt(node.parent?.path ?? node.root.path)
-                  as IIndexedNodeActions;
-          parentNode.insert(pos, node as IndexedNode);
-        },
-        remove: (node, pos) {
-          node as Tree;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+      switch (update) {
+        case TreeDiffNodeAdd tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode = _tree
+                .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+            parentNode.add(node);
+          }
+        case TreeDiffNodeInsert tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode =
+                _tree.elementAt(node.parent?.path ?? node.root.path)
+                    as IIndexedNodeActions;
+            parentNode.insert(tree.position, node as IndexedNode);
+          }
+        case TreeDiffNodeRemove tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode = _tree
+                .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
 
-          parentNode.remove(node);
-        },
-        update: (node) {
-          node as Tree;
-          final oldNode = _tree.elementAt(node.path) as Tree;
-          oldNode.data = node.data;
-        },
-      );
+            parentNode.remove(node);
+          }
+        case TreeDiffNodeUpdate tree:
+          {
+            final node = tree.data as Tree;
+            final oldNode = _tree.elementAt(node.path) as Tree;
+            oldNode.data = node.data;
+          }
+      }
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
 class FakeStatelessTreeView<T> extends StatelessWidget {
   final TreeNode<T> tree;
@@ -54,7 +53,7 @@ class FakeStatefulTreeViewState extends State<FakeStatefulTreeView> {
       home: Material(
         child: Stack(children: [
           TreeView.simple(
-            tree: testTrees[stateCount].item1,
+            tree: testTrees[stateCount].$1,
             expansionBehavior: ExpansionBehavior.scrollToLastChild,
             showRootNode: true,
             builder: (context, node) => ListTile(
@@ -73,10 +72,10 @@ class FakeStatefulTreeViewState extends State<FakeStatefulTreeView> {
   }
 }
 
-late final testTrees = <Tuple2<TreeNode, List<TreeNode>>>[
-  Tuple2(defaultTree, []),
-  Tuple2(nodesAddedTree, []),
-  Tuple2(nodesRemovedTree, [
+late final testTrees = <(TreeNode, List<TreeNode>)>[
+  (defaultTree, []),
+  (nodesAddedTree, []),
+  (nodesRemovedTree, [
     TreeNode(key: "0C"),
     TreeNode(key: "0C1C"),
     TreeNode(key: "0C1C2A"),

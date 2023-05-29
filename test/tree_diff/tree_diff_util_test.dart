@@ -1,5 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:animated_tree_view/tree_diff/tree_diff_update.dart';
+import 'package:animated_tree_view/tree_diff/tree_diff_change.dart';
 import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -23,8 +23,8 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).key, 'd');
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).key, 'd');
     });
 
     test("Correct data is notified on removing a new node at single level", () {
@@ -40,8 +40,8 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as TreeNode).key, 'd');
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(((result.first as TreeDiffNodeRemove).data as TreeNode).key, 'd');
     });
 
     test(
@@ -55,10 +55,10 @@ void main() {
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
 
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).key, 'd');
-      expect(result.last, isA<NodeRemove>());
-      expect(((result.last as NodeRemove).data as TreeNode).key, 'a');
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).key, 'd');
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect(((result.last as TreeDiffNodeRemove).data as TreeNode).key, 'a');
     });
 
     test("Correct data is notified on inserting a new node at double level",
@@ -75,8 +75,8 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).path, "/.c.c1");
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).path, "/.c.c1");
     });
 
     test("Correct data is notified on removing a node at double level", () {
@@ -96,8 +96,8 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as TreeNode).path, "/.c.c1");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(((result.first as TreeDiffNodeRemove).data as TreeNode).path, "/.c.c1");
     });
 
     test(
@@ -119,10 +119,10 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).path, "/.a.a1");
-      expect(result.last, isA<NodeRemove>());
-      expect(((result.last as NodeRemove).data as TreeNode).path, "/.c.c1");
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).path, "/.a.a1");
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect(((result.last as TreeDiffNodeRemove).data as TreeNode).path, "/.c.c1");
     });
 
     test(
@@ -146,10 +146,10 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 2);
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).path, "/.b.b1");
-      expect(result.last, isA<NodeAdd>());
-      expect(((result.last as NodeAdd).data as TreeNode).path, "/.c.c1");
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).path, "/.b.b1");
+      expect(result.last, isA<TreeDiffNodeAdd>());
+      expect(((result.last as TreeDiffNodeAdd).data as TreeNode).path, "/.c.c1");
     });
 
     test(
@@ -174,8 +174,8 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeAdd>());
-      expect(((result.first as NodeAdd).data as TreeNode).path, "/.c.c1.c1-1");
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(((result.first as TreeDiffNodeAdd).data as TreeNode).path, "/.c.c1.c1-1");
     });
 
     test(
@@ -200,9 +200,9 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
+      expect(result.first, isA<TreeDiffNodeRemove>());
       expect(
-          ((result.first as NodeRemove).data as TreeNode).path, "/.c.c1.c1-1");
+          ((result.first as TreeDiffNodeRemove).data as TreeNode).path, "/.c.c1.c1-1");
     });
   });
 
@@ -226,8 +226,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeInsert>());
-      expect((result.first as NodeInsert).position, 3);
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect((result.first as TreeDiffNodeInsert).position, 3);
     });
 
     test(
@@ -249,8 +249,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
-      expect((result.first as NodeRemove).position, 3);
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).position, 3);
     });
 
     test(
@@ -272,10 +272,10 @@ void main() {
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
 
-      expect(result.first, isA<NodeInsert>());
-      expect((result.first as NodeInsert).position, 3);
-      expect(result.last, isA<NodeRemove>());
-      expect((result.last as NodeRemove).position, 0);
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect((result.first as TreeDiffNodeInsert).position, 3);
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.last as TreeDiffNodeRemove).position, 0);
     });
 
     test(
@@ -297,8 +297,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect(((result.first as TreeDiffNodeInsert).data as IndexedTreeNode).path,
           "/.c.c1");
     });
 
@@ -321,8 +321,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(((result.first as TreeDiffNodeRemove).data as IndexedTreeNode).path,
           "/.c.c1");
     });
 
@@ -345,12 +345,12 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
-      expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect(((result.first as TreeDiffNodeInsert).data as IndexedTreeNode).path,
           "/.a.a1");
-      expect(result.last, isA<NodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
       expect(
-          ((result.last as NodeRemove).data as IndexedTreeNode).path, "/.c.c1");
+          ((result.last as TreeDiffNodeRemove).data as IndexedTreeNode).path, "/.c.c1");
     });
 
     test(
@@ -379,12 +379,12 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 2);
-      expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect(((result.first as TreeDiffNodeInsert).data as IndexedTreeNode).path,
           "/.b.b1");
-      expect(result.last, isA<NodeInsert>());
+      expect(result.last, isA<TreeDiffNodeInsert>());
       expect(
-          ((result.last as NodeInsert).data as IndexedTreeNode).path, "/.c.c1");
+          ((result.last as TreeDiffNodeInsert).data as IndexedTreeNode).path, "/.c.c1");
     });
 
     test(
@@ -410,8 +410,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeInsert>());
-      expect(((result.first as NodeInsert).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect(((result.first as TreeDiffNodeInsert).data as IndexedTreeNode).path,
           "/.c.c1.c1-1");
     });
 
@@ -438,8 +438,8 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeRemove>());
-      expect(((result.first as NodeRemove).data as IndexedTreeNode).path,
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(((result.first as TreeDiffNodeRemove).data as IndexedTreeNode).path,
           "/.c.c1.c1-1");
     });
   });
@@ -448,46 +448,46 @@ void main() {
     test("Test correct result is returned on adding nodes", () {
       final result = calculateTreeDiff<TreeNode>(defaultTree, nodesAddedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeAdd>());
-      expect(result.last, isA<NodeAdd>());
-      expect((result.first as NodeAdd).data.key, "0D");
-      expect((result.last as NodeAdd).data.key, "0E");
+      expect(result.first, isA<TreeDiffNodeAdd>());
+      expect(result.last, isA<TreeDiffNodeAdd>());
+      expect((result.first as TreeDiffNodeAdd).data.key, "0D");
+      expect((result.last as TreeDiffNodeAdd).data.key, "0E");
     });
 
     test("Test correct result is returned on removing nodes", () {
       final result =
           calculateTreeDiff<TreeNode>(nodesAddedTree, nodesRemovedTree);
       expect(result.length, 3);
-      expect(result.first, isA<NodeRemove>());
-      expect(result.last, isA<NodeRemove>());
-      expect((result.first as NodeRemove).data.key, "0B");
-      expect((result.last as NodeRemove).data.key, "0E");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).data.key, "0B");
+      expect((result.last as TreeDiffNodeRemove).data.key, "0E");
     });
 
     test("Test correct result is returned on removing nodes on level 1", () {
       final result = calculateTreeDiff<TreeNode>(
           nodesRemovedTree, nodesLevelOneChildRemovedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeRemove>());
-      expect(result.last, isA<NodeRemove>());
-      expect((result.first as NodeRemove).data.key, "0C1A");
-      expect((result.first as NodeRemove).data.path, "/.0C.0C1A");
-      expect((result.last as NodeRemove).data.key, "0C1B");
-      expect((result.last as NodeRemove).data.path, "/.0C.0C1B");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).data.key, "0C1A");
+      expect((result.first as TreeDiffNodeRemove).data.path, "/.0C.0C1A");
+      expect((result.last as TreeDiffNodeRemove).data.key, "0C1B");
+      expect((result.last as TreeDiffNodeRemove).data.path, "/.0C.0C1B");
     });
 
     test("Test correct result is returned on removing nodes on level 2", () {
       final result = calculateTreeDiff<TreeNode>(
           nodesLevelOneChildRemovedTree, nodesLevelTwoChildRemovedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeRemove>());
-      expect(result.last, isA<NodeRemove>());
-      expect((result.first as NodeRemove).data.key, "0C1C2A3B");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).data.key, "0C1C2A3B");
       expect(
-          (result.first as NodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3B");
-      expect((result.last as NodeRemove).data.key, "0C1C2A3C");
+          (result.first as TreeDiffNodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3B");
+      expect((result.last as TreeDiffNodeRemove).data.key, "0C1C2A3C");
       expect(
-          (result.last as NodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3C");
+          (result.last as TreeDiffNodeRemove).data.path, "/.0C.0C1C.0C1C2A.0C1C2A3C");
     });
   });
 
@@ -496,20 +496,20 @@ void main() {
       final result = calculateTreeDiff<IndexedTreeNode>(
           defaultIndexedTree, nodesAddedIndexedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeInsert>());
-      expect(result.last, isA<NodeInsert>());
-      expect((result.first as NodeInsert).data.key, "0E");
-      expect((result.last as NodeInsert).data.key, "0D");
+      expect(result.first, isA<TreeDiffNodeInsert>());
+      expect(result.last, isA<TreeDiffNodeInsert>());
+      expect((result.first as TreeDiffNodeInsert).data.key, "0E");
+      expect((result.last as TreeDiffNodeInsert).data.key, "0D");
     });
 
     test("Test correct result is returned on removing indexed nodes", () {
       final result = calculateTreeDiff<IndexedTreeNode>(
           nodesAddedIndexedTree, nodesRemovedIndexedTree);
       expect(result.length, 3);
-      expect(result.first, isA<NodeRemove>());
-      expect(result.last, isA<NodeRemove>());
-      expect((result.first as NodeRemove).data.key, "0E");
-      expect((result.last as NodeRemove).data.key, "0B");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).data.key, "0E");
+      expect((result.last as TreeDiffNodeRemove).data.key, "0B");
     });
 
     test("Test correct result is returned on removing indexed nodes on level 1",
@@ -517,12 +517,12 @@ void main() {
       final result = calculateTreeDiff<IndexedTreeNode>(
           nodesRemovedIndexedTree, nodesLevelOneChildRemovedIndexedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeRemove>());
-      expect(result.last, isA<NodeRemove>());
-      expect((result.first as NodeRemove).data.key, "0C1B");
-      expect((result.first as NodeRemove).data.path, "/.0C.0C1B");
-      expect((result.last as NodeRemove).data.key, "0C1A");
-      expect((result.last as NodeRemove).data.path, "/.0C.0C1A");
+      expect(result.first, isA<TreeDiffNodeRemove>());
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.first as TreeDiffNodeRemove).data.key, "0C1B");
+      expect((result.first as TreeDiffNodeRemove).data.path, "/.0C.0C1B");
+      expect((result.last as TreeDiffNodeRemove).data.key, "0C1A");
+      expect((result.last as TreeDiffNodeRemove).data.path, "/.0C.0C1A");
     });
 
     test("Test correct result is returned on removing indexed nodes on level 2",
@@ -531,17 +531,17 @@ void main() {
           nodesLevelOneChildRemovedIndexedTree,
           nodesLevelTwoChildRemovedIndexedTree);
       expect(result.length, 2);
-      expect(result.first, isA<NodeRemove>());
+      expect(result.first, isA<TreeDiffNodeRemove>());
 
-      expect((result.first as NodeRemove).data.key, "0C1C2A3C");
+      expect((result.first as TreeDiffNodeRemove).data.key, "0C1C2A3C");
       expect(
-        (result.first as NodeRemove).data.path,
+        (result.first as TreeDiffNodeRemove).data.path,
         "/.0C.0C1C.0C1C2A.0C1C2A3C",
       );
-      expect(result.last, isA<NodeRemove>());
-      expect((result.last as NodeRemove).data.key, "0C1C2A3B");
+      expect(result.last, isA<TreeDiffNodeRemove>());
+      expect((result.last as TreeDiffNodeRemove).data.key, "0C1C2A3B");
       expect(
-        (result.last as NodeRemove).data.path,
+        (result.last as TreeDiffNodeRemove).data.path,
         "/.0C.0C1C.0C1C2A.0C1C2A3B",
       );
     });
@@ -565,9 +565,9 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeUpdate>());
-      expect(((result.first as NodeUpdate).data as TreeNode).key, 'c');
-      expect(((result.first as NodeUpdate).data as TreeNode).data, 'C1');
+      expect(result.first, isA<TreeDiffNodeUpdate>());
+      expect(((result.first as TreeDiffNodeUpdate).data as TreeNode).key, 'c');
+      expect(((result.first as TreeDiffNodeUpdate).data as TreeNode).data, 'C1');
     });
 
     test("Test nodes updates on level 1", () {
@@ -589,9 +589,9 @@ void main() {
 
       final result = calculateTreeDiff<TreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeUpdate>());
-      expect(((result.first as NodeUpdate).data as TreeNode).key, 'c1');
-      expect(((result.first as NodeUpdate).data as TreeNode).data, 'CC2');
+      expect(result.first, isA<TreeDiffNodeUpdate>());
+      expect(((result.first as TreeDiffNodeUpdate).data as TreeNode).key, 'c1');
+      expect(((result.first as TreeDiffNodeUpdate).data as TreeNode).data, 'CC2');
     });
   });
 
@@ -613,9 +613,9 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeUpdate>());
-      expect(((result.first as NodeUpdate).data as IndexedTreeNode).key, 'c');
-      expect(((result.first as NodeUpdate).data as IndexedTreeNode).data, 'C1');
+      expect(result.first, isA<TreeDiffNodeUpdate>());
+      expect(((result.first as TreeDiffNodeUpdate).data as IndexedTreeNode).key, 'c');
+      expect(((result.first as TreeDiffNodeUpdate).data as IndexedTreeNode).data, 'C1');
     });
 
     test("Test nodes updates on level 1", () {
@@ -637,10 +637,10 @@ void main() {
 
       final result = calculateTreeDiff<IndexedTreeNode>(tree1, tree2);
       expect(result.length, 1);
-      expect(result.first, isA<NodeUpdate>());
-      expect(((result.first as NodeUpdate).data as IndexedTreeNode).key, 'c1');
+      expect(result.first, isA<TreeDiffNodeUpdate>());
+      expect(((result.first as TreeDiffNodeUpdate).data as IndexedTreeNode).key, 'c1');
       expect(
-          ((result.first as NodeUpdate).data as IndexedTreeNode).data, 'CC2');
+          ((result.first as TreeDiffNodeUpdate).data as IndexedTreeNode).data, 'CC2');
     });
   });
 }
