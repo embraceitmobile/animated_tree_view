@@ -8,14 +8,13 @@
 .buildlog/
 .history
 .svn/
+migrate_working_dir/
 
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
-analysis_options.yaml
-pubspec.lock
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -32,8 +31,6 @@ pubspec.lock
 .pub-cache/
 .pub/
 /build/
-
-# Web related
 
 # Symbolication related
 app.*.symbols

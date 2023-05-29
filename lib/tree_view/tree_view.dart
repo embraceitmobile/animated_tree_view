@@ -5,6 +5,7 @@ import 'package:animated_tree_view/constants/constants.dart';
 import 'package:animated_tree_view/tree_diff/tree_diff_util.dart';
 import 'package:flutter/material.dart';
 
+import '../tree_diff/tree_diff_change.dart';
 import 'tree_view_state_helper.dart';
 import 'widgets/expandable_node.dart';
 
@@ -26,6 +27,10 @@ typedef TreeNodeWidgetBuilder<Tree> = Widget Function(
   BuildContext context,
   Tree item,
 );
+
+/// Callback to get the [TreeViewController] when the [TreeView] is ready
+typedef TreeReadyCallback<Data, Tree extends ITreeNode<Data>> = void Function(
+    TreeViewController<Data, Tree> controller);
 
 /// The [ExpansionBehavior] provides control over the behavior of the node
 /// when it is expanded.
@@ -53,7 +58,7 @@ enum ExpansionBehavior {
 ///Utility class to provide easy access to basic node operations.
 ///The [TreeViewController] also exposes basic scrolling methods that can be used
 ///for scrolling to an item or a list index.
-class TreeViewController<Data, Tree extends ITreeNode<Data>> {
+final class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   final TreeViewStateHelper<Data> _animatedListController;
 
   const TreeViewController(this._animatedListController);
@@ -89,7 +94,8 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
     expandNode(node);
     for (final child in node.childrenAsList) {
       expandNode(child as Tree);
-      if (child.childrenAsList.isNotEmpty) expandAllChildren(child);
+      if (child.childrenAsList.isNotEmpty)
+        expandAllChildren(child, recursive: recursive);
     }
   }
 
@@ -100,7 +106,7 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   Tree elementAt(String path) => tree.elementAt(path) as Tree;
 }
 
-abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
+abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
     extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
   final TreeNodeWidgetBuilder<Tree> builder;
@@ -169,6 +175,9 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// For more information see the [AnimatedList.padding]
   final EdgeInsetsGeometry? padding;
 
+  /// Callback to get the [TreeViewController] when the [TreeView] is ready
+  final TreeReadyCallback<Data, Tree>? onTreeReady;
+
   const _TreeView({
     super.key,
     this.expansionBehavior = ExpansionBehavior.none,
@@ -180,6 +189,7 @@ abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.onItemTap,
     this.padding,
     this.showRootNode = false,
+    this.onTreeReady,
   }) : this.indentation =
             indentation ?? const Indentation(style: IndentStyle.none);
 }
@@ -215,7 +225,12 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
       ),
     );
 
+    widget.tree.expansionNotifier.value = !widget.showRootNode;
     controller = TreeViewController(_treeViewEventHandler);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onTreeReady?.call(controller);
+    });
   }
 
   Widget _insertedItemBuilder(
@@ -273,33 +288,37 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     if (treeDiff.isEmpty) return;
 
     for (final update in treeDiff) {
-      update.when(
-        add: (node) {
-          node as Tree;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
-          parentNode.add(node);
-        },
-        insert: (node, pos) {
-          node as Tree;
-          final parentNode =
-              _tree.elementAt(node.parent?.path ?? node.root.path)
-                  as IIndexedNodeActions;
-          parentNode.insert(pos, node as IndexedNode);
-        },
-        remove: (node, pos) {
-          node as Tree;
-          final parentNode = _tree
-              .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+      switch (update) {
+        case TreeDiffNodeAdd tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode = _tree
+                .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
+            parentNode.add(node);
+          }
+        case TreeDiffNodeInsert tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode =
+                _tree.elementAt(node.parent?.path ?? node.root.path)
+                    as IIndexedNodeActions;
+            parentNode.insert(tree.position, node as IndexedNode);
+          }
+        case TreeDiffNodeRemove tree:
+          {
+            final node = tree.data as Tree;
+            final parentNode = _tree
+                .elementAt(node.parent?.path ?? node.root.path) as INodeActions;
 
-          parentNode.remove(node);
-        },
-        update: (node) {
-          node as Tree;
-          final oldNode = _tree.elementAt(node.path) as Tree;
-          oldNode.data = node.data;
-        },
-      );
+            parentNode.remove(node);
+          }
+        case TreeDiffNodeUpdate tree:
+          {
+            final node = tree.data as Tree;
+            final oldNode = _tree.elementAt(node.path) as Tree;
+            oldNode.data = node.data;
+          }
+      }
     }
   }
 }
@@ -324,7 +343,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
 /// See also:
 ///   For a TreeView that supports Slivers, that can used with a [CustomScrollView]
 ///   look into the [SliverTreeView].
-class TreeView<Data, Tree extends ITreeNode<Data>>
+final class TreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   /// Whether this is the primary scroll view associated with the parent
   /// [PrimaryScrollController].
@@ -360,6 +379,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     super.padding,
     this.shrinkWrap = false,
     super.showRootNode = false,
+    super.onTreeReady,
   });
 
   /// The default implementation of [TreeView] that uses a [TreeNode] internally,
@@ -394,7 +414,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
         key: key,
@@ -411,6 +432,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
+        onTreeReady: onTreeReady,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -447,7 +469,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
       TreeView._(
         key: key,
@@ -464,6 +487,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
+        onTreeReady: onTreeReady,
       );
 
   /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
@@ -496,7 +520,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
         key: key,
@@ -513,6 +538,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
+        onTreeReady: onTreeReady,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -548,7 +574,8 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
     ScrollPhysics? physics,
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           TreeView._(
             key: key,
@@ -565,6 +592,7 @@ class TreeView<Data, Tree extends ITreeNode<Data>>
             padding: padding,
             shrinkWrap: shrinkWrap,
             showRootNode: showRootNode,
+            onTreeReady: onTreeReady,
           );
 
   @override
@@ -635,7 +663,7 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
 ///
 /// The complexity for accessing child nodes in [SliverTreeView] is simply O(node_level).
 /// e.g. for path './.level1/level2', complexity is simply O(2).
-class SliverTreeView<Data, Tree extends ITreeNode<Data>>
+final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   const SliverTreeView._({
     super.key,
@@ -648,6 +676,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     super.padding,
     super.scrollController,
     super.showRootNode,
+    super.onTreeReady,
   }) : assert(
             expansionBehavior == ExpansionBehavior.none ||
                 scrollController != null,
@@ -692,7 +721,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<TreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
         key: key,
@@ -706,6 +736,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         onItemTap: onItemTap,
         padding: padding,
         showRootNode: showRootNode,
+        onTreeReady: onTreeReady,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -745,7 +776,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
             key: key,
@@ -759,6 +791,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             onItemTap: onItemTap,
             padding: padding,
             showRootNode: showRootNode,
+            onTreeReady: onTreeReady,
           );
 
   /// The alternate implementation of [SliverTreeView] uses an [IndexedNode]
@@ -793,7 +826,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
         key: key,
@@ -807,6 +841,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         onItemTap: onItemTap,
         padding: padding,
         showRootNode: showRootNode,
+        onTreeReady: onTreeReady,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -849,7 +884,8 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ExpansionIndicatorBuilder? expansionIndicatorBuilder,
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
-    bool showRootNode = false,
+    bool showRootNode = true,
+    TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
             key: key,
@@ -863,6 +899,7 @@ class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             onItemTap: onItemTap,
             padding: padding,
             showRootNode: showRootNode,
+            onTreeReady: onTreeReady,
           );
 }
 

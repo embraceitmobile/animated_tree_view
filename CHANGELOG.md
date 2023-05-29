@@ -1,3 +1,8 @@
+## [2.1.0]
+* Fix [#15](https://github.com/embraceitmobile/animated_tree_view/issues/15): nodes duplicate on calling expand or expandAllChildren method from TreeViewController
+* Add support for onTreeReady callback
+* Update the package to Dart 3.0
+
 ## [2.0.1]
 * Fix the indentation screenshot links in readme.md
 

@@ -24,6 +24,7 @@ target/
 
 # JetBrains IDE
 .idea/
+/.idea/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -38,6 +39,11 @@ target/
 /windows/
 .vscode
 .idea
+
+# Dart tool files
+/.dart_tool/package_config.json
+/.dart_tool/package_config_subset
+/.dart_tool/version
 
 # Web related
 lib/generated_plugin_registrant.dart
