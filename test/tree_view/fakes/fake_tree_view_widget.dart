@@ -75,12 +75,15 @@ class FakeStatefulTreeViewState extends State<FakeStatefulTreeView> {
 late final testTrees = <(TreeNode, List<TreeNode>)>[
   (defaultTree, []),
   (nodesAddedTree, []),
-  (nodesRemovedTree, [
-    TreeNode(key: "0C"),
-    TreeNode(key: "0C1C"),
-    TreeNode(key: "0C1C2A"),
-    TreeNode(key: "0C1C2A3C"),
-  ]),
+  (
+    nodesRemovedTree,
+    [
+      TreeNode(key: "0C"),
+      TreeNode(key: "0C1C"),
+      TreeNode(key: "0C1C2A"),
+      TreeNode(key: "0C1C2A3C"),
+    ]
+  ),
 ];
 
 TreeNode get defaultTree => TreeNode.root()

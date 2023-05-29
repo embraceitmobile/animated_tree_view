@@ -58,7 +58,7 @@ enum ExpansionBehavior {
 ///Utility class to provide easy access to basic node operations.
 ///The [TreeViewController] also exposes basic scrolling methods that can be used
 ///for scrolling to an item or a list index.
-class TreeViewController<Data, Tree extends ITreeNode<Data>> {
+final class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   final TreeViewStateHelper<Data> _animatedListController;
 
   const TreeViewController(this._animatedListController);
@@ -106,7 +106,7 @@ class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   Tree elementAt(String path) => tree.elementAt(path) as Tree;
 }
 
-abstract class _TreeView<Data, Tree extends ITreeNode<Data>>
+abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
     extends StatefulWidget {
   /// The [builder] function that is provided to the item builder
   final TreeNodeWidgetBuilder<Tree> builder;
@@ -343,7 +343,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
 /// See also:
 ///   For a TreeView that supports Slivers, that can used with a [CustomScrollView]
 ///   look into the [SliverTreeView].
-class TreeView<Data, Tree extends ITreeNode<Data>>
+final class TreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   /// Whether this is the primary scroll view associated with the parent
   /// [PrimaryScrollController].
@@ -663,7 +663,7 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
 ///
 /// The complexity for accessing child nodes in [SliverTreeView] is simply O(node_level).
 /// e.g. for path './.level1/level2', complexity is simply O(2).
-class SliverTreeView<Data, Tree extends ITreeNode<Data>>
+final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
   const SliverTreeView._({
     super.key,

@@ -79,12 +79,15 @@ class FakeStatefulIndexedTreeViewState
 late final testIndexedTrees = <(IndexedTreeNode, List<IndexedTreeNode>)>[
   (defaultIndexedTree, []),
   (nodesAddedIndexedTree, []),
-  (nodesRemovedIndexedTree, [
-    IndexedTreeNode(key: "0C"),
-    IndexedTreeNode(key: "0C1C"),
-    IndexedTreeNode(key: "0C1C2A"),
-    IndexedTreeNode(key: "0C1C2A3C"),
-  ]),
+  (
+    nodesRemovedIndexedTree,
+    [
+      IndexedTreeNode(key: "0C"),
+      IndexedTreeNode(key: "0C1C"),
+      IndexedTreeNode(key: "0C1C2A"),
+      IndexedTreeNode(key: "0C1C2A3C"),
+    ]
+  ),
 ];
 
 IndexedTreeNode get defaultIndexedTree => IndexedTreeNode.root()
