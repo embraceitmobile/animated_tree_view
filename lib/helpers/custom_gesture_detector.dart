@@ -1,52 +1,80 @@
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 
-class SingleDoubleTapGestureRecognizer extends GestureRecognizer {
-  final Duration doubleTapDelay;
+class CustomGestureDetector extends StatefulWidget {
+  final Widget child;
   final VoidCallback? onSingleTap;
   final VoidCallback? onDoubleTap;
-
-  Timer? _doubleTapTimer;
-
-  SingleDoubleTapGestureRecognizer({
-    this.doubleTapDelay = const Duration(milliseconds: 300),
+  CustomGestureDetector({
+    required this.child,
     this.onSingleTap,
     this.onDoubleTap,
   });
 
   @override
-  void addPointer(PointerDownEvent event) {
-    if (_doubleTapTimer == null || _doubleTapTimer?.isActive == false) {
-      _doubleTapTimer = Timer(doubleTapDelay, () {
-        if (onSingleTap != null) onSingleTap!();
-        _doubleTapTimer = null;
-      });
-    } else {
-      _doubleTapTimer?.cancel();
-      if (onDoubleTap != null) onDoubleTap!();
+  _CustomGestureDetectorState createState() => _CustomGestureDetectorState();
+}
+
+class _CustomGestureDetectorState extends State<CustomGestureDetector> {
+  final double swipeThreshold = 10.0;
+  final Duration doubleTapDelay = Duration(milliseconds: 300);
+
+  Timer? _doubleTapTimer;
+  Offset? _initialPosition;
+  bool _isSwiping = false;
+  bool _isLongPress = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: _handlePointerDown,
+      onPointerMove: _handlePointerMove,
+      onPointerUp: _handlePointerUp,
+      onPointerCancel: _handlePointerCancel, // Handle long press
+      child: widget.child,
+    );
+  }
+
+  void _handlePointerDown(PointerDownEvent event) {
+    _initialPosition = event.position;
+    _isLongPress = false; // Reset long press flag
+    _doubleTapTimer ??= Timer(doubleTapDelay, () {
+      if (!_isSwiping && !_isLongPress && widget.onSingleTap != null) {
+        widget.onSingleTap!();
+      }
       _doubleTapTimer = null;
+    });
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    if (_initialPosition != null) {
+      final gestureDistance = event.position - _initialPosition!;
+      if (gestureDistance.distance > swipeThreshold) {
+        _isSwiping = true;
+        _doubleTapTimer?.cancel();
+        _doubleTapTimer = null;
+      }
     }
   }
 
-  @override
-  void acceptGesture(int pointer) {}
+  void _handlePointerUp(PointerUpEvent event) {
+    _initialPosition = null;
+    if (!_isSwiping && !_isLongPress && widget.onDoubleTap != null) {
+      _doubleTapTimer?.cancel();
+      _doubleTapTimer = null;
+      widget.onDoubleTap!();
+    }
+    _isSwiping = false;
+  }
 
-  @override
-  String get debugDescription => 'single-double-tap';
-
-  void didStopTrackingLastPointer(int pointer) {}
+  void _handlePointerCancel(PointerCancelEvent event) {
+    _isLongPress = true;
+  }
 
   @override
   void dispose() {
     _doubleTapTimer?.cancel();
     super.dispose();
   }
-
-  @override
-  void rejectGesture(int pointer) {}
-
-  @override
-  void resolve(GestureDisposition disposition) {}
 }
