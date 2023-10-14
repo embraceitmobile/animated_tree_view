@@ -55,7 +55,9 @@ class TreeViewStateHelper<Data> {
           animatedListStateController.insertAll(
               animatedListStateController.list.length, List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(root);
+        expansionBehaviourController.scrollToLastVisibleChild(root,
+            bypass: expansionBehaviourController.expansionBehavior ==
+                ExpansionBehavior.none);
       } else {
         final parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
@@ -72,7 +74,9 @@ class TreeViewStateHelper<Data> {
               parentIndex + parentNode.childrenAsList.length,
               List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        expansionBehaviourController.scrollToLastVisibleChild(parentNode,
+            bypass: expansionBehaviourController.expansionBehavior ==
+                ExpansionBehavior.none);
       }
     }
   }
@@ -92,7 +96,9 @@ class TreeViewStateHelper<Data> {
                   : event.index,
               List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(node.root);
+        expansionBehaviourController.scrollToLastVisibleChild(node.root,
+            bypass: expansionBehaviourController.expansionBehavior ==
+                ExpansionBehavior.none);
       } else {
         final parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
@@ -106,7 +112,9 @@ class TreeViewStateHelper<Data> {
           animatedListStateController.insertAll(
               parentIndex + 1 + event.index, List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        expansionBehaviourController.scrollToLastVisibleChild(parentNode,
+            bypass: expansionBehaviourController.expansionBehavior ==
+                ExpansionBehavior.none);
       }
     }
   }
@@ -278,7 +286,12 @@ class TreeViewExpansionBehaviourController<Data> {
     }
   }
 
-  Future<void> scrollToLastVisibleChild(INode parent) async {
+  Future<void> scrollToLastVisibleChild(INode parent,
+      {bool bypass = false}) async {
+    if (bypass) {
+      return;
+    }
+
     final lastChild = parent.childrenAsList.lastOrNull;
     if (lastChild == null) return;
 
