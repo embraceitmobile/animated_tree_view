@@ -1,4 +1,5 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mocks/node_mocks.dart';
@@ -43,6 +44,23 @@ void main() {
       final node = Node();
       final nodesToAdd = [Node(), Node(), Node()];
       node.addAll(nodesToAdd);
+      expect(node.children.length, equals(nodesToAdd.length));
+    });
+
+    test('On adding large number of children, the keys are not duplicated',
+        () async {
+      const count = 100000;
+      final node = Node();
+      final nodesToAdd = [for (int i = 0; i < 100000; i++) Node()];
+      final Map<String, int> freqMap = {};
+
+      for (final node in nodesToAdd) {
+        int freq = freqMap[node.key] ?? 0;
+        freqMap[node.key] = freq++;
+      }
+
+      node.addAll(nodesToAdd);
+      expect(freqMap.length, count);
       expect(node.children.length, equals(nodesToAdd.length));
     });
   });
