@@ -51,7 +51,7 @@ void main() {
         () async {
       const count = 100000;
       final node = Node();
-      final nodesToAdd = [for (int i = 0; i < 100000; i++) Node()];
+      final nodesToAdd = [for (int i = 0; i < count; i++) Node()];
       final Map<String, int> freqMap = {};
 
       for (final node in nodesToAdd) {
