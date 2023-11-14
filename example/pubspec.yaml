@@ -32,7 +32,7 @@ dependencies:
     sdk: flutter
 
   animated_tree_view:
-    path: ../../animated_treeeview
+    path: ../
 
 
   # The following adds the Cupertino Icons font to your application.

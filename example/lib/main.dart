@@ -2,7 +2,7 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/utils.dart';
+import 'package:example/utils/utils.dart';
 
 const showSnackBar = false;
 const expandChildrenOnReady = true;
