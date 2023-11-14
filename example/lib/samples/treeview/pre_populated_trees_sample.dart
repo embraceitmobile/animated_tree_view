@@ -3,10 +3,12 @@ import 'package:example/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Pre populated TreeView sample'),
+      home: const MyHomePage(title: 'Pre populated TreeView sample'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -35,9 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _nextTree() {
     setState(() {
-      if (stateCount < testTrees.length - 1)
+      if (stateCount < testTrees.length - 1) {
         stateCount++;
-      else {
+      } else {
         stateCount = 0;
       }
     });
@@ -58,8 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.fast_forward),
         onPressed: _nextTree,
+        child: const Icon(Icons.fast_forward),
       ),
       body: TreeView.simple(
         tree: testTrees[stateCount].value,
@@ -78,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-late final testTrees = <MapEntry<String, TreeNode>>[
+final testTrees = <MapEntry<String, TreeNode>>[
   MapEntry("Default tree", defaultTree),
   MapEntry("Add two nodes in root (L0)", nodesAddedTree),
   MapEntry("Add nodes in 0C (L1)", levelOneNodesAdded),

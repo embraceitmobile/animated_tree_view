@@ -178,6 +178,12 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// Callback to get the [TreeViewController] when the [TreeView] is ready
   final TreeReadyCallback<Data, Tree>? onTreeReady;
 
+  /// Should the tree move the focus to a new (added or inserted) node.
+  /// It is true by default.
+  /// If false, the [TreeView] will not scroll to the new nodes when they are
+  /// added or inserted to the tree.
+  final bool focusToNewNode;
+
   const _TreeView({
     super.key,
     this.expansionBehavior = ExpansionBehavior.none,
@@ -190,6 +196,7 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.padding,
     this.showRootNode = false,
     this.onTreeReady,
+    this.focusToNewNode = true,
   }) : this.indentation =
             indentation ?? const Indentation(style: IndentStyle.none);
 }
@@ -218,6 +225,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     _treeViewEventHandler = TreeViewStateHelper<Data>(
       animatedListStateController: animatedListController,
       tree: widget.tree,
+      focusToNewNode: widget.focusToNewNode,
       expansionBehaviourController: TreeViewExpansionBehaviourController<Data>(
         scrollController: _scrollController,
         expansionBehavior: widget.expansionBehavior,
@@ -378,8 +386,9 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     this.physics,
     super.padding,
     this.shrinkWrap = false,
-    super.showRootNode = false,
+    super.showRootNode,
     super.onTreeReady,
+    super.focusToNewNode,
   });
 
   /// The default implementation of [TreeView] that uses a [TreeNode] internally,
@@ -415,6 +424,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
@@ -433,6 +443,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
+        focusToNewNode: focusToNewNode,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -470,6 +481,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
       TreeView._(
@@ -488,6 +500,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
+        focusToNewNode: focusToNewNode,
       );
 
   /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
@@ -521,6 +534,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       TreeView._(
@@ -539,6 +553,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         shrinkWrap: shrinkWrap,
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
+        focusToNewNode: focusToNewNode,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -575,6 +590,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     EdgeInsetsGeometry? padding,
     bool shrinkWrap = false,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           TreeView._(
@@ -593,6 +609,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
             shrinkWrap: shrinkWrap,
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
+            focusToNewNode: focusToNewNode,
           );
 
   @override
@@ -677,6 +694,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     super.scrollController,
     super.showRootNode,
     super.onTreeReady,
+    super.focusToNewNode,
   }) : assert(
             expansionBehavior == ExpansionBehavior.none ||
                 scrollController != null,
@@ -722,6 +740,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ValueSetter<TreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
@@ -737,6 +756,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
+        focusToNewNode: focusToNewNode,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -777,6 +797,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
@@ -792,6 +813,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             padding: padding,
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
+            focusToNewNode: focusToNewNode,
           );
 
   /// The alternate implementation of [SliverTreeView] uses an [IndexedNode]
@@ -827,6 +849,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ValueSetter<IndexedTreeNode<Data>>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
   }) =>
       SliverTreeView._(
@@ -842,6 +865,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         padding: padding,
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
+        focusToNewNode: focusToNewNode,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -885,6 +909,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     ValueSetter<Tree>? onItemTap,
     EdgeInsetsGeometry? padding,
     bool showRootNode = true,
+    bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
   }) =>
           SliverTreeView._(
@@ -900,6 +925,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             padding: padding,
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
+            focusToNewNode: focusToNewNode,
           );
 }
 

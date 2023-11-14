@@ -1,6 +1,6 @@
 name: animated_tree_view
 description: Animated TreeView based on AnimatedList that allows building fully customizable Nodes that can be nested to infinite levels and children.
-version: 2.1.0
+version: 2.2.0
 repository: https://github.com/embraceitmobile/animated_tree_view
 
 environment:
@@ -8,8 +8,9 @@ environment:
 
 dependencies:
   scroll_to_index: ^3.0.1
-  diffutil_dart: ^3.0.0
+  diffutil_dart: ^4.0.0
   collection: ^1.17.1
+  uuid: ^4.1.0
 
   flutter:
     sdk: flutter
