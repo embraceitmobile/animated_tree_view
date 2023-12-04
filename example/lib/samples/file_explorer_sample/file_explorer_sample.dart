@@ -2,10 +2,12 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -15,13 +17,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'File Explorer Sample'),
+      home: const MyHomePage(title: 'File Explorer Sample'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -45,12 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
           showRootNode: true,
           expansionBehavior: ExpansionBehavior.scrollToLastChild,
           expansionIndicatorBuilder: (context, node) {
-            if (node.isRoot)
+            if (node.isRoot) {
               return PlusMinusIndicator(
                 tree: node,
                 alignment: Alignment.centerLeft,
                 color: Colors.grey[700],
               );
+            }
 
             return ChevronIndicator.rightDown(
               tree: node,
@@ -78,20 +81,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
 extension on ExplorableNode {
   Icon get icon {
-    if (isRoot) return Icon(Icons.data_object);
+    if (isRoot) return const Icon(Icons.data_object);
 
     if (this is FolderNode) {
-      if (isExpanded) return Icon(Icons.folder_open);
-      return Icon(Icons.folder);
+      if (isExpanded) return const Icon(Icons.folder_open);
+      return const Icon(Icons.folder);
     }
 
     if (this is FileNode) {
-      final file = this.data as File;
-      if (file.mimeType.startsWith("image")) return Icon(Icons.image);
-      if (file.mimeType.startsWith("video")) return Icon(Icons.video_file);
+      final file = data as File;
+      if (file.mimeType.startsWith("image")) return const Icon(Icons.image);
+      if (file.mimeType.startsWith("video")) return const Icon(Icons.video_file);
     }
 
-    return Icon(Icons.insert_drive_file);
+    return const Icon(Icons.insert_drive_file);
   }
 }
 
@@ -99,7 +102,7 @@ abstract class Explorable {
   final String name;
   final DateTime createdAt;
 
-  Explorable(this.name) : this.createdAt = DateTime.now();
+  Explorable(this.name) : createdAt = DateTime.now();
 
   @override
   String toString() => name;

@@ -16,5 +16,5 @@ final Map<int, Color> colorMapper = {
 
 extension ColorUtil on Color {
   Color byLuminance() =>
-      this.computeLuminance() > 0.4 ? Colors.black87 : Colors.white;
+      computeLuminance() > 0.4 ? Colors.black87 : Colors.white;
 }
