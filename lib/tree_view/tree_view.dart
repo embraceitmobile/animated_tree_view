@@ -430,6 +430,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -448,6 +449,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -542,6 +544,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -560,6 +563,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -598,6 +602,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
           TreeView._(
             key: key,
@@ -616,6 +621,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
+            animation: animation,
           );
 
   @override
