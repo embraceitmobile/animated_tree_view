@@ -487,6 +487,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -505,6 +506,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
