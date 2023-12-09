@@ -373,6 +373,9 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
   /// For more information see the [AnimatedList.shrinkWrap]
   final bool shrinkWrap;
 
+  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
+  final Animation<double>? animation;
+
   const TreeView._({
     super.key,
     super.expansionBehavior,
@@ -388,6 +391,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     this.shrinkWrap = false,
     super.showRootNode,
     super.onTreeReady,
+    this.animation,
     super.focusToNewNode,
   });
 
@@ -619,11 +623,15 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
 class TreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<TreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
+  TreeViewState([Animation<double>? animation]) : _animation = animation;
+
   static const _errorMsg =
       "Animated list state not found from GlobalKey<AnimatedListState>";
 
   late final GlobalKey<AnimatedListState> _listKey =
       GlobalKey<AnimatedListState>();
+
+  final Animation<double>? _animation;
 
   @override
   void insertItem(int index, {Duration duration = animationDuration}) {
@@ -637,7 +645,8 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
     if (_listKey.currentState == null) throw Exception(_errorMsg);
     _listKey.currentState!.removeItem(
       index,
-      (context, animation) => _removedItemBuilder(context, item, animation),
+      (context, animation) =>
+          _removedItemBuilder(context, item, _animation ?? animation),
       duration: duration,
     );
   }
@@ -653,7 +662,8 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
-      itemBuilder: _insertedItemBuilder,
+      itemBuilder: (context, index, animation) =>
+          _insertedItemBuilder(context, index, _animation ?? animation),
     );
   }
 }
