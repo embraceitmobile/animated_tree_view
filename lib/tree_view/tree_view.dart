@@ -64,12 +64,16 @@ final class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   const TreeViewController(this._animatedListController);
 
   /// Method for programmatically scrolling to an [index] in the flat list of the [TreeView].
-  Future scrollToIndex(int index) async =>
-      _animatedListController.expansionBehaviourController.scrollToIndex(index);
+  Future scrollToIndex(int index,
+          [Duration duration = scrollAnimationDuration]) async =>
+      _animatedListController.expansionBehaviourController
+          .scrollToIndex(index, duration);
 
   /// Method for programmatically scrolling to a [node] in the [TreeView].
-  Future scrollToItem(Tree node) async =>
-      _animatedListController.expansionBehaviourController.scrollToItem(node);
+  Future scrollToItem(Tree node,
+          [Duration duration = scrollAnimationDuration]) async =>
+      _animatedListController.expansionBehaviourController
+          .scrollToItem(node, duration);
 
   /// Method for programmatically toggling the expansion state of a [TreeNode].
   /// If the [TreeNode] is in expanded state, then it will be collapsed.
