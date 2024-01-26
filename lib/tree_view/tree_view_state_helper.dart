@@ -230,13 +230,14 @@ class TreeViewExpansionBehaviourController<Data> {
     required this.animatedListStateController,
   });
 
-  Future scrollToIndex(int index) async => await scrollController.scrollToIndex(
-        index,
-        preferPosition: AutoScrollPosition.begin,
-      );
+  Future scrollToIndex(int index,
+          [Duration duration = scrollAnimationDuration]) async =>
+      await scrollController.scrollToIndex(index,
+          preferPosition: AutoScrollPosition.begin, duration: duration);
 
-  Future scrollToItem(ITreeNode<Data> item) async =>
-      await scrollToIndex(animatedListStateController.indexOf(item));
+  Future scrollToItem(ITreeNode<Data> item,
+          [Duration duration = scrollAnimationDuration]) async =>
+      await scrollToIndex(animatedListStateController.indexOf(item), duration);
 
   Future<void> collapseNode(ITreeNode<Data> item) async {
     final removeItems = animatedListStateController.list.where((element) =>

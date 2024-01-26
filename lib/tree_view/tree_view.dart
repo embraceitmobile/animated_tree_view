@@ -64,12 +64,16 @@ final class TreeViewController<Data, Tree extends ITreeNode<Data>> {
   const TreeViewController(this._animatedListController);
 
   /// Method for programmatically scrolling to an [index] in the flat list of the [TreeView].
-  Future scrollToIndex(int index) async =>
-      _animatedListController.expansionBehaviourController.scrollToIndex(index);
+  Future scrollToIndex(int index,
+          [Duration duration = scrollAnimationDuration]) async =>
+      _animatedListController.expansionBehaviourController
+          .scrollToIndex(index, duration);
 
   /// Method for programmatically scrolling to a [node] in the [TreeView].
-  Future scrollToItem(Tree node) async =>
-      _animatedListController.expansionBehaviourController.scrollToItem(node);
+  Future scrollToItem(Tree node,
+          [Duration duration = scrollAnimationDuration]) async =>
+      _animatedListController.expansionBehaviourController
+          .scrollToItem(node, duration);
 
   /// Method for programmatically toggling the expansion state of a [TreeNode].
   /// If the [TreeNode] is in expanded state, then it will be collapsed.
@@ -373,6 +377,9 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
   /// For more information see the [AnimatedList.shrinkWrap]
   final bool shrinkWrap;
 
+  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
+  final Animation<double>? animation;
+
   const TreeView._({
     super.key,
     super.expansionBehavior,
@@ -388,6 +395,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     this.shrinkWrap = false,
     super.showRootNode,
     super.onTreeReady,
+    this.animation,
     super.focusToNewNode,
   });
 
@@ -426,6 +434,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -444,6 +453,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -483,6 +493,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -501,6 +512,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
@@ -536,6 +548,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       TreeView._(
         key: key,
@@ -554,6 +567,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -592,6 +606,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
           TreeView._(
             key: key,
@@ -610,20 +625,25 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
+            animation: animation,
           );
 
   @override
-  State<StatefulWidget> createState() => TreeViewState<Data, Tree>();
+  State<StatefulWidget> createState() => TreeViewState<Data, Tree>(animation);
 }
 
 class TreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<TreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, TreeView<Data, Tree>> {
+  TreeViewState(Animation<double>? animation) : _animation = animation;
+
   static const _errorMsg =
       "Animated list state not found from GlobalKey<AnimatedListState>";
 
   late final GlobalKey<AnimatedListState> _listKey =
       GlobalKey<AnimatedListState>();
+
+  final Animation<double>? _animation;
 
   @override
   void insertItem(int index, {Duration duration = animationDuration}) {
@@ -637,7 +657,8 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
     if (_listKey.currentState == null) throw Exception(_errorMsg);
     _listKey.currentState!.removeItem(
       index,
-      (context, animation) => _removedItemBuilder(context, item, animation),
+      (context, animation) =>
+          _removedItemBuilder(context, item, _animation ?? animation),
       duration: duration,
     );
   }
@@ -653,7 +674,8 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
       physics: widget.physics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
-      itemBuilder: _insertedItemBuilder,
+      itemBuilder: (context, index, animation) =>
+          _insertedItemBuilder(context, index, _animation ?? animation),
     );
   }
 }
@@ -682,6 +704,9 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
 /// e.g. for path './.level1/level2', complexity is simply O(2).
 final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
+  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
+  final Animation<double>? animation;
+
   const SliverTreeView._({
     super.key,
     required super.builder,
@@ -695,6 +720,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     super.showRootNode,
     super.onTreeReady,
     super.focusToNewNode,
+    this.animation,
   }) : assert(
             expansionBehavior == ExpansionBehavior.none ||
                 scrollController != null,
@@ -703,7 +729,8 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             "For more info see example/lib/samples/sliver_treeview/sliver_treeview_sample.dart\n\n");
 
   @override
-  State<StatefulWidget> createState() => SliverTreeViewState<Data, Tree>();
+  State<StatefulWidget> createState() =>
+      SliverTreeViewState<Data, Tree>(animation);
 
   /// The default implementation of [SliverTreeView] that uses a [TreeNode] internally,
   /// which is based on the [Map] data structure for maintaining the children states.
@@ -742,6 +769,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       SliverTreeView._(
         key: key,
@@ -757,6 +785,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -799,6 +828,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
           SliverTreeView._(
             key: key,
@@ -814,6 +844,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
+            animation: animation,
           );
 
   /// The alternate implementation of [SliverTreeView] uses an [IndexedNode]
@@ -851,6 +882,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
+    Animation<double>? animation,
   }) =>
       SliverTreeView._(
         key: key,
@@ -866,6 +898,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         showRootNode: showRootNode,
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
+        animation: animation,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -911,6 +944,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool showRootNode = true,
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
+    Animation<double>? animation,
   }) =>
           SliverTreeView._(
             key: key,
@@ -926,17 +960,21 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             showRootNode: showRootNode,
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
+            animation: animation,
           );
 }
 
 class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
     extends State<SliverTreeView<Data, Tree>>
     with _TreeViewState<Data, Tree, SliverTreeView<Data, Tree>> {
+  SliverTreeViewState(Animation<double>? animation) : _animation = animation;
   static const _errorMsg =
       "Sliver Animated list state not found from GlobalKey<SliverAnimatedListState>";
 
   late final GlobalKey<SliverAnimatedListState> _listKey =
       GlobalKey<SliverAnimatedListState>();
+
+  final Animation<double>? _animation;
 
   @override
   void insertItem(int index, {Duration duration = animationDuration}) {
@@ -950,7 +988,8 @@ class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
     if (_listKey.currentState == null) throw Exception(_errorMsg);
     _listKey.currentState!.removeItem(
       index,
-      (context, animation) => _removedItemBuilder(context, item, animation),
+      (context, animation) =>
+          _removedItemBuilder(context, item, _animation ?? animation),
       duration: duration,
     );
   }
@@ -961,7 +1000,8 @@ class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
       key: _listKey,
       initialItemCount:
           _treeViewEventHandler.animatedListStateController.list.length,
-      itemBuilder: _insertedItemBuilder,
+      itemBuilder: (context, index, animation) =>
+          _insertedItemBuilder(context, index, _animation ?? animation),
     );
   }
 }
