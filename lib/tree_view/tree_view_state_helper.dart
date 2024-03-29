@@ -23,6 +23,7 @@ class TreeViewStateHelper<Data> {
   final ITreeNode<Data> tree;
   final AnimatedListStateController<Data> animatedListStateController;
   final TreeViewExpansionBehaviourController<Data> expansionBehaviourController;
+  final bool focusToNewNode;
 
   late StreamSubscription<NodeAddEvent<INode>> _addedNodesSubscription;
   late StreamSubscription<NodeRemoveEvent<INode>> _removeNodesSubscription;
@@ -32,6 +33,7 @@ class TreeViewStateHelper<Data> {
     required this.animatedListStateController,
     required this.expansionBehaviourController,
     required this.tree,
+    this.focusToNewNode = true,
   }) {
     _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
     _removeNodesSubscription = tree.removedNodes.listen(handleRemoveItemsEvent);
@@ -50,12 +52,16 @@ class TreeViewStateHelper<Data> {
       if (node.isRoot || node.parent?.isRoot == true) {
         final root = node.root as ITreeNode<Data>;
         if (!root.isExpanded) {
-          expansionBehaviourController.expandNode(root);
+          if (focusToNewNode) {
+            expansionBehaviourController.expandNode(root);
+          }
         } else {
           animatedListStateController.insertAll(
               animatedListStateController.list.length, List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(root);
+        if (focusToNewNode) {
+          expansionBehaviourController.scrollToLastVisibleChild(root);
+        }
       } else {
         final parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
@@ -72,7 +78,9 @@ class TreeViewStateHelper<Data> {
               parentIndex + parentNode.childrenAsList.length,
               List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        if (focusToNewNode) {
+          expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        }
       }
     }
   }
@@ -92,7 +100,9 @@ class TreeViewStateHelper<Data> {
                   : event.index,
               List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(node.root);
+        if (focusToNewNode) {
+          expansionBehaviourController.scrollToLastVisibleChild(node.root);
+        }
       } else {
         final parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
@@ -106,7 +116,9 @@ class TreeViewStateHelper<Data> {
           animatedListStateController.insertAll(
               parentIndex + 1 + event.index, List.from(event.items));
         }
-        expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        if (focusToNewNode) {
+          expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        }
       }
     }
   }

@@ -45,6 +45,23 @@ void main() {
       node.addAll(nodesToAdd);
       expect(node.children.length, equals(nodesToAdd.length));
     });
+
+    test('On adding large number of children, the keys are not duplicated',
+            () async {
+          const count = 100000;
+          final node = IndexedNode();
+          final nodesToAdd = [for (int i = 0; i < count; i++) IndexedNode()];
+          final Map<String, int> freqMap = {};
+
+          for (final node in nodesToAdd) {
+            int freq = freqMap[node.key] ?? 0;
+            freqMap[node.key] = freq++;
+          }
+
+          node.addAll(nodesToAdd);
+          expect(freqMap.length, count);
+          expect(node.children.length, equals(nodesToAdd.length));
+        });
   });
 
   group('test inserting children to a node', () {

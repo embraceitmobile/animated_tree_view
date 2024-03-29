@@ -1,6 +1,7 @@
 import 'package:animated_tree_view/helpers/exceptions.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/v4.dart';
 
 import 'base/i_node.dart';
 import 'base/i_node_actions.dart';
@@ -30,7 +31,7 @@ class IndexedNode extends INode implements IIndexedNodeActions {
       : assert(key == null || !key.contains(INode.PATH_SEPARATOR),
             "Key should not contain the PATH_SEPARATOR '${INode.PATH_SEPARATOR}'"),
         this.children = <IndexedNode>[],
-        this.key = key ?? UniqueKey().toString();
+        this.key = key ?? UuidV4().generate();
 
   /// Alternate factory constructor that should be used for the [root] nodes.
   factory IndexedNode.root() => IndexedNode(key: INode.ROOT_KEY);
