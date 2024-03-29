@@ -88,7 +88,7 @@ class TreeViewStateHelper<Data> {
   @visibleForTesting
   void handleInsertItemsEvent(NodeInsertEvent<INode> event) {
     for (final node in event.items) {
-      if (animatedListStateController.containsKey(node.path)) continue;
+      // if (animatedListStateController.containsKey(node.path)) continue;
 
       if (node.isRoot || node.parent?.isRoot == true) {
         if (!(node.root as ITreeNode<Data>).isExpanded) {

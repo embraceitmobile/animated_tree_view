@@ -42,9 +42,9 @@ class TreeDiff {
   final ITreeNode newTree;
 
   Iterable<TreeDiffNodeChange> get allUpdates => [
+        ...nodesRemoved,
         ...nodesAdded,
         ...nodesInserted,
-        ...nodesRemoved,
         ...nodesUpdated,
       ];
 
