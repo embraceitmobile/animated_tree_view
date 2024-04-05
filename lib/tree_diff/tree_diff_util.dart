@@ -1,13 +1,14 @@
 import 'dart:collection';
 
+import 'package:flutter/widgets.dart';
+
+import 'package:diffutil_dart/diffutil.dart';
+
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/helpers/collection_utils.dart';
 import 'package:animated_tree_view/tree_diff/tree_diff_change.dart';
-import 'package:diffutil_dart/diffutil.dart';
-import 'package:flutter/widgets.dart';
 
-List<TreeDiffNodeChange> calculateTreeDiff<T extends ITreeNode>(
-    T oldTree, T newTree) {
+List<TreeDiffNodeChange> calculateTreeDiff<T extends ITreeNode>(T oldTree, T newTree) {
   final updates = <TreeDiffNodeChange>[];
 
   final queue = ListQueue<(INode, INode)>();
@@ -16,8 +17,7 @@ List<TreeDiffNodeChange> calculateTreeDiff<T extends ITreeNode>(
   while (queue.isNotEmpty) {
     final (oldTree, newTree) = queue.removeFirst();
 
-    if (oldTree.childrenAsList.isEmpty && newTree.childrenAsList.isEmpty)
-      continue;
+    if (oldTree.childrenAsList.isEmpty && newTree.childrenAsList.isEmpty) continue;
 
     final localUpdates = TreeDiff(
       oldTree: oldTree as ITreeNode,
@@ -69,8 +69,7 @@ class TreeDiff {
   }
 
   @visibleForTesting
-  static TreeDiff forTree(
-      {required TreeNode oldTree, required TreeNode newTree}) {
+  static TreeDiff forTree({required TreeNode oldTree, required TreeNode newTree}) {
     final oldKeys = oldTree.children.keys.toSet();
     final newKeys = newTree.children.keys.toSet();
 
@@ -127,7 +126,10 @@ class TreeDiff {
     for (final update in localUpdates) {
       update.when(
         insert: (pos, data) {
-          nodesInserted.add(TreeDiffNodeInsert(position: pos, data: data));
+          // use the index from the newTree because 'pos' represents a position
+          // based on the oldTree
+          final index = newTree.children.indexWhere((e) => e.key == data.key);
+          nodesInserted.add(TreeDiffNodeInsert(position: index, data: data));
         },
         remove: (pos, data) {
           nodesRemoved.add(TreeDiffNodeRemove(data: data, position: pos));
@@ -137,19 +139,19 @@ class TreeDiff {
       );
     }
 
-    final oldTreeMap = <String, IndexedNode>{
-      for (final node in oldTree.children) node.key: node
-    };
+    // sort nodes to insert ascending
+    nodesInserted.sort((a, b) => a.position - b.position);
+    // sort nodes to remove descending
+    nodesRemoved.sort((a, b) => a.position! - b.position!);
 
-    final newTreeMap = <String, IndexedNode>{
-      for (final node in newTree.children) node.key: node
-    };
+    final oldTreeMap = <String, IndexedNode>{for (final node in oldTree.children) node.key: node};
+
+    final newTreeMap = <String, IndexedNode>{for (final node in newTree.children) node.key: node};
 
     final nodesUnchanged = <(IndexedTreeNode, IndexedTreeNode)>[];
     final nodesUpdated = <TreeDiffNodeUpdate>[];
 
-    for (final nodeKey
-        in oldTreeMap.keys.toSet().intersection(newTreeMap.keys.toSet())) {
+    for (final nodeKey in oldTreeMap.keys.toSet().intersection(newTreeMap.keys.toSet())) {
       if ((oldTreeMap[nodeKey] as IndexedTreeNode).data !=
           (newTreeMap[nodeKey] as IndexedTreeNode).data) {
         nodesUpdated.add(TreeDiffNodeUpdate(newTreeMap[nodeKey]!));
