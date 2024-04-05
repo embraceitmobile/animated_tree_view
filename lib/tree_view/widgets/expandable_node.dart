@@ -1,8 +1,8 @@
-import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
 
-class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
-    extends StatelessWidget {
+import 'package:animated_tree_view/animated_tree_view.dart';
+
+class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>> extends StatelessWidget {
   final TreeNodeWidgetBuilder<Tree> builder;
   final AutoScrollController scrollController;
   final Tree node;
@@ -96,9 +96,8 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       child: builder(context, node),
       indentation: indentation,
       minLevelToIndent: showRootNode ? 0 : 1,
-      expansionIndicator: node.childrenAsList.isEmpty
-          ? null
-          : expansionIndicatorBuilder?.call(context, node),
+      expansionIndicator:
+          node.childrenAsList.isEmpty ? null : expansionIndicatorBuilder?.call(context, node),
       onTap: remove
           ? null
           : (dynamic item) {
@@ -141,23 +140,28 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      axis: Axis.vertical,
-      sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: onTap == null ? null : () => onTap!(node),
-        child: Indent(
-          indentation: indentation,
-          node: node,
-          minLevelToIndent: minLevelToIndent,
-          child: expansionIndicator == null
-              ? child
-              : PositionedExpansionIndicator(
-                  expansionIndicator: expansionIndicator!,
-                  child: child,
-                ),
-        ),
-      ),
-    );
+        sizeFactor: animation,
+        axisAlignment: -1.0,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1.0, 0.0),
+            end: const Offset(0.0, 0.0),
+          ).animate(animation),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: onTap == null ? null : () => onTap!(node),
+            child: Indent(
+              indentation: indentation,
+              node: node,
+              minLevelToIndent: minLevelToIndent,
+              child: expansionIndicator == null
+                  ? child
+                  : PositionedExpansionIndicator(
+                      expansionIndicator: expansionIndicator!,
+                      child: child,
+                    ),
+            ),
+          ),
+        ));
   }
 }
