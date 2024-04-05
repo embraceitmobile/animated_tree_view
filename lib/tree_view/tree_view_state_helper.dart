@@ -109,16 +109,21 @@ class TreeViewStateHelper<Data> {
         if (parentIndex < 0) continue;
 
         final parentNode = animatedListStateController.list[parentIndex];
+        // do NOT insert items when their parent is not expanded
+        if (!parentNode.isExpanded) continue;
 
-        if (!parentNode.isExpanded) {
-          expansionBehaviourController.expandNode(parentNode);
-        } else {
-          animatedListStateController.insertAll(
-              parentIndex + 1 + event.index, List.from(event.items));
-        }
-        if (focusToNewNode) {
-          expansionBehaviourController.scrollToLastVisibleChild(parentNode);
-        }
+        animatedListStateController.insertAll(
+            parentIndex + 1 + event.index, List.from(event.items));
+
+        // if (!parentNode.isExpanded) {
+        //   expansionBehaviourController.expandNode(parentNode);
+        // } else {
+        //   animatedListStateController.insertAll(
+        //       parentIndex + 1 + event.index, List.from(event.items));
+        // }
+        // if (focusToNewNode) {
+        //   expansionBehaviourController.scrollToLastVisibleChild(parentNode);
+        // }
       }
     }
   }
