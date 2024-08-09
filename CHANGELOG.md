@@ -1,3 +1,10 @@
+## [2.2.1]
+
+* Fix [#45](https://github.com/embraceitmobile/animated_tree_view/issues/45): make the animation controller public for expansion indicator
+* Fix [#50](https://github.com/embraceitmobile/animated_tree_view/issues/50): update the dependencies for Flutter 3.24 - Dart 3.5
+* Merge PR [#38](https://github.com/embraceitmobile/animated_tree_view/pull/38): Add optional parameter to specify type of animation 
+* Chores Migrate the example to Android Gradle plugins with the declarative plugins block
+
 ## [2.2.0]
 
 * Fix [#29](https://github.com/embraceitmobile/animated_tree_view/issues/29): replace UniqueKey with Uuid to prevent keys duplication on adding a large number of children to a node
