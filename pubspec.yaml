@@ -8,9 +8,9 @@ environment:
 
 dependencies:
   scroll_to_index: ^3.0.1
-  diffutil_dart: ^4.0.0
-  collection: ^1.17.1
-  uuid: ^4.1.0
+  diffutil_dart: ^4.0.1
+  collection: ^1.18.0
+  uuid: ^4.4.2
 
   flutter:
     sdk: flutter
