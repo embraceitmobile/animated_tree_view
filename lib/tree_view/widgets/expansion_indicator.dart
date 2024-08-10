@@ -63,7 +63,7 @@ abstract class ExpansionIndicator extends StatefulWidget {
 
 abstract class ExpansionIndicatorState<T extends ExpansionIndicator>
     extends State<T> with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
+  late final AnimationController controller = AnimationController(
     duration: animationDuration,
     vsync: this,
   );
@@ -72,21 +72,21 @@ abstract class ExpansionIndicatorState<T extends ExpansionIndicator>
   void initState() {
     super.initState();
     widget.tree.expansionNotifier.addListener(_onExpandedChangeListener);
-    if (widget.tree.isExpanded) _controller.value = 1;
+    if (widget.tree.isExpanded) controller.value = 1;
   }
 
   void _onExpandedChangeListener() {
     if (!mounted) return;
 
     if (widget.tree.isExpanded)
-      _controller.animateTo(1, curve: widget.curve);
+      controller.animateTo(1, curve: widget.curve);
     else
-      _controller.animateBack(0, curve: widget.curve);
+      controller.animateBack(0, curve: widget.curve);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     widget.tree.removeListener(_onExpandedChangeListener);
     super.dispose();
   }
@@ -182,7 +182,7 @@ class _RotatedIndicatorState extends ExpansionIndicatorState<ChevronIndicator> {
   @override
   Widget build(BuildContext context) {
     return RotationTransition(
-      turns: widget.tween.animate(_controller),
+      turns: widget.tween.animate(controller),
       child: Icon(widget.icon, color: widget.color),
     );
   }
@@ -226,7 +226,7 @@ class _PlusMinusIndicatorState
         alignment: Alignment.center,
         children: [
           RotationTransition(
-            turns: tween.animate(_controller),
+            turns: tween.animate(controller),
             child: RotatedBox(
                 quarterTurns: 1,
                 child: Icon(Icons.remove, color: widget.color)),

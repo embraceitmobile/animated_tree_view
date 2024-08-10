@@ -1,5 +1,4 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mocks/node_mocks.dart';

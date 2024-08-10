@@ -227,4 +227,4 @@ The `TreeViewController` provides utility methods that allow controlling the `Tr
 
 ## Future Goals
 * [ ] Add RTL support
-* [ ] Add support for 2D scrolling when the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1) becomes available.
+* [ ] Add support for 2D scrolling using the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1)

@@ -3,10 +3,12 @@ import 'package:example/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(
+      home: const MyHomePage(
         title: 'Indexed TreeView Modification Demo',
       ),
     );
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -51,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
             TreeView.indexed(
               tree: IndexedTreeNode.root(),
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               showRootNode: _showRootNode,
               builder: buildListItem,
             ),
@@ -60,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: ElevatedButton.icon(
                     onPressed: () => tree.add(IndexedTreeNode()),
-                    icon: Icon(Icons.add),
-                    label: Text("Add Node")),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Node")),
               ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -127,12 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TextButton.icon(
         style: TextButton.styleFrom(
           foregroundColor: Colors.green[800],
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
-        icon: Icon(Icons.add_circle, color: Colors.green),
-        label: Text("Child", style: TextStyle(color: Colors.green)),
+        icon: const Icon(Icons.add_circle, color: Colors.green),
+        label: const Text("Child", style: TextStyle(color: Colors.green)),
         onPressed: () => item.add(IndexedTreeNode()),
       ),
     );
@@ -144,11 +146,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: Colors.green[800],
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
-        child: Text("Insert Above", style: TextStyle(color: Colors.green)),
+        child: const Text("Insert Above", style: TextStyle(color: Colors.green)),
         onPressed: () {
           item.parent?.insertBefore(item, IndexedTreeNode());
         },
@@ -162,11 +164,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: Colors.green[800],
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
-        child: Text("Insert Below", style: TextStyle(color: Colors.green)),
+        child: const Text("Insert Below", style: TextStyle(color: Colors.green)),
         onPressed: () {
           item.parent?.insertAfter(item, IndexedTreeNode());
         },
@@ -180,11 +182,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TextButton(
           style: TextButton.styleFrom(
             foregroundColor: Colors.red[800],
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
-          child: Icon(Icons.delete, color: Colors.red),
+          child: const Icon(Icons.delete, color: Colors.red),
           onPressed: () => item.delete()),
     );
   }
@@ -195,12 +197,12 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TextButton.icon(
           style: TextButton.styleFrom(
             foregroundColor: Colors.red[800],
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
-          icon: Icon(Icons.delete, color: Colors.red),
-          label: Text("Clear All", style: TextStyle(color: Colors.red)),
+          icon: const Icon(Icons.delete, color: Colors.red),
+          label: const Text("Clear All", style: TextStyle(color: Colors.red)),
           onPressed: () => item.clear()),
     );
   }

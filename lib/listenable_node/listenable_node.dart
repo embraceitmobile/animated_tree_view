@@ -141,8 +141,9 @@ class ListenableNode extends Node
     final remainingChildren = childrenAsList.toSet();
     allChildren.removeAll(remainingChildren);
 
-    if (allChildren.isNotEmpty)
+    if (allChildren.isNotEmpty) {
       _notifyNodesRemoved(NodeRemoveEvent(List.from(allChildren)));
+    }
   }
 
   /// Clear all the child nodes from [children]. The [children] will be empty
