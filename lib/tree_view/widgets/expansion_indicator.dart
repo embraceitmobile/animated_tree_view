@@ -20,9 +20,9 @@ class PositionedExpansionIndicator extends StatelessWidget {
     return Stack(
       children: <Widget>[
         child,
-        Positioned(
-          left: expansionIndicator.alignment.x <= 0 ? 0 : null,
-          right: expansionIndicator.alignment.x >= 0 ? 0 : null,
+        PositionedDirectional(
+          start: expansionIndicator.alignment.x <= 0 ? 0 : null,
+          end: expansionIndicator.alignment.x >= 0 ? 0 : null,
           top: expansionIndicator.alignment.y <= 0 ? 0 : null,
           bottom: expansionIndicator.alignment.y >= 0 ? 0 : null,
           child: Padding(

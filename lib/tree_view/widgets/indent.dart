@@ -87,9 +87,11 @@ class Indent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Directionality.of(context) == TextDirection.rtl;
+
     final content = Padding(
-      padding: EdgeInsets.only(
-        left: (indentation.width * (node.level - minLevelToIndent)).clamp(
+      padding: EdgeInsetsDirectional.only(
+        start: (indentation.width * (node.level - minLevelToIndent)).clamp(
           0.0,
           double.maxFinite,
         ),
@@ -105,6 +107,7 @@ class Indent extends StatelessWidget {
         indentation: indentation,
         node: node,
         minLevelToIndent: minLevelToIndent,
+        isRtl: isRtl,
       ),
       child: content,
     );
@@ -115,15 +118,23 @@ class _IndentationPainter extends CustomPainter {
   final Indentation indentation;
   final ITreeNode node;
   final int minLevelToIndent;
+  final bool isRtl;
 
   const _IndentationPainter({
     required this.indentation,
     required this.node,
     required this.minLevelToIndent,
+    required this.isRtl,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (isRtl) {
+      canvas.save();
+      canvas.translate(size.width, 0);
+      canvas.scale(-1, 1);
+    }
+
     final strokeWidth = indentation.thickness;
     final totalWidth = (indentation.width * (node.level - minLevelToIndent))
         .clamp(0.0, double.maxFinite);
@@ -212,6 +223,10 @@ class _IndentationPainter extends CustomPainter {
         paint: paint,
         drawLastChild: indentation.style == IndentStyle.scopingLine,
       );
+
+    if (isRtl) {
+      canvas.restore();
+    }
   }
 
   @override
