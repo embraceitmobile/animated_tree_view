@@ -80,7 +80,7 @@ class TreeViewStateHelper<Data> {
                   element.level > parentNode.level);
           if (insertAtIndex < 0) {
             animatedListStateController.insertAll(
-              animatedListStateController.list.length - 1,
+              animatedListStateController.length - 1,
               List.from(event.items),
             );
           } else {
@@ -106,10 +106,24 @@ class TreeViewStateHelper<Data> {
         if (!(node.root as ITreeNode<Data>).isExpanded) {
           expansionBehaviourController.expandNode(node.root as ITreeNode<Data>);
         } else {
+          final parentNode = node.root;
+          int actualIndex = event.index;
+
+          for (int i = event.index + 1;
+              i < animatedListStateController.length;
+              i++) {
+            if (animatedListStateController.list[i].level >
+                parentNode.level + 1) {
+              actualIndex++;
+            } else {
+              break;
+            }
+          }
+
           animatedListStateController.insertAll(
               animatedListStateController.showRootNode
-                  ? event.index + 1
-                  : event.index,
+                  ? actualIndex + 1
+                  : actualIndex,
               List.from(event.items));
         }
         if (focusToNewNode) {
@@ -125,8 +139,22 @@ class TreeViewStateHelper<Data> {
         if (!parentNode.isExpanded) {
           expansionBehaviourController.expandNode(parentNode);
         } else {
+          int actualIndex = parentIndex + event.index;
+
+          for (int i = parentIndex + event.index + 1;
+              i < animatedListStateController.length;
+              i++) {
+            if (animatedListStateController.list[i].level >
+                parentNode.level + 1) {
+              actualIndex++;
+            } else {
+              break;
+            }
+          }
           animatedListStateController.insertAll(
-              parentIndex + 1 + event.index, List.from(event.items));
+            actualIndex + 1,
+            List.from(event.items),
+          );
         }
         if (focusToNewNode) {
           expansionBehaviourController.scrollToLastVisibleChild(parentNode);
