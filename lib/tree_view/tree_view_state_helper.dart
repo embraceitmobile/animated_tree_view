@@ -74,9 +74,21 @@ class TreeViewStateHelper<Data> {
         } else {
           // if the node is expanded, add the items in the flatList and
           // the animatedList
-          animatedListStateController.insertAll(
-              parentIndex + parentNode.childrenAsList.length,
-              List.from(event.items));
+          final insertAtIndex = animatedListStateController.list.lastIndexWhere(
+              (element) =>
+                  element.path.startsWith(parentNode.path) &&
+                  element.level > parentNode.level);
+          if (insertAtIndex < 0) {
+            animatedListStateController.insertAll(
+              animatedListStateController.list.length - 1,
+              List.from(event.items),
+            );
+          } else {
+            animatedListStateController.insertAll(
+              insertAtIndex + 1,
+              List.from(event.items),
+            );
+          }
         }
         if (focusToNewNode) {
           expansionBehaviourController.scrollToLastVisibleChild(parentNode);
