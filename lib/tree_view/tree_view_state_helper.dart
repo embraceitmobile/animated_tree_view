@@ -106,19 +106,7 @@ class TreeViewStateHelper<Data> {
         if (!(node.root as ITreeNode<Data>).isExpanded) {
           expansionBehaviourController.expandNode(node.root as ITreeNode<Data>);
         } else {
-          final parentNode = node.root;
-          int actualIndex = event.index;
-
-          for (int i = event.index + 1;
-              i < animatedListStateController.length;
-              i++) {
-            if (animatedListStateController.list[i].level >
-                parentNode.level + 1) {
-              actualIndex++;
-            } else {
-              break;
-            }
-          }
+          int actualIndex = computeActualIndex(event.index, node.root.level);
 
           animatedListStateController.insertAll(
               animatedListStateController.showRootNode
@@ -139,28 +127,35 @@ class TreeViewStateHelper<Data> {
         if (!parentNode.isExpanded) {
           expansionBehaviourController.expandNode(parentNode);
         } else {
-          int actualIndex = parentIndex + event.index;
+          final actualIndex =
+              computeActualIndex(parentIndex + event.index, parentNode.level);
 
-          for (int i = parentIndex + event.index + 1;
-              i < animatedListStateController.length;
-              i++) {
-            if (animatedListStateController.list[i].level >
-                parentNode.level + 1) {
-              actualIndex++;
-            } else {
-              break;
-            }
-          }
           animatedListStateController.insertAll(
             actualIndex + 1,
             List.from(event.items),
           );
         }
+
         if (focusToNewNode) {
           expansionBehaviourController.scrollToLastVisibleChild(parentNode);
         }
       }
     }
+  }
+
+  @visibleForTesting
+  int computeActualIndex(int targetIndex, int parentNodeLevel) {
+    int actualIndex = targetIndex;
+
+    for (int i = targetIndex + 1; i < animatedListStateController.length; i++) {
+      if (animatedListStateController.list[i].level > parentNodeLevel + 1) {
+        actualIndex++;
+      } else {
+        break;
+      }
+    }
+
+    return actualIndex;
   }
 
   @visibleForTesting
