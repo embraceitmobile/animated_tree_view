@@ -290,7 +290,6 @@ class TreeViewExpansionBehaviourController<Data> {
     );
 
     item.expansionNotifier.value = true;
-    item.cacheChildIndices();
   }
 
   Future<void> toggleExpansion(ITreeNode<Data> item) async {

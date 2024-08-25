@@ -14,6 +14,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final ValueSetter<Tree>? onItemTap;
   final ValueSetter<Tree> onToggleExpansion;
   final bool showRootNode;
+  final bool isLastChild;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
@@ -26,8 +27,10 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
     required Indentation indentation,
+    Tree? nextNode,
   }) {
     return ValueListenableBuilder<INode>(
+      key: ValueKey(node.key + index.toString()),
       valueListenable: node,
       builder: (context, treeNode, _) => ValueListenableBuilder(
         valueListenable: (treeNode as Tree).listenableData,
@@ -42,6 +45,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
           showRootNode: showRootNode,
+          isLastChild: node.level > (nextNode?.level ?? 0),
         ),
       ),
     );
@@ -60,6 +64,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required Indentation indentation,
   }) {
     return ExpandableNodeItem<Data, Tree>(
+      key: ValueKey(node.key),
       builder: builder,
       scrollController: scrollController,
       node: node,
@@ -70,6 +75,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
       showRootNode: showRootNode,
+      isLastChild: true,
     );
   }
 
@@ -86,16 +92,19 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     this.onItemTap,
     required this.showRootNode,
     required this.indentation,
+    required this.isLastChild,
   });
 
   @override
   Widget build(BuildContext context) {
     final itemContainer = ExpandableNodeContainer(
+      key: ValueKey("container#$key"),
       animation: animation,
       node: node,
       child: builder(context, node),
       indentation: indentation,
       minLevelToIndent: showRootNode ? 0 : 1,
+      isLastChild: isLastChild,
       expansionIndicator: node.childrenAsList.isEmpty
           ? null
           : expansionIndicatorBuilder?.call(context, node),
@@ -110,7 +119,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     if (index == null || remove) return itemContainer;
 
     return AutoScrollTag(
-      key: ValueKey(node.key),
+      key: ValueKey("tag#${node.key}"),
       controller: scrollController,
       index: index!,
       child: itemContainer,
@@ -126,6 +135,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
   final Indentation indentation;
   final Widget child;
   final int minLevelToIndent;
+  final bool isLastChild;
 
   const ExpandableNodeContainer({
     super.key,
@@ -135,6 +145,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
     required this.node,
     required this.indentation,
     required this.minLevelToIndent,
+    required this.isLastChild,
     this.expansionIndicator,
   });
 
@@ -150,6 +161,7 @@ class ExpandableNodeContainer<T> extends StatelessWidget {
           indentation: indentation,
           node: node,
           minLevelToIndent: minLevelToIndent,
+          isLastChild: isLastChild,
           child: expansionIndicator == null
               ? child
               : PositionedExpansionIndicator(

@@ -16,26 +16,10 @@ mixin ITreeNode<T> on IListenableNode implements ValueListenable<INode> {
   /// The data value of [T] wrapped in the [ITreeNode]
   T? get data => listenableData.value;
 
-  /// The setter for data value [T] of wrapped in the Node.
+  /// The setter for data value [T] wrapped in the Node.
   /// It will notify [listenableData] whenever the value is set.
   set data(T? value) {
     listenableData.value = value;
-  }
-
-  bool isLastChild = false;
-
-  bool areChildIndicesCached = false;
-
-  void cacheChildIndices() {
-    if (childrenAsList.isEmpty || areChildIndicesCached) return;
-    (childrenAsList[length - 1] as ITreeNode).isLastChild = true;
-    areChildIndicesCached = true;
-  }
-
-  void resetIndentationCache() {
-    if (childrenAsList.isEmpty) return;
-    (childrenAsList[length - 1] as ITreeNode).isLastChild = false;
-    areChildIndicesCached = false;
   }
 }
 
@@ -55,9 +39,7 @@ class TreeNode<T> extends ListenableNode with ITreeNode<T> {
       : this.listenableData = ValueNotifier(data);
 
   /// Factory constructor to be used only for root [TreeNode]
-  factory TreeNode.root({T? data}) => TreeNode(key: INode.ROOT_KEY, data: data)
-    ..isLastChild = true
-    ..cacheChildIndices();
+  factory TreeNode.root({T? data}) => TreeNode(key: INode.ROOT_KEY, data: data);
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
   @override
@@ -81,9 +63,7 @@ class IndexedTreeNode<T> extends IndexedListenableNode with ITreeNode<T> {
 
   /// Factory constructor to be used only for root [IndexedTreeNode]
   factory IndexedTreeNode.root({T? data}) =>
-      IndexedTreeNode(key: INode.ROOT_KEY, data: data)
-        ..isLastChild = true
-        ..cacheChildIndices();
+      IndexedTreeNode(key: INode.ROOT_KEY, data: data);
 
   /// [ValueNotifier] for data [T] that can be listened for data changes;
   @override

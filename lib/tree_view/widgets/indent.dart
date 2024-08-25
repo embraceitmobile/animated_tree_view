@@ -76,6 +76,7 @@ class Indent extends StatelessWidget {
   final ITreeNode node;
   final Widget child;
   final int minLevelToIndent;
+  final bool isLastChild;
 
   const Indent({
     super.key,
@@ -83,6 +84,7 @@ class Indent extends StatelessWidget {
     required this.child,
     required this.node,
     required this.minLevelToIndent,
+    required this.isLastChild,
   });
 
   @override
@@ -105,6 +107,7 @@ class Indent extends StatelessWidget {
         indentation: indentation,
         node: node,
         minLevelToIndent: minLevelToIndent,
+        isLastChild: isLastChild,
       ),
       child: content,
     );
@@ -115,11 +118,13 @@ class _IndentationPainter extends CustomPainter {
   final Indentation indentation;
   final ITreeNode node;
   final int minLevelToIndent;
+  final bool isLastChild;
 
   const _IndentationPainter({
     required this.indentation,
     required this.node,
     required this.minLevelToIndent,
+    required this.isLastChild,
   });
 
   @override
@@ -127,7 +132,7 @@ class _IndentationPainter extends CustomPainter {
     final strokeWidth = indentation.thickness;
     final totalWidth = (indentation.width * (node.level - minLevelToIndent))
         .clamp(0.0, double.maxFinite);
-    final shouldDrawBottom = !node.isLastChild;
+    final shouldDrawBottom = !isLastChild;
 
     final paint = Paint()
       ..color = indentation.color
@@ -210,13 +215,16 @@ class _IndentationPainter extends CustomPainter {
         bottom: bottom.dy,
         node: node.parent! as ITreeNode,
         paint: paint,
+        isLastChild: isLastChild,
         drawLastChild: indentation.style == IndentStyle.scopingLine,
       );
   }
 
   @override
   bool shouldRepaint(_IndentationPainter oldDelegate) {
-    return indentation != oldDelegate.indentation || node != oldDelegate.node;
+    return isLastChild != oldDelegate.isLastChild ||
+        indentation != oldDelegate.indentation ||
+        node != oldDelegate.node;
   }
 
   void _drawWithRoundedCorners({
@@ -320,9 +328,10 @@ class _IndentationPainter extends CustomPainter {
     required double bottom,
     required ITreeNode node,
     required Paint paint,
+    required bool isLastChild,
     bool drawLastChild = false,
   }) {
-    if (drawLastChild || node.isLastChild == false)
+    if (drawLastChild || isLastChild == false)
       canvas.drawRect(
           Rect.fromLTRB(
             origin.dx - 0.5,
@@ -340,6 +349,7 @@ class _IndentationPainter extends CustomPainter {
         bottom: bottom,
         node: node.parent! as ITreeNode,
         paint: paint,
+        isLastChild: isLastChild,
         drawLastChild: drawLastChild,
       );
     }

@@ -242,22 +242,24 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
   }
 
   Widget _insertedItemBuilder(
-          BuildContext context, int index, Animation<double> animation) =>
-      ExpandableNodeItem.insertedNode<Data, Tree>(
-        node: _treeViewEventHandler.animatedListStateController.list[index]
-            as Tree,
-        index: index,
-        builder: widget.builder,
-        scrollController: _scrollController,
-        animation: animation,
-        indentation: widget.indentation,
-        expansionIndicator: widget.expansionIndicatorBuilder,
-        onToggleExpansion: (item) => _treeViewEventHandler
-            .expansionBehaviourController
-            .toggleExpansion(item),
-        onItemTap: widget.onItemTap,
-        showRootNode: widget.showRootNode,
-      );
+      BuildContext context, int index, Animation<double> animation) {
+    final list = _treeViewEventHandler.animatedListStateController.list;
+    return ExpandableNodeItem.insertedNode<Data, Tree>(
+      node: list[index] as Tree,
+      nextNode: index < list.length - 1 ? list[index + 1] as Tree : null,
+      index: index,
+      builder: widget.builder,
+      scrollController: _scrollController,
+      animation: animation,
+      indentation: widget.indentation,
+      expansionIndicator: widget.expansionIndicatorBuilder,
+      onToggleExpansion: (item) => _treeViewEventHandler
+          .expansionBehaviourController
+          .toggleExpansion(item),
+      onItemTap: widget.onItemTap,
+      showRootNode: widget.showRootNode,
+    );
+  }
 
   Widget _removedItemBuilder(
     BuildContext context,
