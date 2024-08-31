@@ -204,10 +204,11 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
 mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     S extends _TreeView<Data, Tree>> on State<S> implements ListState<Tree> {
   late final TreeViewController<Data, Tree> controller;
-  late final TreeViewStateHelper<Data> _treeViewEventHandler;
+  late final TreeViewStateHelper<Data> _stateHelper;
   late final AutoScrollController _scrollController;
+  late final LastChildCacheManager<Data> _lastChildCacheManager;
 
-  ITreeNode<Data> get _tree => _treeViewEventHandler.tree;
+  ITreeNode<Data> get _tree => _stateHelper.tree;
 
   @override
   void initState() {
@@ -216,13 +217,15 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     _scrollController =
         widget.scrollController ?? AutoScrollController(axis: Axis.vertical);
 
+    _lastChildCacheManager = LastChildCacheManager(widget.tree);
+
     final animatedListController = AnimatedListStateController<Data>(
       listState: this,
       showRootNode: widget.showRootNode,
       tree: widget.tree,
     );
 
-    _treeViewEventHandler = TreeViewStateHelper<Data>(
+    _stateHelper = TreeViewStateHelper<Data>(
       animatedListStateController: animatedListController,
       tree: widget.tree,
       focusToNewNode: widget.focusToNewNode,
@@ -230,32 +233,47 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         scrollController: _scrollController,
         expansionBehavior: widget.expansionBehavior,
         animatedListStateController: animatedListController,
+        onToggleExpansion: (node) {
+          if (node.isExpanded) {
+            _lastChildCacheManager.indexChildren(node);
+          }
+        },
       ),
     );
 
     widget.tree.expansionNotifier.value = !widget.showRootNode;
-    controller = TreeViewController(_treeViewEventHandler);
+    controller = TreeViewController(_stateHelper);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onTreeReady?.call(controller);
     });
   }
 
+  @override
+  Future<void> dispose() async {
+    Future.wait([
+      _stateHelper.dispose(),
+      _lastChildCacheManager.dispose(),
+    ]);
+
+    super.dispose();
+  }
+
   Widget _insertedItemBuilder(
       BuildContext context, int index, Animation<double> animation) {
-    final list = _treeViewEventHandler.animatedListStateController.list;
+    final list = _stateHelper.animatedListStateController.list;
+    final node = list[index] as Tree;
     return ExpandableNodeItem.insertedNode<Data, Tree>(
-      node: list[index] as Tree,
-      nextNode: index < list.length - 1 ? list[index + 1] as Tree : null,
+      node: node,
+      isLastChild: _lastChildCacheManager.isLastChild(node),
       index: index,
       builder: widget.builder,
       scrollController: _scrollController,
       animation: animation,
       indentation: widget.indentation,
       expansionIndicator: widget.expansionIndicatorBuilder,
-      onToggleExpansion: (item) => _treeViewEventHandler
-          .expansionBehaviourController
-          .toggleExpansion(item),
+      onToggleExpansion: (item) =>
+          _stateHelper.expansionBehaviourController.toggleExpansion(item),
       onItemTap: widget.onItemTap,
       showRootNode: widget.showRootNode,
     );
@@ -273,12 +291,11 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         animation: animation,
         indentation: widget.indentation,
         expansionIndicator: widget.expansionIndicatorBuilder,
-        onToggleExpansion: (item) => _treeViewEventHandler
-            .expansionBehaviourController
-            .toggleExpansion(item),
+        onToggleExpansion: (item) =>
+            _stateHelper.expansionBehaviourController.toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
-        isLastChild: true,
+        isLastChild: _lastChildCacheManager.isLastChild(node),
       );
 
   @override
@@ -286,7 +303,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     super.didUpdateWidget(oldWidget);
 
     if (widget.expansionBehavior != oldWidget.expansionBehavior)
-      _treeViewEventHandler.expansionBehaviourController.expansionBehavior =
+      _stateHelper.expansionBehaviourController.expansionBehavior =
           widget.expansionBehavior;
 
     didUpdateTree();
@@ -648,8 +665,7 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
   Widget build(BuildContext context) {
     return AnimatedList(
       key: _listKey,
-      initialItemCount:
-          _treeViewEventHandler.animatedListStateController.list.length,
+      initialItemCount: _stateHelper.animatedListStateController.list.length,
       controller: _scrollController,
       primary: widget.primary,
       physics: widget.physics,
@@ -961,8 +977,7 @@ class SliverTreeViewState<Data, Tree extends ITreeNode<Data>>
   Widget build(BuildContext context) {
     return SliverAnimatedList(
       key: _listKey,
-      initialItemCount:
-          _treeViewEventHandler.animatedListStateController.list.length,
+      initialItemCount: _stateHelper.animatedListStateController.list.length,
       itemBuilder: _insertedItemBuilder,
     );
   }

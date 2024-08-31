@@ -109,10 +109,11 @@ class TreeViewStateHelper<Data> {
           int actualIndex = computeActualIndex(event.index, node.root.level);
 
           animatedListStateController.insertAll(
-              animatedListStateController.showRootNode
-                  ? actualIndex + 1
-                  : actualIndex,
-              List.from(event.items));
+            animatedListStateController.showRootNode
+                ? actualIndex + 1
+                : actualIndex,
+            List.from(event.items),
+          );
         }
         if (focusToNewNode) {
           expansionBehaviourController.scrollToLastVisibleChild(node.root);
@@ -182,10 +183,12 @@ class TreeViewStateHelper<Data> {
     }
   }
 
-  void dispose() {
-    _addedNodesSubscription.cancel();
-    _insertNodesSubscription?.cancel();
-    _removeNodesSubscription.cancel();
+  Future<void> dispose() async {
+    Future.wait([
+      _addedNodesSubscription.cancel(),
+      _removeNodesSubscription.cancel(),
+      if (_insertNodesSubscription != null) _insertNodesSubscription!.cancel(),
+    ]);
   }
 }
 
@@ -257,12 +260,14 @@ class AnimatedListStateController<Data> {
 class TreeViewExpansionBehaviourController<Data> {
   final AnimatedListStateController<Data> animatedListStateController;
   final AutoScrollController scrollController;
+  final Function(ITreeNode<Data> item)? onToggleExpansion;
   ExpansionBehavior expansionBehavior;
 
   TreeViewExpansionBehaviourController({
     required this.scrollController,
     required this.expansionBehavior,
     required this.animatedListStateController,
+    this.onToggleExpansion,
   });
 
   Future scrollToIndex(int index) async => await scrollController.scrollToIndex(
@@ -293,9 +298,11 @@ class TreeViewExpansionBehaviourController<Data> {
   }
 
   Future<void> toggleExpansion(ITreeNode<Data> item) async {
-    if (item.isExpanded)
+    onToggleExpansion?.call(item);
+
+    if (item.isExpanded) {
       await collapseNode(item);
-    else {
+    } else {
       expandNode(item);
       await applyExpansionBehavior(item);
     }
@@ -365,5 +372,63 @@ class TreeViewExpansionBehaviourController<Data> {
         return Future.value();
       }),
     );
+  }
+}
+
+class LastChildCacheManager<Data> {
+  final ITreeNode<Data> tree;
+  final Map<INode, bool> _lastChildMap;
+
+  late StreamSubscription<NodeAddEvent<INode>> _addedNodesSubscription;
+  StreamSubscription<NodeInsertEvent<INode>>? _insertNodesSubscription;
+
+  LastChildCacheManager(this.tree) : _lastChildMap = <INode, bool>{} {
+    {
+      _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
+
+      try {
+        _insertNodesSubscription =
+            tree.insertedNodes.listen(handleInsertItemsEvent);
+      } on ActionNotAllowedException catch (_) {}
+    }
+
+    indexChildren(tree);
+  }
+
+  bool isLastChild(INode node) => _lastChildMap[node] != null;
+
+  void indexChildren(INode node) {
+    if (node.length <= 0) return;
+    _lastChildMap[node.childrenAsList[node.length - 1]] = true;
+  }
+
+  void clearChildrenIndex(INode node) {
+    for (final childNode in node.childrenAsList) {
+      _lastChildMap.remove(childNode);
+    }
+  }
+
+  @visibleForTesting
+  void handleAddItemsEvent(NodeAddEvent<INode> event) {
+    final parent = event.items.firstOrNull?.parent;
+    if (parent != null) clearChildrenIndex(parent);
+
+    _lastChildMap[event.items.last] = true;
+  }
+
+  @visibleForTesting
+  void handleInsertItemsEvent(NodeInsertEvent<INode> event) {
+    //only update the lastChild if the item is inserted at the last position
+    if (event.index == (event.items.firstOrNull?.parent?.length ?? 0) - 1) {
+      final parent = event.items.firstOrNull?.parent;
+      if (parent != null) clearChildrenIndex(parent);
+    }
+  }
+
+  Future<void> dispose() async {
+    Future.wait([
+      _addedNodesSubscription.cancel(),
+      if (_insertNodesSubscription != null) _insertNodesSubscription!.cancel(),
+    ]);
   }
 }

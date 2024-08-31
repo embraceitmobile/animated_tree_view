@@ -27,7 +27,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
     required Indentation indentation,
-    Tree? nextNode,
+    required bool isLastChild,
   }) {
     return ValueListenableBuilder<INode>(
       key: ValueKey(node.key + index.toString()),
@@ -45,7 +45,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           onToggleExpansion: onToggleExpansion,
           onItemTap: onItemTap,
           showRootNode: showRootNode,
-          isLastChild: node.level > (nextNode?.level ?? 0),
+          isLastChild: isLastChild,
         ),
       ),
     );
@@ -60,8 +60,8 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required ValueSetter<Tree>? onItemTap,
     required ValueSetter<Tree> onToggleExpansion,
     required bool showRootNode,
-    required bool isLastChild,
     required Indentation indentation,
+    required bool isLastChild,
   }) {
     return ExpandableNodeItem<Data, Tree>(
       key: ValueKey(node.key),
@@ -75,7 +75,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       onItemTap: onItemTap,
       onToggleExpansion: onToggleExpansion,
       showRootNode: showRootNode,
-      isLastChild: true,
+      isLastChild: isLastChild,
     );
   }
 
