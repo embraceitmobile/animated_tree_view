@@ -188,6 +188,9 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// added or inserted to the tree.
   final bool focusToNewNode;
 
+  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
+  final Animation<double>? animation;
+
   const _TreeView({
     super.key,
     this.expansionBehavior = ExpansionBehavior.none,
@@ -201,6 +204,7 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.showRootNode = false,
     this.onTreeReady,
     this.focusToNewNode = true,
+    this.animation,
   }) : this.indentation =
             indentation ?? const Indentation(style: IndentStyle.none);
 }
@@ -392,9 +396,6 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
   /// For more information see the [AnimatedList.shrinkWrap]
   final bool shrinkWrap;
 
-  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
-  final Animation<double>? animation;
-
   const TreeView._({
     super.key,
     super.expansionBehavior,
@@ -410,7 +411,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     this.shrinkWrap = false,
     super.showRootNode,
     super.onTreeReady,
-    this.animation,
+    super.animation,
     super.focusToNewNode,
   });
 
@@ -718,9 +719,6 @@ class TreeViewState<Data, Tree extends ITreeNode<Data>>
 /// e.g. for path './.level1/level2', complexity is simply O(2).
 final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     extends _TreeView<Data, Tree> {
-  /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
-  final Animation<double>? animation;
-
   const SliverTreeView._({
     super.key,
     required super.builder,
@@ -734,7 +732,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     super.showRootNode,
     super.onTreeReady,
     super.focusToNewNode,
-    this.animation,
+    super.animation,
   }) : assert(
             expansionBehavior == ExpansionBehavior.none ||
                 scrollController != null,
