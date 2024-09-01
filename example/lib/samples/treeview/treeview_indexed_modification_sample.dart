@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               showRootNode: _showRootNode,
-              indentation: Indentation(
+              indentation: const Indentation(
                 style: IndentStyle.roundJoint,
               ),
               builder: buildListItem,
