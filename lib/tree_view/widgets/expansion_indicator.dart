@@ -181,10 +181,18 @@ class ChevronIndicator extends ExpansionIndicator {
 class _RotatedIndicatorState extends ExpansionIndicatorState<ChevronIndicator> {
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
+    final rotationTransition = RotationTransition(
       turns: widget.tween.animate(controller),
       child: Icon(widget.icon, color: widget.color),
     );
+
+    return switch (Directionality.of(context)) {
+      TextDirection.rtl => Transform.flip(
+          flipX: true,
+          child: rotationTransition,
+        ),
+      TextDirection.ltr => rotationTransition,
+    };
   }
 }
 
