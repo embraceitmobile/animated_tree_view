@@ -265,7 +265,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
     final node = list[index] as Tree;
     return ExpandableNodeItem.insertedNode<Data, Tree>(
       node: node,
-      isLastChild: _lastChildCacheManager.isLastChild(node),
+      lastChildCacheManager: _lastChildCacheManager,
       index: index,
       builder: widget.builder,
       scrollController: _scrollController,
@@ -295,7 +295,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
             _stateHelper.expansionBehaviourController.toggleExpansion(item),
         onItemTap: widget.onItemTap,
         showRootNode: widget.showRootNode,
-        isLastChild: _lastChildCacheManager.isLastChild(node),
+        lastChildCacheManager: _lastChildCacheManager,
       );
 
   @override

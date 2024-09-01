@@ -380,15 +380,17 @@ class LastChildCacheManager<Data> {
   final Map<INode, bool> _lastChildMap;
 
   late StreamSubscription<NodeAddEvent<INode>> _addedNodesSubscription;
+  late StreamSubscription<NodeRemoveEvent<INode>> _removeNodesSubscription;
   StreamSubscription<NodeInsertEvent<INode>>? _insertNodesSubscription;
 
   LastChildCacheManager(this.tree) : _lastChildMap = <INode, bool>{} {
     {
-      _addedNodesSubscription = tree.addedNodes.listen(handleAddItemsEvent);
-
+      _addedNodesSubscription = tree.addedNodes.listen(handleItemChangeEvent);
+      _removeNodesSubscription =
+          tree.removedNodes.listen(handleItemChangeEvent);
       try {
         _insertNodesSubscription =
-            tree.insertedNodes.listen(handleInsertItemsEvent);
+            tree.insertedNodes.listen(handleItemChangeEvent);
       } on ActionNotAllowedException catch (_) {}
     }
 
@@ -402,6 +404,11 @@ class LastChildCacheManager<Data> {
     _lastChildMap[node.childrenAsList[node.length - 1]] = true;
   }
 
+  void updateChildrenIndices(INode node) {
+    clearChildrenIndex(node);
+    indexChildren(node);
+  }
+
   void clearChildrenIndex(INode node) {
     for (final childNode in node.childrenAsList) {
       _lastChildMap.remove(childNode);
@@ -409,26 +416,27 @@ class LastChildCacheManager<Data> {
   }
 
   @visibleForTesting
-  void handleAddItemsEvent(NodeAddEvent<INode> event) {
+  void handleItemChangeEvent(NodeEvent<INode> event) {
     final parent = event.items.firstOrNull?.parent;
-    if (parent != null) clearChildrenIndex(parent);
-
-    _lastChildMap[event.items.last] = true;
-  }
-
-  @visibleForTesting
-  void handleInsertItemsEvent(NodeInsertEvent<INode> event) {
-    //only update the lastChild if the item is inserted at the last position
-    if (event.index == (event.items.firstOrNull?.parent?.length ?? 0) - 1) {
-      final parent = event.items.firstOrNull?.parent;
-      if (parent != null) clearChildrenIndex(parent);
-    }
+    if (parent != null) updateChildrenIndices(parent);
   }
 
   Future<void> dispose() async {
     Future.wait([
       _addedNodesSubscription.cancel(),
+      _removeNodesSubscription.cancel(),
       if (_insertNodesSubscription != null) _insertNodesSubscription!.cancel(),
     ]);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LastChildCacheManager &&
+          runtimeType == other.runtimeType &&
+          tree == other.tree &&
+          _lastChildMap == other._lastChildMap;
+
+  @override
+  int get hashCode => tree.hashCode ^ _lastChildMap.hashCode;
 }
