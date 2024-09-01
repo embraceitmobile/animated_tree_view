@@ -233,11 +233,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
         scrollController: _scrollController,
         expansionBehavior: widget.expansionBehavior,
         animatedListStateController: animatedListController,
-        onToggleExpansion: (node) {
-          if (node.isExpanded) {
-            _lastChildCacheManager.indexChildren(node);
-          }
-        },
+        onExpandNode: (node) => _lastChildCacheManager.indexChildren(node),
       ),
     );
 

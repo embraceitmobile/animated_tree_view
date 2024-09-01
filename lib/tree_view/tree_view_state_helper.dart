@@ -250,14 +250,14 @@ class AnimatedListStateController<Data> {
 class TreeViewExpansionBehaviourController<Data> {
   final AnimatedListStateController<Data> animatedListStateController;
   final AutoScrollController scrollController;
-  final Function(ITreeNode<Data> item)? onToggleExpansion;
+  final Function(ITreeNode<Data> item)? onExpandNode;
   ExpansionBehavior expansionBehavior;
 
   TreeViewExpansionBehaviourController({
     required this.scrollController,
     required this.expansionBehavior,
     required this.animatedListStateController,
-    this.onToggleExpansion,
+    this.onExpandNode,
   });
 
   Future scrollToIndex(int index) async => await scrollController.scrollToIndex(
@@ -278,6 +278,7 @@ class TreeViewExpansionBehaviourController<Data> {
 
   void expandNode(ITreeNode<Data> item) {
     if (item.childrenAsList.isEmpty || item.isExpanded) return;
+    onExpandNode?.call(item);
 
     animatedListStateController.insertAll(
       animatedListStateController.indexOf(item) + 1,
@@ -288,8 +289,6 @@ class TreeViewExpansionBehaviourController<Data> {
   }
 
   Future<void> toggleExpansion(ITreeNode<Data> item) async {
-    onToggleExpansion?.call(item);
-
     if (item.isExpanded) {
       await collapseNode(item);
     } else {
