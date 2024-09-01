@@ -143,6 +143,7 @@ CustomScrollView(
 | primary _(TreeView only)_    | Whether this is the primary scroll view associated with the parent PrimaryScrollController.                                                                                                                                                                                                                                 |
 | physics _(TreeView only)_    | An object that can be used to control the position to which this scroll view is scrolled.                                                                                                                                                                                                                                   |
 | shrinkWrap _(TreeView only)_ | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.                                                                                                                                                                                                           |
+| animation                    | Optional param to specify the animation for the item addition and removal                                                                                                                                                                                                                                                   |
 
 ## ExpansionBehavior <a name="expansionBehavior"></a>
 The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
