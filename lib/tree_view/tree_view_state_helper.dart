@@ -99,47 +99,37 @@ class TreeViewStateHelper<Data> {
 
   @visibleForTesting
   void handleInsertItemsEvent(NodeInsertEvent<INode> event) {
+    if (event.index + event.items.length ==
+        (event.items.firstOrNull?.parent?.length ?? 0)) {
+      handleAddItemsEvent(NodeAddEvent(event.items));
+      return;
+    }
+
     for (final node in event.items) {
       if (animatedListStateController.containsKey(node.path)) continue;
+      late ITreeNode<Data> parentNode;
+      late int parentIndex;
 
       if (node.isRoot || node.parent?.isRoot == true) {
-        if (!(node.root as ITreeNode<Data>).isExpanded) {
-          expansionBehaviourController.expandNode(node.root as ITreeNode<Data>);
-        } else {
-          int actualIndex = computeActualIndex(event.index, node.root.level);
-
-          animatedListStateController.insertAll(
-            animatedListStateController.showRootNode
-                ? actualIndex + 1
-                : actualIndex,
-            List.from(event.items),
-          );
-        }
-        if (focusToNewNode) {
-          expansionBehaviourController.scrollToLastVisibleChild(node.root);
-        }
+        parentNode = node.root as ITreeNode<Data>;
+        parentIndex = 0;
       } else {
-        final parentIndex = animatedListStateController.list
+        parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
-        if (parentIndex < 0) continue;
 
-        final parentNode = animatedListStateController.list[parentIndex];
+        parentNode = animatedListStateController.list[parentIndex];
+      }
 
-        if (!parentNode.isExpanded) {
-          expansionBehaviourController.expandNode(parentNode);
-        } else {
-          final actualIndex =
-              computeActualIndex(parentIndex + event.index, parentNode.level);
+      if (parentNode.isExpanded) {
+        final actualIndex =
+            computeActualIndex(parentIndex + event.index, parentNode.level);
 
-          animatedListStateController.insertAll(
-            actualIndex + 1,
-            List.from(event.items),
-          );
-        }
-
-        if (focusToNewNode) {
-          expansionBehaviourController.scrollToLastVisibleChild(parentNode);
-        }
+        animatedListStateController.insertAll(
+          actualIndex + 1,
+          List.from(event.items),
+        );
+      } else {
+        expansionBehaviourController.expandNode(parentNode);
       }
     }
   }
