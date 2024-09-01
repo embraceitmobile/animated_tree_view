@@ -55,6 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               showRootNode: _showRootNode,
+              indentation: Indentation(
+                style: IndentStyle.roundJoint,
+              ),
               builder: buildListItem,
             ),
             if (!_showRootNode)
@@ -85,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ListTile(
               title: Text(
-                "Item ${node.level}-${node.key}",
+                "Item ${node.level} - ${node.key}",
                 style: TextStyle(color: color.byLuminance()),
               ),
               subtitle: Text(
@@ -135,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         icon: const Icon(Icons.add_circle, color: Colors.green),
         label: const Text("Child", style: TextStyle(color: Colors.green)),
-        onPressed: () => item.add(IndexedTreeNode()),
+        onPressed: () => item.add(IndexedTreeNode(key: UniqueKey().toString())),
       ),
     );
   }
@@ -150,9 +153,10 @@ class _MyHomePageState extends State<MyHomePage> {
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
-        child: const Text("Insert Above", style: TextStyle(color: Colors.green)),
+        child:
+            const Text("Insert Above", style: TextStyle(color: Colors.green)),
         onPressed: () {
-          item.parent?.insertBefore(item, IndexedTreeNode());
+          item.parent?.insertBefore(item, IndexedTreeNode(key: UniqueKey().toString()));
         },
       ),
     );
@@ -168,9 +172,10 @@ class _MyHomePageState extends State<MyHomePage> {
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
-        child: const Text("Insert Below", style: TextStyle(color: Colors.green)),
+        child:
+            const Text("Insert Below", style: TextStyle(color: Colors.green)),
         onPressed: () {
-          item.parent?.insertAfter(item, IndexedTreeNode());
+          item.parent?.insertAfter(item, IndexedTreeNode(key: UniqueKey().toString()));
         },
       ),
     );
