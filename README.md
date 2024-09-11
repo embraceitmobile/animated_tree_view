@@ -4,7 +4,9 @@ A flutter package that provides a heirarchial Tree like data structure that can 
 
 The widget is based on the Flutter’s familiar APIs of [AnimatedList](https://api.flutter.dev/flutter/widgets/AnimatedList-class.html) and [SliverAnimatedList](https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html) and can even be used as a replacement for these widgets. Each node can be completely customized using the `TreeNodeWidgetBuilder` that is used to build the nodes. All the mobile, web and desktop platforms are fully supported.
 
-![Animated Tree View Demo](https://media.giphy.com/media/ZeTlxJQKxOEZnuSgK7/giphy.gif)  ![Animated Tree View Demo](https://media.giphy.com/media/7i8rXNlzkjhWvaHOnd/giphy.gif)                 
+![Animated Tree View Demo](https://media.giphy.com/media/ZeTlxJQKxOEZnuSgK7/giphy.gif)  ![Animated Tree View Demo](https://media.giphy.com/media/7i8rXNlzkjhWvaHOnd/giphy.gif)  
+
+## SUPPORT FOR RTL ADDED!!
 
 ## Variants
 There are four different variants each for the `TreeView` and the `SliverTreeView`. Based on the requirements and use case, you can use the [simple](#.simple), [simpleTyped](#.simpleTyped), [indexed](#.indexed) or the [indexTyped](#.indexTyped) variants.
@@ -35,6 +37,7 @@ The `indexTyped` works the same as the `indexed` variant however it is optimized
 * Easily traverse the tree laterally or vertically from the root to the leaf and back.
 * Tree Diff Util to compute the difference between two trees, and automatically apply the changes in the tree view.
 * Listenable changes using ValueNotifier and event Streams.
+* RTL Support
 
 ## How to use
 ### TreeView.simple
@@ -140,6 +143,7 @@ CustomScrollView(
 | primary _(TreeView only)_    | Whether this is the primary scroll view associated with the parent PrimaryScrollController.                                                                                                                                                                                                                                 |
 | physics _(TreeView only)_    | An object that can be used to control the position to which this scroll view is scrolled.                                                                                                                                                                                                                                   |
 | shrinkWrap _(TreeView only)_ | Whether the extent of the scroll view in the `scrollDirection` should be determined by the contents being viewed.                                                                                                                                                                                                           |
+| animation                    | Optional param to specify the animation for the item addition and removal                                                                                                                                                                                                                                                   |
 
 ## ExpansionBehavior <a name="expansionBehavior"></a>
 The `ExpansionBehavior` provides control over the behavior of the node when it is expanded.
@@ -226,5 +230,7 @@ The `TreeViewController` provides utility methods that allow controlling the `Tr
 | `expandAllChildren` | Utility method for expanding all the children of a node. It can be also be used to recursively expanded all the child nodes until the leaf is reached   |
 
 ## Future Goals
-* [ ] Add RTL support
+* [x] Add RTL support
 * [ ] Add support for 2D scrolling using the [2D scrolling API](https://docs.google.com/document/d/1C2hAq-gMAIx4Cbym7EMhVAcPZ2hmNxlgijpYmgTpmUU/edit?pli=1)
+* [ ] Reorder nodes in the hierarchy
+* [ ] Indentation builder

@@ -20,9 +20,9 @@ class PositionedExpansionIndicator extends StatelessWidget {
     return Stack(
       children: <Widget>[
         child,
-        Positioned(
-          left: expansionIndicator.alignment.x <= 0 ? 0 : null,
-          right: expansionIndicator.alignment.x >= 0 ? 0 : null,
+        PositionedDirectional(
+          start: expansionIndicator.alignment.x <= 0 ? 0 : null,
+          end: expansionIndicator.alignment.x >= 0 ? 0 : null,
           top: expansionIndicator.alignment.y <= 0 ? 0 : null,
           bottom: expansionIndicator.alignment.y >= 0 ? 0 : null,
           child: Padding(
@@ -181,10 +181,18 @@ class ChevronIndicator extends ExpansionIndicator {
 class _RotatedIndicatorState extends ExpansionIndicatorState<ChevronIndicator> {
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
+    final rotationTransition = RotationTransition(
       turns: widget.tween.animate(controller),
       child: Icon(widget.icon, color: widget.color),
     );
+
+    return switch (Directionality.of(context)) {
+      TextDirection.rtl => Transform.flip(
+          flipX: true,
+          child: rotationTransition,
+        ),
+      TextDirection.ltr => rotationTransition,
+    };
   }
 }
 

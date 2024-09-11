@@ -1,4 +1,5 @@
 import 'package:animated_tree_view/tree_view/tree_node.dart';
+import 'package:animated_tree_view/tree_view/tree_view_state_helper.dart';
 import 'package:flutter/material.dart';
 
 enum IndentStyle {
@@ -76,6 +77,7 @@ class Indent extends StatelessWidget {
   final ITreeNode node;
   final Widget child;
   final int minLevelToIndent;
+  final LastChildCacheManager lastChildCacheManager;
 
   const Indent({
     super.key,
@@ -83,13 +85,16 @@ class Indent extends StatelessWidget {
     required this.child,
     required this.node,
     required this.minLevelToIndent,
+    required this.lastChildCacheManager,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Directionality.of(context) == TextDirection.rtl;
+
     final content = Padding(
-      padding: EdgeInsets.only(
-        left: (indentation.width * (node.level - minLevelToIndent)).clamp(
+      padding: EdgeInsetsDirectional.only(
+        start: (indentation.width * (node.level - minLevelToIndent)).clamp(
           0.0,
           double.maxFinite,
         ),
@@ -105,6 +110,8 @@ class Indent extends StatelessWidget {
         indentation: indentation,
         node: node,
         minLevelToIndent: minLevelToIndent,
+        isRtl: isRtl,
+        lastChildCacheManager: lastChildCacheManager,
       ),
       child: content,
     );
@@ -115,19 +122,29 @@ class _IndentationPainter extends CustomPainter {
   final Indentation indentation;
   final ITreeNode node;
   final int minLevelToIndent;
+  final LastChildCacheManager lastChildCacheManager;
+  final bool isRtl;
 
   const _IndentationPainter({
     required this.indentation,
     required this.node,
     required this.minLevelToIndent,
+    required this.lastChildCacheManager,
+    required this.isRtl,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (isRtl) {
+      canvas.save();
+      canvas.translate(size.width, 0);
+      canvas.scale(-1, 1);
+    }
+
     final strokeWidth = indentation.thickness;
     final totalWidth = (indentation.width * (node.level - minLevelToIndent))
         .clamp(0.0, double.maxFinite);
-    final shouldDrawBottom = !node.isLastChild;
+    bool shouldDrawBottom = !lastChildCacheManager.isLastChild(node);
 
     final paint = Paint()
       ..color = indentation.color
@@ -212,12 +229,14 @@ class _IndentationPainter extends CustomPainter {
         paint: paint,
         drawLastChild: indentation.style == IndentStyle.scopingLine,
       );
+
+    if (isRtl) {
+      canvas.restore();
+    }
   }
 
   @override
-  bool shouldRepaint(_IndentationPainter oldDelegate) {
-    return indentation != oldDelegate.indentation || node != oldDelegate.node;
-  }
+  bool shouldRepaint(_IndentationPainter oldDelegate) => true;
 
   void _drawWithRoundedCorners({
     required Canvas canvas,
@@ -322,7 +341,7 @@ class _IndentationPainter extends CustomPainter {
     required Paint paint,
     bool drawLastChild = false,
   }) {
-    if (drawLastChild || node.isLastChild == false)
+    if (drawLastChild || lastChildCacheManager.isLastChild(node) == false)
       canvas.drawRect(
           Rect.fromLTRB(
             origin.dx - 0.5,

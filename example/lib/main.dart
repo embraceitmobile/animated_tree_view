@@ -1,6 +1,7 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../utils/utils.dart';
 
@@ -19,6 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Simple Animated Tree Demo',
+      localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      locale: Locale('en'),
+      supportedLocales: [Locale('en'), Locale('ar')],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -29,7 +37,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
@@ -72,7 +80,7 @@ class MyHomePageState extends State<MyHomePage> {
           color: Colors.blue[700],
           padding: const EdgeInsets.all(8),
         ),
-        indentation: const Indentation(style: IndentStyle.squareJoint),
+        indentation: const Indentation(style: IndentStyle.roundJoint),
         onItemTap: (item) {
           if (kDebugMode) print("Item tapped: ${item.key}");
 

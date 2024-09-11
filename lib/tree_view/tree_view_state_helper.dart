@@ -74,9 +74,21 @@ class TreeViewStateHelper<Data> {
         } else {
           // if the node is expanded, add the items in the flatList and
           // the animatedList
-          animatedListStateController.insertAll(
-              parentIndex + parentNode.childrenAsList.length,
-              List.from(event.items));
+          final insertAtIndex = animatedListStateController.list.lastIndexWhere(
+              (element) =>
+                  element.path.startsWith(parentNode.path) &&
+                  element.level > parentNode.level);
+          if (insertAtIndex < 0) {
+            animatedListStateController.insertAll(
+              animatedListStateController.length - 1,
+              List.from(event.items),
+            );
+          } else {
+            animatedListStateController.insertAll(
+              insertAtIndex + 1,
+              List.from(event.items),
+            );
+          }
         }
         if (focusToNewNode) {
           expansionBehaviourController.scrollToLastVisibleChild(parentNode);
@@ -87,40 +99,54 @@ class TreeViewStateHelper<Data> {
 
   @visibleForTesting
   void handleInsertItemsEvent(NodeInsertEvent<INode> event) {
+    if (event.index + event.items.length ==
+        (event.items.firstOrNull?.parent?.length ?? 0)) {
+      handleAddItemsEvent(NodeAddEvent(event.items));
+      return;
+    }
+
     for (final node in event.items) {
       if (animatedListStateController.containsKey(node.path)) continue;
+      late ITreeNode<Data> parentNode;
+      late int parentIndex;
 
       if (node.isRoot || node.parent?.isRoot == true) {
-        if (!(node.root as ITreeNode<Data>).isExpanded) {
-          expansionBehaviourController.expandNode(node.root as ITreeNode<Data>);
-        } else {
-          animatedListStateController.insertAll(
-              animatedListStateController.showRootNode
-                  ? event.index + 1
-                  : event.index,
-              List.from(event.items));
-        }
-        if (focusToNewNode) {
-          expansionBehaviourController.scrollToLastVisibleChild(node.root);
-        }
+        parentNode = node.root as ITreeNode<Data>;
+        parentIndex = 0;
       } else {
-        final parentIndex = animatedListStateController.list
+        parentIndex = animatedListStateController.list
             .indexWhere((element) => element.key == node.parent?.key);
-        if (parentIndex < 0) continue;
 
-        final parentNode = animatedListStateController.list[parentIndex];
+        parentNode = animatedListStateController.list[parentIndex];
+      }
 
-        if (!parentNode.isExpanded) {
-          expansionBehaviourController.expandNode(parentNode);
-        } else {
-          animatedListStateController.insertAll(
-              parentIndex + 1 + event.index, List.from(event.items));
-        }
-        if (focusToNewNode) {
-          expansionBehaviourController.scrollToLastVisibleChild(parentNode);
-        }
+      if (parentNode.isExpanded) {
+        final actualIndex =
+            computeActualIndex(parentIndex + event.index, parentNode.level);
+
+        animatedListStateController.insertAll(
+          actualIndex + 1,
+          List.from(event.items),
+        );
+      } else {
+        expansionBehaviourController.expandNode(parentNode);
       }
     }
+  }
+
+  @visibleForTesting
+  int computeActualIndex(int targetIndex, int parentNodeLevel) {
+    int actualIndex = targetIndex;
+
+    for (int i = targetIndex + 1; i < animatedListStateController.length; i++) {
+      if (animatedListStateController.list[i].level > parentNodeLevel + 1) {
+        actualIndex++;
+      } else {
+        break;
+      }
+    }
+
+    return actualIndex;
   }
 
   @visibleForTesting
@@ -147,10 +173,12 @@ class TreeViewStateHelper<Data> {
     }
   }
 
-  void dispose() {
-    _addedNodesSubscription.cancel();
-    _insertNodesSubscription?.cancel();
-    _removeNodesSubscription.cancel();
+  Future<void> dispose() async {
+    Future.wait([
+      _addedNodesSubscription.cancel(),
+      _removeNodesSubscription.cancel(),
+      if (_insertNodesSubscription != null) _insertNodesSubscription!.cancel(),
+    ]);
   }
 }
 
@@ -222,12 +250,14 @@ class AnimatedListStateController<Data> {
 class TreeViewExpansionBehaviourController<Data> {
   final AnimatedListStateController<Data> animatedListStateController;
   final AutoScrollController scrollController;
+  final Function(ITreeNode<Data> item)? onExpandNode;
   ExpansionBehavior expansionBehavior;
 
   TreeViewExpansionBehaviourController({
     required this.scrollController,
     required this.expansionBehavior,
     required this.animatedListStateController,
+    this.onExpandNode,
   });
 
   Future scrollToIndex(int index,
@@ -249,6 +279,7 @@ class TreeViewExpansionBehaviourController<Data> {
 
   void expandNode(ITreeNode<Data> item) {
     if (item.childrenAsList.isEmpty || item.isExpanded) return;
+    onExpandNode?.call(item);
 
     animatedListStateController.insertAll(
       animatedListStateController.indexOf(item) + 1,
@@ -256,13 +287,12 @@ class TreeViewExpansionBehaviourController<Data> {
     );
 
     item.expansionNotifier.value = true;
-    item.cacheChildIndices();
   }
 
   Future<void> toggleExpansion(ITreeNode<Data> item) async {
-    if (item.isExpanded)
+    if (item.isExpanded) {
       await collapseNode(item);
-    else {
+    } else {
       expandNode(item);
       await applyExpansionBehavior(item);
     }
@@ -333,4 +363,70 @@ class TreeViewExpansionBehaviourController<Data> {
       }),
     );
   }
+}
+
+class LastChildCacheManager<Data> {
+  final ITreeNode<Data> tree;
+  final Map<INode, bool> _lastChildMap;
+
+  late StreamSubscription<NodeAddEvent<INode>> _addedNodesSubscription;
+  late StreamSubscription<NodeRemoveEvent<INode>> _removeNodesSubscription;
+  StreamSubscription<NodeInsertEvent<INode>>? _insertNodesSubscription;
+
+  LastChildCacheManager(this.tree) : _lastChildMap = <INode, bool>{} {
+    {
+      _addedNodesSubscription = tree.addedNodes.listen(handleItemChangeEvent);
+      _removeNodesSubscription =
+          tree.removedNodes.listen(handleItemChangeEvent);
+      try {
+        _insertNodesSubscription =
+            tree.insertedNodes.listen(handleItemChangeEvent);
+      } on ActionNotAllowedException catch (_) {}
+    }
+
+    indexChildren(tree);
+  }
+
+  bool isLastChild(INode node) => _lastChildMap[node] != null;
+
+  void indexChildren(INode node) {
+    if (node.length <= 0) return;
+    _lastChildMap[node.childrenAsList[node.length - 1]] = true;
+  }
+
+  void updateChildrenIndices(INode node) {
+    clearChildrenIndex(node);
+    indexChildren(node);
+  }
+
+  void clearChildrenIndex(INode node) {
+    for (final childNode in node.childrenAsList) {
+      _lastChildMap.remove(childNode);
+    }
+  }
+
+  @visibleForTesting
+  void handleItemChangeEvent(NodeEvent<INode> event) {
+    final parent = event.items.firstOrNull?.parent;
+    if (parent != null) updateChildrenIndices(parent);
+  }
+
+  Future<void> dispose() async {
+    Future.wait([
+      _addedNodesSubscription.cancel(),
+      _removeNodesSubscription.cancel(),
+      if (_insertNodesSubscription != null) _insertNodesSubscription!.cancel(),
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LastChildCacheManager &&
+          runtimeType == other.runtimeType &&
+          tree == other.tree &&
+          _lastChildMap == other._lastChildMap;
+
+  @override
+  int get hashCode => tree.hashCode ^ _lastChildMap.hashCode;
 }

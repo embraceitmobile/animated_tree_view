@@ -31,7 +31,9 @@ abstract class NodeUpdateNotifier {
   void dispose();
 }
 
-mixin NodeEvent<T> {}
+mixin NodeEvent<T> {
+  List<T> get items;
+}
 
 class NodeAddEvent<T> with NodeEvent<T> {
   final List<T> items;
@@ -46,13 +48,12 @@ class NodeAddEvent<T> with NodeEvent<T> {
 
 class NodeRemoveEvent<T> with NodeEvent<T> {
   final List<T> items;
-  final int? index;
 
-  const NodeRemoveEvent(this.items, {this.index});
+  const NodeRemoveEvent(this.items);
 
   @override
   String toString() {
-    return 'NodeRemoveEvent{keys: $items, index: $index}';
+    return 'NodeRemoveEvent{keys: $items';
   }
 }
 

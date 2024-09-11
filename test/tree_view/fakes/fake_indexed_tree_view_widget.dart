@@ -21,6 +21,7 @@ class FakeStatelessIndexedTreeView<T> extends StatelessWidget {
           showRootNode: true,
           onTreeReady: onTreeReady,
           builder: (context, node) => ListTile(
+            key: ValueKey(node.key),
             title: Text("Item ${node.level}-${node.key}"),
             subtitle: Text('Level ${node.level}'),
           ),
@@ -61,6 +62,7 @@ class FakeStatefulIndexedTreeViewState
             expansionBehavior: ExpansionBehavior.scrollToLastChild,
             showRootNode: true,
             builder: (context, node) => ListTile(
+              key: ValueKey(node.key),
               title: Text("Item ${node.level}-${node.key}"),
               subtitle: Text('Level ${node.level}'),
             ),
