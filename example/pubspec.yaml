@@ -34,7 +34,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   animated_tree_view:
-    path: ../../animated_treeeview
+    path: ../../animated_tree_view
 
 dev_dependencies:
   flutter_test:
