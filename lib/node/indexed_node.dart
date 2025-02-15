@@ -7,6 +7,9 @@ import 'base/i_node.dart';
 import 'base/i_node_actions.dart';
 
 class IndexedNode extends INode implements IIndexedNodeActions {
+  /// Override the [focusNode] of the [INode]
+  final focusNode = FocusScopeNode();
+
   /// These are the children of the node.
   final List<IndexedNode> children;
 

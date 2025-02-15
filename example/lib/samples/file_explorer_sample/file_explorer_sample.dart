@@ -65,7 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, node) => Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: ListTile(
-              title: Text(node.data?.name ?? "N/A"),
+              title: Text(
+                node.data?.name ?? "N/A",
+                style: TextStyle(color: node.isHover ? Colors.blue : null),
+              ),
               subtitle: Text(node.data?.createdAt.toString() ?? "N/A"),
               leading: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -91,7 +94,8 @@ extension on ExplorableNode {
     if (this is FileNode) {
       final file = data as File;
       if (file.mimeType.startsWith("image")) return const Icon(Icons.image);
-      if (file.mimeType.startsWith("video")) return const Icon(Icons.video_file);
+      if (file.mimeType.startsWith("video"))
+        return const Icon(Icons.video_file);
     }
 
     return const Icon(Icons.insert_drive_file);

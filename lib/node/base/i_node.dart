@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 /// Base class for Node that defines the required interfaces
 abstract class INode {
   static const PATH_SEPARATOR = ".";
@@ -94,6 +96,10 @@ abstract class INode {
   ///     /.#grand_parent_2.#parent_1
   String get path =>
       parent == null ? key : "${parent!.path}${INode.PATH_SEPARATOR}$key";
+
+  /// Getter to get the [focusNode] of the node.
+  /// This is used by the [TreeView] to focus on the node when it is tapped.
+  FocusScopeNode get focusNode;
 
   @override
   bool operator ==(Object other) =>

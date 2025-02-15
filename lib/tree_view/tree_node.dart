@@ -7,11 +7,17 @@ mixin ITreeNode<T> on IListenableNode implements ValueListenable<INode> {
   /// ValueNotifier for node expansion/collapse
   late final ValueNotifier<bool> expansionNotifier = ValueNotifier(false);
 
+  /// ValueNotifier for node hover
+  late final ValueNotifier<bool> hoverNotifier = ValueNotifier(false);
+
   /// [ValueNotifier] for data [T] that can be listened for data changes;
   ValueNotifier<T?> get listenableData;
 
   /// Shows whether the node is expanded or not
   bool get isExpanded => expansionNotifier.value;
+
+  /// Shows whether the node is hovered or not
+  bool get isHover => hoverNotifier.value;
 
   /// The data value of [T] wrapped in the [ITreeNode]
   T? get data => listenableData.value;
