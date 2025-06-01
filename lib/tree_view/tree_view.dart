@@ -191,6 +191,8 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
   /// An optional animation for AnimatedList. If no animation is provided, AnimatedList falls back on its default.
   final Animation<double>? animation;
 
+  /// If true, the expansion state of the node will be toggled automatically
+  final bool autoToggleExpansion;
   const _TreeView({
     super.key,
     this.expansionBehavior = ExpansionBehavior.none,
@@ -205,6 +207,7 @@ abstract base class _TreeView<Data, Tree extends ITreeNode<Data>>
     this.onTreeReady,
     this.focusToNewNode = true,
     this.animation,
+    this.autoToggleExpansion = true,
   }) : this.indentation =
             indentation ?? const Indentation(style: IndentStyle.none);
 }
@@ -280,6 +283,7 @@ mixin _TreeViewState<Data, Tree extends ITreeNode<Data>,
           _stateHelper.expansionBehaviourController.toggleExpansion(item),
       onItemTap: widget.onItemTap,
       showRootNode: widget.showRootNode,
+      autoToggleExpansion: widget.autoToggleExpansion,
     );
   }
 
@@ -413,6 +417,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     super.onTreeReady,
     super.animation,
     super.focusToNewNode,
+    super.autoToggleExpansion = true,
   });
 
   /// The default implementation of [TreeView] that uses a [TreeNode] internally,
@@ -451,6 +456,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
       TreeView._(
         key: key,
@@ -470,6 +476,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
         animation: animation,
+        autoToggleExpansion: autoToggleExpansion,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -510,6 +517,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
       TreeView._(
         key: key,
@@ -529,6 +537,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
         animation: animation,
+        autoToggleExpansion: autoToggleExpansion,
       );
 
   /// The alternate implementation of [TreeView] uses an [IndexedNode] internally,
@@ -565,6 +574,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
       TreeView._(
         key: key,
@@ -584,6 +594,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
         animation: animation,
+        autoToggleExpansion: autoToggleExpansion,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -623,6 +634,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
           TreeView._(
             key: key,
@@ -642,6 +654,7 @@ final class TreeView<Data, Tree extends ITreeNode<Data>>
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
             animation: animation,
+            autoToggleExpansion: autoToggleExpansion,
           );
 
   @override
@@ -733,6 +746,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     super.onTreeReady,
     super.focusToNewNode,
     super.animation,
+    super.autoToggleExpansion = true,
   }) : assert(
             expansionBehavior == ExpansionBehavior.none ||
                 scrollController != null,
@@ -782,6 +796,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, TreeNode<Data>>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
       SliverTreeView._(
         key: key,
@@ -798,6 +813,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
         animation: animation,
+        autoToggleExpansion: autoToggleExpansion,
       );
 
   /// Use the typed constructor if you are extending the [TreeNode] instead of
@@ -841,6 +857,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
           SliverTreeView._(
             key: key,
@@ -857,6 +874,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
             animation: animation,
+            autoToggleExpansion: autoToggleExpansion,
           );
 
   /// The alternate implementation of [SliverTreeView] uses an [IndexedNode]
@@ -895,6 +913,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, IndexedTreeNode<Data>>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
       SliverTreeView._(
         key: key,
@@ -911,6 +930,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
         onTreeReady: onTreeReady,
         focusToNewNode: focusToNewNode,
         animation: animation,
+        autoToggleExpansion: autoToggleExpansion,
       );
 
   /// Use the typed constructor if you are extending the [IndexedTreeNode] instead
@@ -957,6 +977,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
     bool focusToNewNode = true,
     TreeReadyCallback<Data, Tree>? onTreeReady,
     Animation<double>? animation,
+    bool autoToggleExpansion = true,
   }) =>
           SliverTreeView._(
             key: key,
@@ -973,6 +994,7 @@ final class SliverTreeView<Data, Tree extends ITreeNode<Data>>
             onTreeReady: onTreeReady,
             focusToNewNode: focusToNewNode,
             animation: animation,
+            autoToggleExpansion: autoToggleExpansion,
           );
 }
 
