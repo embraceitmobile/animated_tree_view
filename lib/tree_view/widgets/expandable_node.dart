@@ -16,6 +16,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
   final ValueSetter<Tree> onToggleExpansion;
   final bool showRootNode;
   final LastChildCacheManager lastChildCacheManager;
+  final bool autoToggleExpansion;
 
   static Widget insertedNode<Data, Tree extends ITreeNode<Data>>({
     required int index,
@@ -29,6 +30,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required bool showRootNode,
     required Indentation indentation,
     required LastChildCacheManager lastChildCacheManager,
+    required bool autoToggleExpansion,
   }) {
     return ValueListenableBuilder<INode>(
       key: ValueKey(node.key + index.toString()),
@@ -47,6 +49,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
           onItemTap: onItemTap,
           showRootNode: showRootNode,
           lastChildCacheManager: lastChildCacheManager,
+          autoToggleExpansion: autoToggleExpansion,
         ),
       ),
     );
@@ -94,6 +97,7 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     required this.showRootNode,
     required this.indentation,
     required this.lastChildCacheManager,
+    this.autoToggleExpansion = true,
   });
 
   @override
@@ -112,7 +116,9 @@ class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
       onTap: remove
           ? null
           : (dynamic item) {
-              onToggleExpansion(item);
+              if (autoToggleExpansion) {
+                onToggleExpansion(item);
+              }
               if (onItemTap != null) onItemTap!(item);
             },
     );
