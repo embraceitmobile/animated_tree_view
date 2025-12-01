@@ -1,6 +1,6 @@
 import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:animated_tree_view/tree_view/tree_view_state_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 enum IndentStyle {
   /// Do not apply any indentation or scoping lines

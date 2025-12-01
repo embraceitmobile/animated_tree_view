@@ -1,6 +1,7 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/constants/constants.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
     BuildContext, ITreeNode<Data>);
@@ -141,7 +142,7 @@ class ChevronIndicator extends ExpansionIndicator {
         key: key,
         tree: tree,
         tween: Tween(begin: 0, end: 0.25),
-        icon: icon ?? Icons.keyboard_arrow_right_rounded,
+        icon: icon ?? FontAwesomeIcons.angleRight,
         alignment: alignment,
         padding: padding,
         curve: curve,
@@ -167,7 +168,7 @@ class ChevronIndicator extends ExpansionIndicator {
         key: key,
         tree: tree,
         tween: Tween(begin: 1, end: 0.50),
-        icon: icon ?? Icons.keyboard_arrow_up_rounded,
+        icon: icon ?? FontAwesomeIcons.angleUp,
         alignment: alignment,
         padding: padding,
         curve: curve,
@@ -237,9 +238,9 @@ class _PlusMinusIndicatorState
             turns: tween.animate(controller),
             child: RotatedBox(
                 quarterTurns: 1,
-                child: Icon(Icons.remove, color: widget.color)),
+                child: Icon(FontAwesomeIcons.minus, color: widget.color)),
           ),
-          Icon(Icons.remove, color: widget.color),
+          Icon(FontAwesomeIcons.minus, color: widget.color),
         ],
       ),
     );
