@@ -1,5 +1,5 @@
 import 'package:animated_tree_view/helpers/exceptions.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:uuid/v4.dart';
 
 import 'base/i_node.dart';

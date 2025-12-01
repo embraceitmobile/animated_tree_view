@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      locale: Locale('en'),
-      supportedLocales: [Locale('en'), Locale('ar')],
+      locale: const Locale('en'),
+      supportedLocales: const [Locale('en'), Locale('ar')],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:animated_tree_view/animated_tree_view.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'fakes/fake_tree_view_widget.dart';
 import 'utils/test_utils.dart';

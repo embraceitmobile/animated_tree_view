@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -44,14 +44,16 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
 
-    Future.microtask(
-      () => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(testIndexedTrees[stateCount].key),
-          duration: const Duration(seconds: 2),
-        ),
-      ),
-    );
+    Future.microtask(() {
+      if (context.mounted && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(testIndexedTrees[stateCount].key),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    });
   }
 
   @override

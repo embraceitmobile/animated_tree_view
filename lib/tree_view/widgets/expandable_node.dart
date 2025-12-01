@@ -1,6 +1,6 @@
 import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/tree_view/tree_view_state_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ExpandableNodeItem<Data, Tree extends ITreeNode<Data>>
     extends StatelessWidget {
